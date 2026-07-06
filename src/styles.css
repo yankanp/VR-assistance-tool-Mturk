@@ -1405,3 +1405,20 @@ button:disabled {
 .save-error-detail {
   margin-top: 0.8rem;
 }
+.consent-full-text {
+  max-height: min(62vh, 42rem);
+  overflow: auto;
+}
+
+.consent-full-text p {
+  margin: 0 0 0.85rem;
+}
+
+.consent-full-text ul {
+  margin: 0 0 1.25rem 1.5rem;
+  padding: 0;
+}
+
+.consent-full-text strong {
+  color: inherit;
+}

@@ -3,7 +3,7 @@ import Controller3DViewer from './controllers/Controller3DViewer';
 import './controllers/Controller3DViewer.css';
 
 const STORAGE_KEY = 'vr-helper-mturk-study-session';
-const CONSENT_VERSION = '2026-07-04';
+const CONSENT_VERSION = '2026-07-06';
 const FALLBACK_AUDIO_PATH = 'audio/task-16.mp3';
 const AVAILABLE_AUDIO_TASKS = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16]);
 const FIXED_VR_VIEW_IMAGE = 'img/VR_user_current_view_screenshots/task-18-no-annotation.png';
@@ -90,24 +90,109 @@ function LandingPage({ onAccept, onDecline }) {
   return (
     <main className="page-shell">
       <section className="study-card consent-card">
-        <p className="eyebrow">VR Helper Tool Study</p>
         <h1>Informed Consent</h1>
-        <p>
-          You are invited to take part in a research study about a helper dashboard for assisting a
-          person using a virtual reality application. This study asks you to view dashboard screens
-          and click the feature that best answers each prompt.
-        </p>
-        <p>
-          Your participation is voluntary. You may stop at any time. Please answer based only on what
-          is shown in the dashboard. The study includes attention checks.
-        </p>
-        <div className="consent-box">
-          <strong>By continuing, you confirm that:</strong>
+        <div className="consent-box consent-full-text">
+          <p><strong>STUDY TITLE</strong></p>
+          <p>Evaluating the understandability of an assistance tool for virtual reality application</p>
+
+          <p><strong>PRINCIPAL INVESTIGATOR</strong></p>
+          <p>Krishna Kumar Venkatasubramanian, Ph.D.</p>
+          <p>Office: (401) 874-2701</p>
+          <p>Email: krish@uri.edu</p>
+
+          <p><strong>STUDENT INVESTIGATORS</strong></p>
+          <p>Piriyankan Kirupaharan</p>
+          <p>Email: pkirupaharan@uri.edu</p>
+
+          <p><strong>OTHER INVESTIGATORS</strong></p>
+          <p>Tina-Marie Ranalli</p>
+          <p>tinamarie.ranalli@uri.edu</p>
+
+          <p><strong>KEY INFORMATION</strong></p>
+
+          <p>Important information to know about this research study:</p>
+
           <ul>
-            <li>You are at least 18 years old.</li>
-            <li>You understand this is a simulated helper dashboard study.</li>
-            <li>You agree to have your anonymous study interactions recorded for research analysis.</li>
+            <li>The purpose of this study is to evaluate whether untrained first-time users can correctly identify the appropriate assistance features in the assistance tool, and to measure how efficiently they can do so</li>
+            <li>If you choose to participate, you will interact with a web application designed to help a person using virtual reality application. You will then be asked a few questions about your experience. This will take about 20 minutes.</li>
+            <li>Risks or discomfort from this research are expected to be minimal.</li>
+            <li>The study will have no direct benefits to you.</li>
+            <li>You will be paid $4 for your participation.</li>
+            <li>Taking part in this research project is voluntary. You do not have to participate, and you can stop at any time.</li>
           </ul>
+
+          <p><strong>INVITATION</strong></p>
+
+          <p>You are invited to take part in this research study. The information in this form is meant to help you decide whether or not to participate. If you have any questions, please ask.</p>
+
+          <p><strong>Why are you being asked to be in this research study?</strong></p>
+
+          <p>You are being asked to be in this study in order to evaluate understandability of an assistance tool. In order to participate you must at least 18 years old.</p>
+
+          <p><strong>What is the reason for doing this research study?</strong></p>
+
+          <p>The goal of this study is to evaluate the understandability of an assistance tool for virtual reality application.</p>
+          <p>This study focuses on whether first-time users can identify the correct assistance feature in the assistance tool when asked what assistance they would provide.</p>
+
+          <p><strong>What will be done during this research study?</strong></p>
+
+          <p>If you agree to participate, you will first read a brief introduction explaining the purpose of the study and your role. You will then complete several attention check questions. These questions are included to ensure that participants are carefully reading the study materials. If you pass the attention checks, you will complete a series of questions about the helper tool. For each question, you will see the assistance tool and your task is to click the part of the assistance tool that best answers the question. The assistance tool includes several regions, after you click a region, the selected region will be highlighted. You may change your selection before moving to the next question. Only your final selected region for each question will be recorded as your answer. You will not be told whether each answer is correct during the study.</p>
+
+          <p>Afterward, you will be asked to complete a short survey with questions your experience using the assistance tool as well as a few demographics questions such as age, gender, and prior VR experience. Your answers to the survey will not affect your compensation in any way. At the end of the survey, you will receive a completion code. You will copy and paste this code into Amazon Mechanical Turk to receive payment for completing the study.</p>
+
+          <p><strong>What are the possible risks of being in this research study?</strong></p>
+
+          <p>There are no known risks to you from being in this research study.</p>
+
+          <p><strong>What are the possible benefits to you?</strong></p>
+
+          <p>You are not expected to get any benefit from being in this study.</p>
+
+          <p><strong>What are the possible benefits to other people?</strong></p>
+          <p>This research may help us understand whether people can use the assistance tool to provide assistance in VR activities. The results may help improve future tools for supporting VR users, including users who may need assistance during VR activities.</p>
+
+          <p><strong>What will being in this research study cost you?</strong></p>
+
+          <p>There is no cost to you to be in this research study.</p>
+
+          <p><strong>Will you be compensated for being in this research study?</strong></p>
+
+          <p>You will receive $4 for participating in this study.</p>
+
+          <p><strong>What should you do if you have a problem during this research study?</strong></p>
+
+          <p>Your welfare is the major concern of every member of the research team. If you have a problem as a direct result of being in this study, you should immediately contact one of the people listed at the beginning of this consent form.</p>
+
+          <p><strong>How will information about you be protected?</strong></p>
+
+          <p>Reasonable steps will be taken to protect your privacy and the confidentiality of your study data.</p>
+
+          <p>The data will be stored electronically through a secure server and will only be seen by the research team during the study and for 5 years or longer after the study is complete.</p>
+
+          <p>The only persons who will have access to your research records are the study personnel, the Institutional Review Board (IRB), and any other person, agency, or sponsor as required by law. The information from this study may be published in scientific journals or presented at scientific meetings but the data will be reported as group or summarized data and your identity will be kept strictly confidential.</p>
+
+          <p><strong>What are your rights as a research subject?</strong></p>
+
+          <p>You may ask any questions concerning this research and have those questions answered before agreeing to participate in or during the study.</p>
+
+          <p>For study related questions, please contact the investigator(s) listed at the beginning of this form.</p>
+
+          <p>For questions concerning your rights or complaints about the research contact the Institutional Review Board (IRB) or Vice President for Research and Economic Development:</p>
+
+          <ul>
+            <li>IRB: (401) 874-4328 / researchintegrity@etal.uri.edu.</li>
+            <li>Vice President for Research and Economic Development: at (401) 874-4576</li>
+          </ul>
+
+          <p><strong>What will happen if you decide not to be in this research study or decide to stop participating once you start?</strong></p>
+
+          <p>You can decide not to be in this research study, or you can stop being in this research study (“withdraw”) at any time before, during, or after the research begins for any reason. Deciding not to be in this research study or deciding to withdraw will not affect your relationship with the investigator or with the University of Rhode Island.</p>
+
+          <p>You will not lose any benefits to which you are entitled.</p>
+
+          <p><strong>Documentation of informed consent</strong></p>
+
+          <p>You are voluntarily making a decision whether or not to be in this research study. Agreeing to this form means that (1) you have read and understood this consent form, (2) you have had your questions answered, and (3) you have decided to be in the research study. You can request a copy of this consent form to keep</p>
         </div>
         <div className="consent-actions">
           <button className="primary-action" type="button" onClick={onAccept}>
@@ -121,7 +206,6 @@ function LandingPage({ onAccept, onDecline }) {
     </main>
   );
 }
-
 function IntroPage({ onNext }) {
   return (
     <main className="page-shell">
