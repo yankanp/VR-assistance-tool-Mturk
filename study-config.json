@@ -1,0 +1,8 @@
+{
+  "studyName": "VR Helper Assistance Dashboard Usability Study",
+  "attentionFailureThreshold": 1,
+  "qualtricsRedirectUrl": "https://uri.co1.qualtrics.com/jfe/form/SV_6kY4lKaetR6QLzg",
+  "metricsApiBaseUrl": "https://vr-assistance-tool-mturk-backend.onrender.com",
+  "completionCodePrefix": "VRHELP",
+  "autoRedirectToQualtrics": false
+}

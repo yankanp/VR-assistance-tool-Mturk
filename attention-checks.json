@@ -1,0 +1,41 @@
+[
+  {
+    "check_id": "ac_math",
+    "type": "text",
+    "prompt": "9 + 6 - 2 = ?",
+    "correct_answer": "13",
+    "order_after_question": 3
+  },
+  {
+    "check_id": "ac_year",
+    "type": "text",
+    "prompt": "What is the current year?",
+    "correct_answer": "2026",
+    "order_after_question": 6
+  },
+  {
+    "check_id": "ac_option_c",
+    "type": "multiple_choice",
+    "prompt": "Please select Option C.",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "correct_answer": "Option C",
+    "order_after_question": 9
+  },
+  {
+    "check_id": "ac_select_no",
+    "type": "multiple_choice",
+    "prompt": "Please select No.",
+    "options": ["Yes", "No"],
+    "correct_answer": "No",
+    "order_after_question": 12
+  },
+  {
+    "check_id": "ac_object",
+    "type": "multiple_choice",
+    "prompt": "Which object is highlighted in the image?",
+    "image_placeholder": true,
+    "options": ["Ship bell", "Cargo barrel", "Controller", "Map"],
+    "correct_answer": "Ship bell",
+    "order_after_question": 15
+  }
+]
