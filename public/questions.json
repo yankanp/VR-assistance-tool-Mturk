@@ -1,0 +1,172 @@
+[
+  {
+    "question_id": "q_1_1",
+    "prompt": "Click the area where you would see what the VR user is currently seeing.",
+    "target_feature": "Real-time view of VR user",
+    "acceptable_features": ["vr-view"],
+    "correct_region_ids": ["vr-view"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 1
+  },
+  {
+    "question_id": "q_2_1",
+    "prompt": "Click where you would see the list of activities.",
+    "target_feature": "Dropdown section / current task list",
+    "acceptable_features": ["task-dropdown"],
+    "correct_region_ids": ["task-dropdown", "task-list"],
+    "question_type": "main",
+    "screen_variant": "dropdown-open",
+    "order": 2
+  },
+  {
+    "question_id": "q_2_2",
+    "prompt": "Click where you would check the VR user's progress.",
+    "target_feature": "Dropdown section / current task progress",
+    "acceptable_features": ["task-progress"],
+    "correct_region_ids": ["task-progress", "task-dropdown"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 3
+  },
+  {
+    "question_id": "q_2_3",
+    "prompt": "Click where you would check a completed activity.",
+    "target_feature": "Completed activity in task list",
+    "acceptable_features": ["completed-task"],
+    "correct_region_ids": ["completed-task", "task-list"],
+    "question_type": "main",
+    "screen_variant": "dropdown-open",
+    "order": 4
+  },
+  {
+    "question_id": "q_2_4",
+    "prompt": "Click where you would check a future activity.",
+    "target_feature": "Future activity in task list",
+    "acceptable_features": ["future-task"],
+    "correct_region_ids": ["future-task", "task-list"],
+    "question_type": "main",
+    "screen_variant": "dropdown-open",
+    "order": 5
+  },
+  {
+    "question_id": "q_3_1",
+    "prompt": "Click where you would find the written instruction for the current activity.",
+    "target_feature": "Current instructions section",
+    "acceptable_features": ["instructions-written"],
+    "correct_region_ids": ["instructions-panel", "instructions-written"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 6
+  },
+  {
+    "question_id": "q_3_2",
+    "prompt": "Click the button you would use to listen to the current instruction.",
+    "target_feature": "Listen instruction button",
+    "acceptable_features": ["listen-button"],
+    "correct_region_ids": ["listen-button"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 7
+  },
+  {
+    "question_id": "q_4_1",
+    "prompt": "Click where you would find the objects related to the current activity.",
+    "target_feature": "Current activity objects section",
+    "acceptable_features": ["objects-panel"],
+    "correct_region_ids": ["objects-panel"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 8
+  },
+  {
+    "question_id": "q_4_2",
+    "prompt": "Click the object button you would use to help the VR user find that object in the virtual environment.",
+    "target_feature": "Object guidance button",
+    "acceptable_features": ["object-guide-button"],
+    "correct_region_ids": ["object-guide-button"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 9
+  },
+  {
+    "question_id": "q_4_3",
+    "prompt": "Click the object button you would use to highlight that object in the virtual environment.",
+    "target_feature": "Object highlight button",
+    "acceptable_features": ["object-highlight-button"],
+    "correct_region_ids": ["object-highlight-button"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 10
+  },
+  {
+    "question_id": "q_5_1",
+    "prompt": "Click where you would choose whether the left or right controller should be shown.",
+    "target_feature": "Controller side selector",
+    "acceptable_features": ["controller-side-dropdown"],
+    "correct_region_ids": ["controller-side-dropdown"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 11
+  },
+  {
+    "question_id": "q_5_2",
+    "prompt": "Click where you would watch a video showing which button or buttons on the controller to press.",
+    "target_feature": "Controller guidance video",
+    "acceptable_features": ["controller-video"],
+    "correct_region_ids": ["controller-video"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 12
+  },
+  {
+    "question_id": "q_5_3",
+    "prompt": "Click the button you would use to send the controller guidance to the VR user.",
+    "target_feature": "Send controller guidance button",
+    "acceptable_features": ["controller-send-button"],
+    "correct_region_ids": ["controller-send-button"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 13
+  },
+  {
+    "question_id": "q_6_1",
+    "prompt": "Click where you would watch a video showing the current activity.",
+    "target_feature": "Current activity demonstration video",
+    "acceptable_features": ["demo-video"],
+    "correct_region_ids": ["demo-video"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 14
+  },
+  {
+    "question_id": "q_6_2",
+    "prompt": "Click the button you would use to send the demonstration video to the VR user.",
+    "target_feature": "Send demonstration video button",
+    "acceptable_features": ["demo-send-button"],
+    "correct_region_ids": ["demo-send-button"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 15
+  },
+  {
+    "question_id": "q_7_1",
+    "prompt": "Click the tool you would use to draw directly on the VR user's view.",
+    "target_feature": "Freehand drawing button",
+    "acceptable_features": ["freehand-button"],
+    "correct_region_ids": ["freehand-button"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 16
+  },
+  {
+    "question_id": "q_8_1",
+    "prompt": "Click the button you would use to remove drawings or annotations from the VR user's view.",
+    "target_feature": "Clear annotations button",
+    "acceptable_features": ["clear-button"],
+    "correct_region_ids": ["clear-button"],
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 17
+  }
+]

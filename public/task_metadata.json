@@ -1,0 +1,2606 @@
+{
+  "version": 1,
+  "tasks": [
+    {
+      "id": "start_the_app",
+      "title": "Press the play icon",
+      "order": 0,
+      "runtimeTracking": {
+        "type": "ui_button"
+      },
+      "writtenInstructions": "Point the controller at the play icon and press the trigger button to start the application",
+      "sendAudioInstructionMp3Path": "audio/task-0.mp3",
+      "objects": [
+        {
+          "id": "Debug Menu Opener",
+          "label": "Play icon",
+          "icon": "img/object_icons/task_0_object_1.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "trigger"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "trigger"
+              ]
+            }
+          },
+          "sceneName": "Beat1",
+          "objectPath": "Start Menu/FlatUnityCanvas/Canvas/Debug Menu Opener",
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-0-object-1.png",
+            "leftVideoUrl": "video/controller/task-0-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-0-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-0.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-0.png"
+      },
+      "unityTaskIds": [
+        "A0_StartExperience"
+      ]
+    },
+    {
+      "id": "ring_ship_bell",
+      "title": "Ring the ship bell",
+      "order": 1,
+      "writtenInstructions": "Strike the ship bell by hitting the clapper inside the bell",
+      "sendAudioInstructionMp3Path": "audio/task-1.mp3",
+      "objects": [
+        {
+          "id": "SM_Bell",
+          "label": "Ship bell",
+          "icon": "img/object_icons/task_1_object_1.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "sceneName": "Beat1",
+          "objectPath": "FloatingDebrisPlatform/Bell/Bell Parent/SM_Bell",
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-1-object-1.png",
+            "leftVideoUrl": "video/controller/task-1-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-1-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-1.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-1.png"
+      },
+      "unityTaskIds": [
+        "B1_StartPanel"
+      ]
+    },
+    {
+      "id": "teleport_cabin_to_dock",
+      "title": "Move from the cabin to the ship deck",
+      "order": 2,
+      "writtenInstructions": "Move to the first teleport marker in front of you.\nMove to the second teleport marker in front of you.\nMove to the third teleport marker in front of you to reach the ship deck.",
+      "sendAudioInstructionMp3Path": "audio/task-2.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B2_Start",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/teleportation.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Boat/Narrative/Beat 2/Beat2Teleports/Teleport Hotspot B2_S1/FX_Teleport_Pin",
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot Towards B2_S3",
+          "label": "Teleport marker - 2",
+          "icon": "img/object_icons/teleportation.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Boat/Narrative/Beat 2/Beat2Teleports/Teleport Hotspot Towards B2_S3/FX_Teleport_Pin",
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B2_S3",
+          "label": "Teleport marker - 3",
+          "icon": "img/object_icons/teleportation.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Boat/Narrative/Beat 2/Beat2Teleports/Teleport Hotspot B2_S3/FX_Teleport_Pin",
+          "order": 3,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-2.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-2.png"
+      },
+      "unityTaskIds": [
+        "B2_S1",
+        "B2_S2"
+      ]
+    },
+    {
+      "id": "teleport_dock_to_ramp",
+      "title": "Teleport to the dock",
+      "order": 3,
+      "writtenInstructions": "Move to the teleport marker in front of you to go from the ship deck to the loading area",
+      "sendAudioInstructionMp3Path": "audio/task-3.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B2_S4",
+          "label": "Teleport marker",
+          "icon": "img/object_icons/teleportation.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Beat2_IslandAndJetty_VisibilitySet/Beat 2_Docks/DocksTeleports/Teleport Hotspot B2_S4/FX_Teleport_Pin",
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-3.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-3.png"
+      },
+      "unityTaskIds": [
+        "B2_S3"
+      ]
+    },
+    {
+      "id": "roll_cargo_barrels",
+      "title": "Move the cargo barrels",
+      "order": 4,
+      "writtenInstructions": "Push or roll each cargo barrel toward the sail loading area when it comes close to you",
+      "sendAudioInstructionMp3Path": "audio/task-4.mp3",
+      "objects": [
+        {
+          "id": "BarrelRollingSetup001",
+          "label": "Cargo barrel 1",
+          "icon": "img/object_icons/task_4_object_1.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Beat2_IslandAndJetty_VisibilitySet/Beat 2_Docks/SequenceObjectsOffset/PhysicsBarrelSetups/Sequence 5_BarrelRolling/BarrelRollingSetup001",
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-4.png",
+            "leftVideoUrl": "video/controller/task-4-left.mp4",
+            "rightVideoUrl": "video/controller/task-4-right.mp4"
+          }
+        },
+        {
+          "id": "BarrelRollingSetup002",
+          "label": "Cargo barrel 2",
+          "icon": "img/object_icons/task_4_object_2.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Beat2_IslandAndJetty_VisibilitySet/Beat 2_Docks/SequenceObjectsOffset/PhysicsBarrelSetups/Sequence 5_BarrelRolling/BarrelRollingSetup002",
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-4.png",
+            "leftVideoUrl": "video/controller/task-4-left.mp4",
+            "rightVideoUrl": "video/controller/task-4-right.mp4"
+          }
+        },
+        {
+          "id": "BarrelRollingSetup003",
+          "label": "Cargo barrel 3",
+          "icon": "img/object_icons/task_4_object_3.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Beat2_IslandAndJetty_VisibilitySet/Beat 2_Docks/SequenceObjectsOffset/PhysicsBarrelSetups/Sequence 5_BarrelRolling/BarrelRollingSetup003",
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-4.png",
+            "leftVideoUrl": "video/controller/task-4-left.mp4",
+            "rightVideoUrl": "video/controller/task-4-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-4.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-4.png"
+      },
+      "unityTaskIds": [
+        "B2_S4",
+        "B2_S4_2",
+        "B2_S4_3"
+      ]
+    },
+    {
+      "id": "teleport_to_boarding_ramp_base",
+      "title": "Move to the boarding ramp",
+      "order": 5,
+      "writtenInstructions": "Move to the teleport marker to move to the base of the boarding ramp to reach the mooring rope",
+      "sendAudioInstructionMp3Path": "audio/task-5.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot Towards B2_S5",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/teleportation.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Beat2_IslandAndJetty_VisibilitySet/Beat 2_Docks/DocksTeleports/Teleport Hotspot Towards B2_S5/FX_Teleport_Pin",
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B2_S5",
+          "label": "Teleport marker - 2",
+          "icon": "img/object_icons/teleportation.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Beat2_IslandAndJetty_VisibilitySet/Beat 2_Docks/DocksTeleports/Teleport Hotspot B2_S5/FX_Teleport_Pin",
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-5.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-5.png"
+      },
+      "unityTaskIds": [
+        "B2_S4_4"
+      ]
+    },
+    {
+      "id": "untie_mooring_rope",
+      "title": "Untie the ship from the dock",
+      "order": 6,
+      "writtenInstructions": "Release the mooring rope from the dock cleat ",
+      "sendAudioInstructionMp3Path": "audio/task-6.mp3",
+      "objects": [
+        {
+          "id": "Top",
+          "label": "Mooring rope",
+          "icon": "img/object_icons/task_6_object_1.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Beat2_IslandAndJetty_VisibilitySet/Beat 2_Docks/UnhitchShip_Interaction/RopeSystem",
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-6-object-1.png",
+            "leftVideoUrl": "video/controller/task-6-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-6-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-6.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-6.png"
+      },
+      "unityTaskIds": [
+        "B2_S5"
+      ]
+    },
+    {
+      "id": "teleport_onto_ship_deck",
+      "title": "Board the ship deck",
+      "order": 7,
+      "writtenInstructions": "Move to the two teleport markers, one at a time, to move from the ramp onto the ship deck",
+      "sendAudioInstructionMp3Path": "audio/task-7.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B2_S6",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat2",
+          "objectPath": "Beat2_IslandAndJetty_VisibilitySet/Beat 2_Docks/SM_ShipGangplank/Teleport Hotspot Towards B2_S7/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B2_S7",
+          "label": "Teleport marker - 2",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat2",
+          "objectPath": "Boat/Narrative/Beat 2/Beat2Teleports/Teleport Hotspot B2_S7/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B2_S8",
+          "label": "Teleport marker - 3",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat2",
+          "objectPath": "Boat/Narrative/Beat 2/Beat2Teleports/Teleport Hotspot B2_S8/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 3,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-7.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-7.png"
+      },
+      "unityTaskIds": [
+        "B2_S6",
+        "B2_S7"
+      ]
+    },
+    {
+      "id": "teleport_to_helm_area",
+      "title": "Move to the helm",
+      "order": 8,
+      "writtenInstructions": "Move to the teleport marker in front of you to go to the helm area",
+      "sendAudioInstructionMp3Path": "audio/task-8.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B2_S9",
+          "label": "Teleport marker",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat2",
+          "objectPath": "Boat/Narrative/Beat 2/Beat2Teleports/Teleport Hotspot B2_S9/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-8.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-8.png"
+      },
+      "unityTaskIds": [
+        "B2_S8"
+      ]
+    },
+    {
+      "id": "raise_mainsail",
+      "title": "Raise the mainsail",
+      "order": 9,
+      "writtenInstructions": "Grab the mainsail rope and pull until the sail is fully raised",
+      "sendAudioInstructionMp3Path": "audio/task-9.mp3",
+      "objects": [
+        {
+          "id": "VerletRope",
+          "label": "Mainsail rope",
+          "icon": "img/object_icons/task_9_object_1.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_both_controllers",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Boat/DynamicBoat/SailControls (1)/RopeSystem/VerletRope",
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-9-object-1.png",
+            "leftVideoUrl": "video/controller/task-9-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-9-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-9.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-9.png"
+      },
+      "unityTaskIds": [
+        "B2_S9"
+      ]
+    },
+    {
+      "id": "secure_mainsail_rope",
+      "title": "Secure the mainsail rope",
+      "order": 10,
+      "writtenInstructions": "Wrap the raised sail rope around the cleat to hold the mainsail in place",
+      "sendAudioInstructionMp3Path": "audio/task-10.mp3",
+      "objects": [
+        {
+          "id": "PROXY_CleatMesh",
+          "label": "Cleat",
+          "icon": "img/object_icons/task_10_object_1.png",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Boat/DynamicBoat/SailControls (1)/SM_SailControlMechanisms/PROXY_CleatMesh/Knot",
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-10-object-1.png",
+            "leftVideoUrl": "video/controller/task-10-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-10-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-10.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-10.png"
+      },
+      "unityTaskIds": [
+        "B2_S10"
+      ]
+    },
+    {
+      "id": "steer_helm_wheel",
+      "title": "Steer the ship",
+      "order": 11,
+      "writtenInstructions": "Move to the teleport marker in front of you to go to the helm area, then rotate the helm wheel to steer the ship",
+      "sendAudioInstructionMp3Path": "audio/task-11.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B2_S11",
+          "label": "Teleport marker",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat2",
+          "objectPath": "Boat/Narrative/Beat 2/Beat2Teleports/Teleport Hotspot B2_S11/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Handle",
+          "label": "Helm wheel",
+          "icon": "img/object_icons/task_11_object_2.png",
+          "controllerHints": {
+            "needsToPressCondition": "no_button_required",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "sceneName": "Beat2",
+          "objectPath": "Boat/DynamicBoat/SteeringWheel/Handle",
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-11-object-2.png",
+            "leftVideoUrl": "video/controller/task-11-object-2-left.mp4",
+            "rightVideoUrl": "video/controller/task-11-object-2-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-11.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-11.png"
+      },
+      "unityTaskIds": [
+        "B2_S11",
+        "B2_S11_2"
+      ]
+    },
+    {
+      "id": "teleport_back_to_helm_area_scene3and4",
+      "title": "Return to the helm",
+      "order": 12,
+      "writtenInstructions": "Move to the three teleport markers, one at a time, to go from the ship deck to the helm area",
+      "sendAudioInstructionMp3Path": "audio/task-12.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B3_S1",
+          "label": "Teleport marker-1",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Beat3Teleports/Teleport Hotspot Towards B3_S2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B3_S2_2",
+          "label": "Teleport marker-2",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Beat3Teleports/Teleport Hotspot Towards B3_S2_2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B3_S2",
+          "label": "Teleport marker-3",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Beat3Teleports/Teleport Hotspot B3_S2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 3,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-12.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-12.png"
+      },
+      "unityTaskIds": [
+        "B3_S1"
+      ]
+    },
+    {
+      "id": "teleport_to_sail_crank_scene3and4",
+      "title": "Move to the sail crank",
+      "order": 13,
+      "writtenInstructions": "Move to the teleport marker in front of you to reach the sail crank",
+      "sendAudioInstructionMp3Path": "audio/task-13.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B3_S3",
+          "label": "Teleport marker",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Beat3Teleports/Teleport Hotspot B3_S3/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-13.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-13.png"
+      },
+      "unityTaskIds": [
+        "B3_S2"
+      ]
+    },
+    {
+      "id": "turn_sail_crank_scene3and4",
+      "title": "Turn the sail crank",
+      "order": 14,
+      "writtenInstructions": "Grab the sail crank and turn it to move the sail into position",
+      "sendAudioInstructionMp3Path": "audio/task-14.mp3",
+      "objects": [
+        {
+          "id": "Interactable Crank",
+          "label": "Sail crank",
+          "icon": "img/object_icons/task_14_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Boat/DynamicBoat/SailControls (1)/Interactable Crank (1)/Handle",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-14-object-1.png",
+            "leftVideoUrl": "video/controller/task-14-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-14-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-14.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-14.png"
+      },
+      "unityTaskIds": [
+        "B3_S3"
+      ]
+    },
+    {
+      "id": "teleport_to_harpoon_path_scene3and4",
+      "title": "Move toward the harpoon",
+      "order": 15,
+      "writtenInstructions": "Move to the teleport marker in front of you to head toward the harpoon area",
+      "sendAudioInstructionMp3Path": "audio/task-15.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot Towards B3_S5",
+          "label": "Teleport marker",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Beat3Teleports/Teleport Hotspot Towards B3_S5/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B3_S5",
+          "label": "Teleport marker",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Beat3Teleports/Teleport Hotspot B3_S5/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-15.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-15.png"
+      },
+      "unityTaskIds": [
+        "B3_S4"
+      ]
+    },
+    {
+      "id": "teleport_to_harpoon_deck_scene3and4",
+      "title": "Move along the deck",
+      "order": 16,
+      "writtenInstructions": "Move to the next teleport marker to get closer to the harpoon",
+      "sendAudioInstructionMp3Path": "audio/task-16.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B3_S6",
+          "label": "Teleport marker",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Beat3Teleports/Teleport Hotspot B3_S6/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B3_S7",
+          "label": "Teleport marker",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Beat3Teleports/Teleport Hotspot B3_S7/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-16.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-16.png"
+      },
+      "unityTaskIds": [
+        "B3_S5",
+        "B3_S6"
+      ]
+    },
+    {
+      "id": "teleport_to_harpoon_deck_1_scene3and4",
+      "title": "Move along the deck",
+      "order": 17,
+      "writtenInstructions": "Move to the next teleport marker to get closer to the harpoon",
+      "sendAudioInstructionMp3Path": "audio/task-17.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B3_S8",
+          "label": "Teleport marker",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Beat3Teleports/Teleport Hotspot B3_S8/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-17.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-17.png"
+      },
+      "unityTaskIds": [
+        "B3_S7"
+      ]
+    },
+    {
+      "id": "operate_harpoon_scene3and4",
+      "title": "Operate the harpoon",
+      "order": 18,
+      "writtenInstructions": "Move to the teleport marker beside the harpoon controls",
+      "sendAudioInstructionMp3Path": "audio/task-18.mp3",
+      "objects": [
+        {
+          "id": "lever",
+          "label": "Harpoon lever",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Boat/DynamicBoat/Harpoon/Top/Interactable Slide Bar/Handle/GrabPoint/Model/Model/Top_Lever",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-18-object-1.png",
+            "leftVideoUrl": "video/controller/task-18-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-18-object-1-right.mp4"
+          }
+        },
+        {
+          "id": "button",
+          "label": "Fire button",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Boat/DynamicBoat/Harpoon/Top/Fire Button/Button",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-18-object-2.png",
+            "leftVideoUrl": "video/controller/task-18-object-2-left.mp4",
+            "rightVideoUrl": "video/controller/task-18-object-2-right.mp4"
+          }
+        },
+        {
+          "id": "crank",
+          "label": "Crank handle",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Boat/DynamicBoat/Harpoon/Top/Double Crank/Handle",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "order": 3,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-18-object-3.png",
+            "leftVideoUrl": "video/controller/task-18-object-3-left.mp4",
+            "rightVideoUrl": "video/controller/task-18-object-3-right.mp4"
+          }
+        },
+        {
+          "id": "aiming_handle",
+          "label": "Aiming handle",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Boat/DynamicBoat/Harpoon/Top/HarpoonBody/Handle",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-18-object-4.png",
+            "leftVideoUrl": "video/controller/task-18-object-4-left.mp4",
+            "rightVideoUrl": "video/controller/task-18-object-4-right.mp4"
+          }
+        },
+        {
+          "id": "box_1",
+          "label": "Supply box 1",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Sequence 8/HarpoonTargets/HarpoonTargetBox",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+          }
+        },
+        {
+          "id": "box_2",
+          "label": "Supply box 2",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Sequence 8/HarpoonTargets/HarpoonTargetBox (1)",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+          }
+        },
+        {
+          "id": "box_3",
+          "label": "Supply box 3",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 3/Sequence 8/HarpoonTargets/HarpoonTargetBox (2)",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-18.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/task-18.png"
+      },
+      "unityTaskIds": [
+        "B3_S8",
+        "B3_S8_2",
+        "B3_S8_3",
+        "B3_S8_4",
+        "B3_S8_5"
+      ]
+    },
+    {
+      "id": "teleport_back_to_helm_scene3and4",
+      "title": "Teleport back to the helm area",
+      "order": 19,
+      "writtenInstructions": "Use the teleporter to return to the helm area",
+      "sendAudioInstructionMp3Path": "audio/task-19.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B4_S2",
+          "label": "Teleport Hotspot B4_S2",
+          "icon": "img/object_icons/task_19_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot B4_S2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-19.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-19.png"
+      },
+      "unityTaskIds": [
+        "B4_S1"
+      ]
+    },
+    {
+      "id": "grab_spy_glass_scene3and4",
+      "title": "Grab the spy glass",
+      "order": 20,
+      "writtenInstructions": "Grab the spy glass from the designated location",
+      "sendAudioInstructionMp3Path": "audio/task-20.mp3",
+      "objects": [
+        {
+          "id": "spy_glass",
+          "label": "Spy glass",
+          "icon": "img/object_icons/task_20_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 4/SpyglassBarrel/Spyglass&Anchor/Telescope/End/SM_Telescope",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-20-object-1.png",
+            "leftVideoUrl": "video/controller/task-20-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-20-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-20.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-20.png"
+      },
+      "unityTaskIds": [
+        "B4_S2"
+      ]
+    },
+    {
+      "id": "teleport_back_to_helm_wheel_scene3and4",
+      "title": "Teleport back to the helm wheel",
+      "order": 21,
+      "writtenInstructions": "Use the teleporter to return to the helm wheel",
+      "sendAudioInstructionMp3Path": "audio/task-21.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B4_S3",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/task_21_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot B4_S3/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-21.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-21.png"
+      },
+      "unityTaskIds": [
+        "B4_S2_2"
+      ]
+    },
+    {
+      "id": "teleport_to_helm_scene3and4",
+      "title": "Teleport back to the helm wheel",
+      "order": 22,
+      "writtenInstructions": "Use the teleporter to return to the helm wheel",
+      "sendAudioInstructionMp3Path": "audio/task-21.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot Towards B4_S4 1",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/task_21_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S4 1/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot Towards B4_S4 2",
+          "label": "Teleport marker - 2",
+          "icon": "img/object_icons/task_21_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S4 2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B4_S4",
+          "label": "Teleport marker - 3",
+          "icon": "img/object_icons/task_21_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot B4_S4/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 3,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-22.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-22.png"
+      },
+      "unityTaskIds": [
+        "B4_S3"
+      ]
+    },
+    {
+      "id": "secure_cargo_scene3and4",
+      "title": "Secure the cargo",
+      "order": 23,
+      "writtenInstructions": "Use the rope to secure the cargo in place",
+      "sendAudioInstructionMp3Path": "audio/task-23.mp3",
+      "objects": [
+        {
+          "id": "Barrel-PROXY_CleatMesh",
+          "label": "Secure rope",
+          "icon": "img/object_icons/task_23_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 4/BarrelsForRopeSection/RopeSystem/VerletRope",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-23-object-1.png",
+            "leftVideoUrl": "video/controller/task-23-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-23-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-23.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-23.png"
+      },
+      "unityTaskIds": [
+        "B4_S4"
+      ]
+    },
+    {
+      "id": "teleport_back_to_deck_scene3and4",
+      "title": "Teleport back to the deck",
+      "order": 24,
+      "writtenInstructions": "Use the teleporter to return to the deck",
+      "sendAudioInstructionMp3Path": "audio/task-24.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot S4_S5_2",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/task_24_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot S4_S5_2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-24.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-24.png"
+      },
+      "unityTaskIds": [
+        "B4_S5"
+      ]
+    },
+    {
+      "id": "teleport_back_to_cabin_scene3and4",
+      "title": "Teleport back to the cabin",
+      "order": 25,
+      "writtenInstructions": "Use the teleporter to return to the cabin",
+      "sendAudioInstructionMp3Path": "audio/task-25.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot Towards B4_S7 2",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/task_25_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S7 2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot Towards B4_S7 3",
+          "label": "Teleport marker - 2",
+          "icon": "img/object_icons/task_25_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S7 3/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Proxy Teleport Hotspot Towards B4_S7 4",
+          "label": "Teleport marker - 3",
+          "icon": "img/object_icons/task_25_object_1.png",
+          "sceneName": "Beat3and4",
+          "objectPath": "Narrative/Beat 4/Beat4Teleports/Proxy Teleport Hotspot Towards B4_S7 4/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 3,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-25.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-25.png"
+      },
+      "unityTaskIds": [
+        "B4_S5_2",
+        "B4_S6",
+        "B4_S6_2",
+        "B4_S6_3",
+        "B4_S7"
+      ]
+    },
+    {
+      "id": "teleport_to_helm_area_scene_5",
+      "title": "Teleport to the helm area",
+      "order": 26,
+      "writtenInstructions": "Use the teleporter to return to the helm area",
+      "sendAudioInstructionMp3Path": "audio/task-26.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B5_Towards_S2",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/task_26_object_1.png",
+          "sceneName": "Beat5",
+          "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_Towards_S2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B5_Towards_S2_02",
+          "label": "Teleport marker - 2",
+          "icon": "img/object_icons/task_26_object_1.png",
+          "sceneName": "Beat5",
+          "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_Towards_S2_02/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B5_S2",
+          "label": "Teleport marker - 3",
+          "icon": "img/object_icons/task_26_object_1.png",
+          "sceneName": "Beat5",
+          "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_S2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 3,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-26.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-26.png"
+      },
+      "unityTaskIds": [
+        "B5_S1"
+      ]
+    },
+    {
+      "id": "teleport_to_lifebuoy_area_scene_5",
+      "title": "Teleport and throw the lifebuoy",
+      "order": 27,
+      "writtenInstructions": "Use the teleporter to return to the lifebuoy area and throw the lifebuoy to the target",
+      "sendAudioInstructionMp3Path": "audio/task-27.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B5_S3",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/task_27_object_1.png",
+          "sceneName": "Beat5",
+          "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_S3/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "SM_LifeBuoy",
+          "label": "Lifebuoy",
+          "icon": "img/object_icons/task_27_object_1.png",
+          "sceneName": "Beat5",
+          "objectPath": "boat/Narrative/Beat 5/LifeBuoyAndRopeSetup/SM_LifeBuoy",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-27-object-2.png",
+            "leftVideoUrl": "video/controller/task-27-object-2-left.mp4",
+            "rightVideoUrl": "video/controller/task-27-object-2-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-27.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-27.png"
+      },
+      "unityTaskIds": [
+        "B5_S2"
+      ]
+    },
+    {
+      "id": "teleport_to_harpoon_deck_scene_5",
+      "title": "Teleport to the harpoon deck",
+      "order": 28,
+      "writtenInstructions": "Use the teleporter to return to the harpoon deck",
+      "sendAudioInstructionMp3Path": "audio/task-28.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B5_Towards_S4_01",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/task_28_object_1.png",
+          "sceneName": "Beat5",
+          "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_Towards_S4_01/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Proxy Teleport Hotspot B5_S4",
+          "label": "Teleport marker - 2",
+          "icon": "img/object_icons/task_28_object_1.png",
+          "sceneName": "Beat5",
+          "objectPath": "Narrative/Beat 5/Beat5Teleports/Proxy Teleport Hotspot B5_S4/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-28.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-28.png"
+      },
+      "unityTaskIds": [
+        "B5_S3"
+      ]
+    },
+    {
+      "id": "teleport_to_harpoon_scene_5",
+      "title": "Teleport to the harpoon",
+      "order": 29,
+      "writtenInstructions": "Use the teleporter to return to the harpoon",
+      "sendAudioInstructionMp3Path": "audio/task-29.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B5_S5",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/task_29_object_1.png",
+          "sceneName": "Beat5",
+          "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_S5/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-29.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-29.png"
+      },
+      "unityTaskIds": [
+        "B5_S4"
+      ]
+    },
+    {
+      "id": "attack_squid_with_harpoon_scene_5",
+      "title": "Attack the squid with the harpoon",
+      "order": 30,
+      "writtenInstructions": "Use the harpoon controls to aim and fire at the squid",
+      "sendAudioInstructionMp3Path": "audio/task-30.mp3",
+      "objects": [
+        {
+          "id": "lever",
+          "label": "Harpoon lever",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat5",
+          "objectPath": "Boat/DynamicBoatVariantBeat5/Harpoon/Top/Interactable Slide Bar/Handle/GrabPoint/Model/Model/Top_Lever",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-30-object-1.png",
+            "leftVideoUrl": "video/controller/task-30-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-30-object-1-right.mp4"
+          }
+        },
+        {
+          "id": "button",
+          "label": "Fire button",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat5",
+          "objectPath": "Boat/DynamicBoatVariantBeat5/Harpoon/Top/Fire Button/Button",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-30-object-2.png",
+            "leftVideoUrl": "video/controller/task-30-object-2-left.mp4",
+            "rightVideoUrl": "video/controller/task-30-object-2-right.mp4"
+          }
+        },
+        {
+          "id": "aiming_handle",
+          "label": "Aiming handle",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat5",
+          "objectPath": "Boat/DynamicBoatVariantBeat5/Harpoon/Top/HarpoonBody/Handle",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-30-object-3.png",
+            "leftVideoUrl": "video/controller/task-30-object-3-left.mp4",
+            "rightVideoUrl": "video/controller/task-30-object-3-right.mp4"
+          }
+        },
+        {
+          "id": "MiddeckTentacleHitbox",
+          "label": "Tentacle 1",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat5",
+          "objectPath": "Beat5/Boat/Narrative/Beat 5/MidDeckTentacleOffset/SK_KrakenTentacle_v2/Tentacle_Rig/Tentacle_Root/Tentacle_02/Tentacle_03/Tentacle_04/Tentacle_05/TentacleHarpoonTarget_Middeck",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-30-object-4.png",
+            "leftVideoUrl": "video/controller/task-30-object-4-left.mp4",
+            "rightVideoUrl": "video/controller/task-30-object-4-right.mp4"
+          }
+        },
+        {
+          "id": "BowTentacleHitbox",
+          "label": "Tentacle 2",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat5",
+          "objectPath": "Narrative/Beat 5/Sequence5/BowTentacleOffset/Tentacle_Grab_Bow/Tentacle",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-30-object-5.png",
+            "leftVideoUrl": "video/controller/task-30-object-5-left.mp4",
+            "rightVideoUrl": "video/controller/task-30-object-5-right.mp4"
+          }
+        },
+        {
+          "id": "HelmTentacleHitbox",
+          "label": "Tentacle 3",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat5",
+          "objectPath": "Narrative/Beat 5/Sequence5/HelmTentacleOffset/Tentacle_Grab_Helm/Tentacle",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-30-object-6.png",
+            "leftVideoUrl": "video/controller/task-30-object-6-left.mp4",
+            "rightVideoUrl": "video/controller/task-30-object-6-right.mp4"
+          }
+        },
+        {
+          "id": "FullBodyKrakenOffset",
+          "label": "Squid head",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat5",
+          "objectPath": "Narrative/Beat 5/Sequence5/FullBodyKrakenOffset/SK_KrakenFullBody/Kraken_Rig/Kraken_Root/Head_Root",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-30-object-7.png",
+            "leftVideoUrl": "video/controller/task-30-object-7-left.mp4",
+            "rightVideoUrl": "video/controller/task-30-object-7-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-30.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-30.png"
+      },
+      "unityTaskIds": [
+        "B5_S5",
+        "B5_S5_2",
+        "B5_S5_3"
+      ]
+    },
+    {
+      "id": "teleport_to_lifebuoy_area_scene_6",
+      "title": "Teleport to the lifebuoy area",
+      "order": 31,
+      "writtenInstructions": "Use the teleporter to return to the lifebuoy area",
+      "sendAudioInstructionMp3Path": "audio/task-31.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot B5_END",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat5",
+          "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_END/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-31.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-31.png"
+      },
+      "unityTaskIds": [
+        "B5_S5_4"
+      ]
+    },
+    {
+      "id": "teleport_to_harpoon_area_scene_6",
+      "title": "Teleport to the harpoon area",
+      "order": 32,
+      "writtenInstructions": "Use the teleporter to return to the harpoon area",
+      "sendAudioInstructionMp3Path": "audio/task-32.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot Towards B6_S2",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat6",
+          "objectPath": "Narrative/Beat 6/Teleport Hotspot Towards B6_S2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot Towards B6_S2_1",
+          "label": "Teleport marker - 2",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat6",
+          "objectPath": "Narrative/Beat 6/Teleport Hotspot Towards B6_S2_1/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot Towards B6_S2_2",
+          "label": "Teleport marker - 3",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat6",
+          "objectPath": "Narrative/Beat 6/Teleport Hotspot Towards B6_S2_2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 3,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot B6_S2",
+          "label": "Teleport marker - 4",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat6",
+          "objectPath": "Narrative/Beat 6/Teleport Hotspot B6_S2/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 4,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-32.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-32.png"
+      },
+      "unityTaskIds": [
+        "B6_S1"
+      ]
+    },
+    {
+      "id": "rotate_crank_scene_6",
+      "title": "Rotate the crank",
+      "order": 33,
+      "writtenInstructions": "Rotate the crank to bring the exploration pod",
+      "sendAudioInstructionMp3Path": "audio/task-33.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot Beat 6 - Crank",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat6",
+          "objectPath": "Narrative/Beat 6/Teleport Hotspot Beat 6 - Crank/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "DivingBellPulley",
+          "label": "Crank handle",
+          "icon": "img/object_icons/task_33_object_1.png",
+          "sceneName": "Beat6",
+          "objectPath": "Narrative/Beat 6/DivingBellPulley/Interactable Crank/Handle",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-33-object-2.png",
+            "leftVideoUrl": "video/controller/task-33-object-2-left.mp4",
+            "rightVideoUrl": "video/controller/task-33-object-2-right.mp4"
+          }
+        },
+        {
+          "id": "Teleport Hotspot Beat 6 - Diving bell",
+          "label": "Teleport marker - 2",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat6",
+          "objectPath": "Narrative/Beat 6/Teleport Hotspot Beat 6 - Diving bell/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 3,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-33.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-33.png"
+      },
+      "unityTaskIds": [
+        "B6_S2",
+        "B6_S2_2",
+        "B6_S3",
+        "B6_S3_2",
+        "B6_S3_3"
+      ]
+    },
+    {
+      "id": "close_hatch_scene_7",
+      "title": "Close the hatch",
+      "order": 34,
+      "writtenInstructions": "Close the hatch to secure the exploration pod",
+      "sendAudioInstructionMp3Path": "audio/task-34.mp3",
+      "objects": [
+        {
+          "id": "DivingBellPulley",
+          "label": "Crank handle",
+          "icon": "img/object_icons/task_34_object_1.png",
+          "sceneName": "Beat7",
+          "objectPath": "Beat 7/B7GameObjects/DivingBell/DivingBell_v2/Door/BellWheelInteraction/Handle/wheel",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-34-object-1.png",
+            "leftVideoUrl": "video/controller/task-34-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-34-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-34.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-34.png"
+      },
+      "unityTaskIds": [
+        "B6_S4"
+      ]
+    },
+    {
+      "id": "thumbs_up_scene_7",
+      "title": "Give a thumbs up",
+      "order": 35,
+      "writtenInstructions": "Give a thumbs up to acknowledge the task",
+      "sendAudioInstructionMp3Path": "audio/task-35.mp3",
+      "objects": [
+        {
+          "id": "ThumbsupImage",
+          "label": "Thumbs up icon",
+          "icon": "img/object_icons/task_35_object_1.png",
+          "sceneName": "Beat7",
+          "objectPath": "Beat 7/B7GameObjects/DivingBell/StartDescentInstructionsCanvas/Image",
+          "controllerHints": {
+            "needsToPressCondition": "two_buttons_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip",
+                "trigger"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip",
+                "trigger"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-35-object-1.png",
+            "leftVideoUrl": "video/controller/task-35-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-35-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-35.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-35.png"
+      },
+      "unityTaskIds": [
+        "B6_S4_2"
+      ]
+    },
+    {
+      "id": "lever_scene_7",
+      "title": "Pull the lever",
+      "order": 36,
+      "writtenInstructions": "Pull the lever to descend",
+      "sendAudioInstructionMp3Path": "audio/task-36.mp3",
+      "objects": [
+        {
+          "id": "DivingBellPulley",
+          "label": "Exploration pod lever",
+          "icon": "img/object_icons/task_36_object_1.png",
+          "sceneName": "Beat7",
+          "objectPath": "Beat 7/B7GameObjects/DivingBell/DivingBell_v2/DescentInteractableLever/Handle/Lever",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "grip"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "grip"
+              ]
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-36-object-1.png",
+            "leftVideoUrl": "video/controller/task-36-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-36-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-36.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-36.png"
+      },
+      "unityTaskIds": [
+        "B6_S4_3_InitialDrop",
+        "B6_S4_3_BobbingInOcean"
+      ]
+    },
+    {
+      "id": "open_hatch_scene_7",
+      "title": "Open the hatch",
+      "order": 37,
+      "writtenInstructions": "Open the hatch",
+      "sendAudioInstructionMp3Path": "audio/task-37.mp3",
+      "objects": [
+        {
+          "id": "Door",
+          "label": "Door",
+          "icon": "img/object_icons/task_36_object_1.png",
+          "sceneName": "Beat7",
+          "objectPath": "Beat 7/B7GameObjects/DivingBell/DivingBell_v2/Door",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-37-object-1.png",
+            "leftVideoUrl": "video/controller/task-37-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-37-object-1-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-37.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-37.png"
+      },
+      "unityTaskIds": [
+        "B6_S4_3_OceanDescent"
+      ]
+    },
+    {
+      "id": "Teleport_to_treasure_scene_7",
+      "title": "Teleport and grab the treasure",
+      "order": 38,
+      "writtenInstructions": "Teleport to the treasure and grab the treasure",
+      "sendAudioInstructionMp3Path": "audio/task-38.mp3",
+      "objects": [
+        {
+          "id": "Teleport Hotspot S6_SeaBed",
+          "label": "Teleport marker - 1",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat7",
+          "objectPath": "Beat 7/B7GameObjects/Teleport Hotspot S6_SeaBed/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 1,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "Teleport Hotspot S6_Orb",
+          "label": "Teleport marker - 2",
+          "icon": "img/object_icons/teleportation.png",
+          "sceneName": "Beat7",
+          "objectPath": "Beat 7/B7GameObjects/Teleport Hotspot S6_Orb/FX_Teleport_Pin",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": [
+                "joystick"
+              ]
+            },
+            "right": {
+              "needsToPress": [
+                "joystick"
+              ]
+            }
+          },
+          "order": 2,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/teleport.png",
+            "leftVideoUrl": "video/controller/teleport-left.mov",
+            "rightVideoUrl": "video/controller/teleport-right.mov"
+          }
+        },
+        {
+          "id": "treasure",
+          "label": "Treasure",
+          "icon": "img/object_icons/treasure.png",
+          "sceneName": "Beat7",
+          "objectPath": "Beat 7/FX_SilverOrb/SilverOrb",
+          "controllerHints": {
+            "needsToPressCondition": "one_button_either_controller",
+            "left": {
+              "needsToPress": []
+            },
+            "right": {
+              "needsToPress": []
+            }
+          },
+          "order": 3,
+          "demoVideoPhysicalworld": {
+            "thumbnail": "video/controller/thumbnails/task-38-object-3.png",
+            "leftVideoUrl": "video/controller/task-38-object-3-left.mp4",
+            "rightVideoUrl": "video/controller/task-38-object-3-right.mp4"
+          }
+        }
+      ],
+      "demoVideoInworld": {
+        "file": "video/in-world-videos/task-38.mp4",
+        "thumbnail": "video/in-world-videos/thumbnails/task-38.png"
+      },
+      "unityTaskIds": [
+        "B6_S4_4",
+        "B6_S4_5"
+      ]
+    }
+  ]
+}
