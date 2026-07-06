@@ -995,7 +995,7 @@ function StoppedPage() {
   );
 }
 
-function CompletionPage({ completionCode, qualtricsUrl }) {
+function CompletionPage({ completionCode, qualtricsUrl, metricsSaveStatus, metricsSaveError, onRetrySave }) {
   return (
     <main className="page-shell">
       <section className="study-card completion-card">
@@ -1007,16 +1007,31 @@ function CompletionPage({ completionCode, qualtricsUrl }) {
           <strong>{completionCode}</strong>
         </div>
         <div className="completion-actions">
-          {qualtricsUrl ? (
+          {(metricsSaveStatus === 'idle' || metricsSaveStatus === 'saving') && (
+            <button className="primary-action" type="button" disabled>
+              Saving responses...
+            </button>
+          )}
+          {metricsSaveStatus === 'failed' && (
+            <>
+              <p className="save-error">Responses could not be saved. Please retry before continuing.</p>
+              <button className="primary-action" type="button" onClick={onRetrySave}>
+                Retry saving responses
+              </button>
+            </>
+          )}
+          {metricsSaveStatus === 'saved' && qualtricsUrl && (
             <a className="primary-action link-action" href={qualtricsUrl}>
               Continue to exit survey
             </a>
-          ) : (
+          )}
+          {metricsSaveStatus === 'saved' && !qualtricsUrl && (
             <button className="primary-action" type="button" disabled>
               Qualtrics URL not configured
             </button>
           )}
         </div>
+        {metricsSaveError && <p className="save-error-detail">{metricsSaveError}</p>}
       </section>
     </main>
   );
@@ -1047,6 +1062,8 @@ export default function App() {
   const [currentQuestionStartedAt, setCurrentQuestionStartedAt] = useState('');
   const [firstClick, setFirstClick] = useState(null);
   const savedSessionIdRef = useRef('');
+  const [metricsSaveStatus, setMetricsSaveStatus] = useState('idle');
+  const [metricsSaveError, setMetricsSaveError] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -1280,21 +1297,44 @@ export default function App() {
     ? makeQualtricsUrl(config, sessionPayload.participant_params, completionCode, sessionPayload.session_id)
     : '';
 
+  function retrySaveMetrics() {
+    savedSessionIdRef.current = '';
+    setMetricsSaveStatus('idle');
+    setMetricsSaveError('');
+  }
+
   useEffect(() => {
     if (!sessionPayload || !completionCode) return;
     if (sessionPayload.completion_status === 'in_progress') return;
-    if (savedSessionIdRef.current === `${sessionPayload.session_id}:${sessionPayload.completion_status}`) return;
+    const saveKey = `${sessionPayload.session_id}:${sessionPayload.completion_status}`;
+    if (savedSessionIdRef.current === saveKey) return;
 
-    savedSessionIdRef.current = `${sessionPayload.session_id}:${sessionPayload.completion_status}`;
+    let cancelled = false;
+    savedSessionIdRef.current = saveKey;
+    setMetricsSaveStatus('saving');
+    setMetricsSaveError('');
+
     saveSessionMetrics({
       ...sessionPayload,
       completion_code: completionCode,
       qualtrics_redirect_url: qualtricsUrl,
-    }, config?.metricsApiBaseUrl).catch((error) => {
-      console.warn('Unable to save MTurk session metrics', error);
-      savedSessionIdRef.current = '';
-    });
-  }, [completionCode, config?.metricsApiBaseUrl, qualtricsUrl, sessionPayload]);
+    }, config?.metricsApiBaseUrl)
+      .then(() => {
+        if (cancelled) return;
+        setMetricsSaveStatus('saved');
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        console.warn('Unable to save MTurk session metrics', error);
+        savedSessionIdRef.current = '';
+        setMetricsSaveStatus('failed');
+        setMetricsSaveError(error.message || 'Unknown save error');
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [completionCode, config?.metricsApiBaseUrl, metricsSaveStatus, qualtricsUrl, sessionPayload]);
 
   if (phase === 'loading') {
     return <main className="page-shell"><section className="study-card">Loading study...</section></main>;
@@ -1344,6 +1384,9 @@ export default function App() {
       <CompletionPage
         completionCode={completionCode}
         qualtricsUrl={qualtricsUrl}
+        metricsSaveStatus={metricsSaveStatus}
+        metricsSaveError={metricsSaveError}
+        onRetrySave={retrySaveMetrics}
       />
     );
   }

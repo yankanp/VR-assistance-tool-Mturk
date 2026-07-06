@@ -1394,3 +1394,14 @@ button:disabled {
   font-weight: 700;
   line-height: 1.25;
 }
+
+.save-error,
+.save-error-detail {
+  color: #ffd6d6;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.save-error-detail {
+  margin-top: 0.8rem;
+}
