@@ -7,15 +7,18 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "serve": "node server.js"
+    "serve": "node server.js",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.0.0",
-    "vite": "^5.0.0",
-    "typescript": "^5.0.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "three": "^0.179.1"
+    "three": "^0.179.1",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
 }
