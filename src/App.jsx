@@ -1083,13 +1083,9 @@ function CompletionPage({ completionCode, qualtricsUrl, metricsSaveStatus, metri
   return (
     <main className="page-shell">
       <section className="study-card completion-card">
-        <p className="eyebrow">Study Complete</p>
         <h1>Please continue to the exit survey.</h1>
+        <p>Your study responses have been saved. Please continue to the exit survey to receive your MTurk completion code.</p>
         <p>Your responses will not affect your compensation.</p>
-        <div className="completion-code">
-          <span>Completion code</span>
-          <strong>{completionCode}</strong>
-        </div>
         <div className="completion-actions">
           {(metricsSaveStatus === 'idle' || metricsSaveStatus === 'saving') && (
             <button className="primary-action" type="button" disabled>
@@ -1125,7 +1121,6 @@ function ThankYouPage() {
   return (
     <main className="page-shell">
       <section className="study-card completion-card">
-        <p className="eyebrow">Thank You</p>
         <h1>Thank you for your time.</h1>
         <p>The study has ended. You may close this page.</p>
       </section>
@@ -1418,7 +1413,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [completionCode, config?.metricsApiBaseUrl, metricsSaveStatus, qualtricsUrl, sessionPayload]);
+  }, [completionCode, config?.metricsApiBaseUrl, qualtricsUrl, sessionPayload]);
 
   if (phase === 'loading') {
     return <main className="page-shell"><section className="study-card">Loading study...</section></main>;
