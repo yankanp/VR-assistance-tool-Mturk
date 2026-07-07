@@ -55,6 +55,7 @@ function getParticipantParams(payload) {
     workerId: payload.workerId || payload.participant_params?.workerId || '',
     assignmentId: payload.assignmentId || payload.participant_params?.assignmentId || '',
     hitId: payload.hitId || payload.participant_params?.hitId || '',
+    turkSubmitTo: payload.turkSubmitTo || payload.participant_params?.turkSubmitTo || '',
     participant_id: payload.participant_id || payload.participant_params?.participant_id || '',
   };
 }
@@ -188,6 +189,7 @@ function normalizeSession(session) {
     workerId: participantParams.workerId || '',
     assignmentId: participantParams.assignmentId || '',
     hitId: participantParams.hitId || '',
+    turkSubmitTo: participantParams.turkSubmitTo || '',
     completion_status: session.completion_status || '',
     attention_passed: session.attention_passed ?? '',
     completion_code: session.completion_code || '',
@@ -227,6 +229,7 @@ function flattenSessionRows(rawSession) {
     workerId: session.workerId || session.participant_params?.workerId || '',
     assignmentId: session.assignmentId || session.participant_params?.assignmentId || '',
     hitId: session.hitId || session.participant_params?.hitId || '',
+    turkSubmitTo: session.turkSubmitTo || session.participant_params?.turkSubmitTo || '',
     completion_status: session.completion_status || '',
     attention_passed: session.attention_passed ?? '',
     completion_code: session.completion_code || '',
@@ -269,6 +272,7 @@ function buildExcelXml(rows) {
     'workerId',
     'assignmentId',
     'hitId',
+    'turkSubmitTo',
     'completion_status',
     'attention_passed',
     'completion_code',

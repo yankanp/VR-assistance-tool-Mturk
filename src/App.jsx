@@ -33,8 +33,13 @@ function getUrlParams() {
     workerId: params.get('workerId') ?? '',
     assignmentId: params.get('assignmentId') ?? '',
     hitId: params.get('hitId') ?? '',
+    turkSubmitTo: params.get('turkSubmitTo') ?? '',
     participant_id: params.get('participant_id') ?? '',
   };
+}
+
+function isMturkPreview(participantParams) {
+  return participantParams?.assignmentId === 'ASSIGNMENT_ID_NOT_AVAILABLE';
 }
 
 function normalizeAnswer(value) {
@@ -57,6 +62,7 @@ function makeQualtricsUrl(config, participantParams, completionCode, sessionId) 
     if (participantParams.workerId) url.searchParams.set('workerId', participantParams.workerId);
     if (participantParams.assignmentId) url.searchParams.set('assignmentId', participantParams.assignmentId);
     if (participantParams.hitId) url.searchParams.set('hitId', participantParams.hitId);
+    if (participantParams.turkSubmitTo) url.searchParams.set('turkSubmitTo', participantParams.turkSubmitTo);
     url.searchParams.set('session_id', sessionId);
     url.searchParams.set('completion_code', completionCode);
     return url.toString();
@@ -82,7 +88,12 @@ async function saveSessionMetrics(payload, metricsApiBaseUrl = '') {
 }
 
 function hasRequiredMturkParams(participantParams) {
-  return Boolean(participantParams?.workerId && participantParams?.assignmentId && participantParams?.hitId);
+  return Boolean(
+    participantParams?.workerId
+    && participantParams?.assignmentId
+    && participantParams?.assignmentId !== 'ASSIGNMENT_ID_NOT_AVAILABLE'
+    && participantParams?.hitId,
+  );
 }
 
 function durationMs(startedAt, endedAt) {
@@ -116,6 +127,7 @@ function buildMetricsPayload(session, config) {
     workerId: participantParams.workerId || '',
     assignmentId: participantParams.assignmentId || '',
     hitId: participantParams.hitId || '',
+    turkSubmitTo: participantParams.turkSubmitTo || '',
     completion_status: session.completion_status,
     attention_passed: session.attention_passed,
     completion_code: session.completion_code || '',
@@ -1213,6 +1225,20 @@ function MturkRequiredPage() {
   );
 }
 
+function MturkPreviewPage() {
+  return (
+    <main className="page-shell">
+      <section className="study-card completion-card">
+        <h1>Please accept the HIT before starting the study.</h1>
+        <p>
+          You are currently previewing this HIT. After you accept it on MTurk, this study will open
+          with your assignment information and you can begin.
+        </p>
+      </section>
+    </main>
+  );
+}
+
 export default function App() {
   const [config, setConfig] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -1241,7 +1267,16 @@ export default function App() {
       fetch(assetUrl('task_metadata.json')).then((response) => response.json()),
     ])
       .then(([loadedConfig, loadedQuestions, loadedAttentionChecks, loadedMetadata]) => {
-        if (loadedConfig.requireMturkParams && !hasRequiredMturkParams(getUrlParams())) {
+        const participantParams = getUrlParams();
+        if (loadedConfig.requireMturkParams && isMturkPreview(participantParams)) {
+          setConfig(loadedConfig);
+          setQuestions(loadedQuestions);
+          setAttentionChecks(loadedAttentionChecks);
+          setMetadata(loadedMetadata);
+          setPhase('mturk_preview');
+          return;
+        }
+        if (loadedConfig.requireMturkParams && !hasRequiredMturkParams(participantParams)) {
           setConfig(loadedConfig);
           setQuestions(loadedQuestions);
           setAttentionChecks(loadedAttentionChecks);
@@ -1551,6 +1586,10 @@ export default function App() {
 
   if (phase === 'mturk_required') {
     return <MturkRequiredPage />;
+  }
+
+  if (phase === 'mturk_preview') {
+    return <MturkPreviewPage />;
   }
 
   if (phase === 'consent') return <LandingPage onAccept={acceptConsent} onDecline={declineConsent} />;
