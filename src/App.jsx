@@ -1209,6 +1209,7 @@ export default function App() {
   const [selectedRegionId, setSelectedRegionId] = useState('');
   const [currentQuestionStartedAt, setCurrentQuestionStartedAt] = useState('');
   const [firstClick, setFirstClick] = useState(null);
+  const [currentQuestionClicks, setCurrentQuestionClicks] = useState([]);
   const savedSessionIdRef = useRef('');
   const phaseStartedAtRef = useRef('');
   const [metricsSaveStatus, setMetricsSaveStatus] = useState('idle');
