@@ -47,11 +47,6 @@ function buildQuestionFlow(questions) {
     .map((question) => ({ type: 'main', id: question.question_id, item: question }));
 }
 
-function getCompletionCode(config, sessionId) {
-  const suffix = sessionId.replace(/[^a-zA-Z0-9]/g, '').slice(-6).toUpperCase();
-  return `${config.completionCodePrefix ?? 'VRHELP'}-${suffix}`;
-}
-
 function makeQualtricsUrl(config, participantParams, completionCode, sessionId) {
   const base = config.qualtricsRedirectUrl ?? '';
   if (!base) return '';
@@ -85,6 +80,11 @@ async function saveSessionMetrics(payload, metricsApiBaseUrl = '') {
 
   return response.json();
 }
+
+function hasRequiredMturkParams(participantParams) {
+  return Boolean(participantParams?.workerId && participantParams?.assignmentId && participantParams?.hitId);
+}
+
 function durationMs(startedAt, endedAt) {
   if (!startedAt || !endedAt) return '';
   const duration = Date.parse(endedAt) - Date.parse(startedAt);
@@ -98,7 +98,7 @@ function compactClick(click) {
   };
 }
 
-function buildMetricsPayload(session, config, completionCode, qualtricsUrl) {
+function buildMetricsPayload(session, config) {
   const participantParams = session.participant_params ?? {};
   const timing = session.timing ?? {};
   const attentionChecks = session.attention_checks ?? [];
@@ -117,8 +117,10 @@ function buildMetricsPayload(session, config, completionCode, qualtricsUrl) {
     assignmentId: participantParams.assignmentId || '',
     hitId: participantParams.hitId || '',
     completion_status: session.completion_status,
-    completion_code: completionCode,
-    qualtrics_redirect_url: qualtricsUrl,
+    attention_passed: session.attention_passed,
+    completion_code: session.completion_code || '',
+    completion_code_prefix: config?.completionCodePrefix ?? 'VRHELP',
+    qualtrics_redirect_url: session.qualtrics_redirect_url || '',
     study_name: config?.studyName ?? '',
     generated_at: getIsoTimestamp(),
     attention_checks: attentionChecks.map((check) => ({
@@ -1148,7 +1150,7 @@ function StoppedPage() {
   );
 }
 
-function CompletionPage({ completionCode, qualtricsUrl, metricsSaveStatus, metricsSaveError, onRetrySave }) {
+function CompletionPage({ qualtricsUrl, metricsSaveStatus, metricsSaveError, onRetrySave }) {
   return (
     <main className="page-shell">
       <section className="study-card completion-card">
@@ -1197,6 +1199,20 @@ function ThankYouPage() {
   );
 }
 
+function MturkRequiredPage() {
+  return (
+    <main className="page-shell">
+      <section className="study-card completion-card">
+        <h1>Please open this study from the MTurk HIT page.</h1>
+        <p>
+          This study requires a valid MTurk worker ID, assignment ID, and HIT ID. Please return to
+          MTurk and use the survey link shown inside the HIT.
+        </p>
+      </section>
+    </main>
+  );
+}
+
 export default function App() {
   const [config, setConfig] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -1214,6 +1230,8 @@ export default function App() {
   const phaseStartedAtRef = useRef('');
   const [metricsSaveStatus, setMetricsSaveStatus] = useState('idle');
   const [metricsSaveError, setMetricsSaveError] = useState('');
+  const [backendCompletionCode, setBackendCompletionCode] = useState('');
+  const [backendQualtricsUrl, setBackendQualtricsUrl] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -1223,6 +1241,14 @@ export default function App() {
       fetch(assetUrl('task_metadata.json')).then((response) => response.json()),
     ])
       .then(([loadedConfig, loadedQuestions, loadedAttentionChecks, loadedMetadata]) => {
+        if (loadedConfig.requireMturkParams && !hasRequiredMturkParams(getUrlParams())) {
+          setConfig(loadedConfig);
+          setQuestions(loadedQuestions);
+          setAttentionChecks(loadedAttentionChecks);
+          setMetadata(loadedMetadata);
+          setPhase('mturk_required');
+          return;
+        }
         setConfig(loadedConfig);
         setQuestions(loadedQuestions);
         setAttentionChecks(loadedAttentionChecks);
@@ -1460,25 +1486,21 @@ export default function App() {
     setPhase(status === 'attention_failed' ? 'stopped' : 'complete');
   }
 
-  const completionCode = session && config
-    ? getCompletionCode(config, session.session_id)
-    : '';
-  const qualtricsUrl = session && config
-    ? makeQualtricsUrl(config, session.participant_params, completionCode, session.session_id)
-    : '';
   const sessionPayload = useMemo(() => {
-    if (!session || !config || !completionCode) return null;
-    return buildMetricsPayload(session, config, completionCode, qualtricsUrl);
-  }, [completionCode, config, qualtricsUrl, session]);
+    if (!session || !config) return null;
+    return buildMetricsPayload(session, config);
+  }, [config, session]);
 
   function retrySaveMetrics() {
     savedSessionIdRef.current = '';
     setMetricsSaveStatus('idle');
     setMetricsSaveError('');
+    setBackendCompletionCode('');
+    setBackendQualtricsUrl('');
   }
 
   useEffect(() => {
-    if (!sessionPayload || !completionCode) return;
+    if (!sessionPayload) return;
     if (sessionPayload.completion_status === 'in_progress') return;
     const saveKey = `${sessionPayload.session_id}:${sessionPayload.completion_status}`;
     if (savedSessionIdRef.current === saveKey) return;
@@ -1489,8 +1511,14 @@ export default function App() {
     setMetricsSaveError('');
 
     saveSessionMetrics(sessionPayload, config?.metricsApiBaseUrl)
-      .then(() => {
+      .then((result) => {
         if (cancelled) return;
+        const returnedCode = result.completion_code || '';
+        const returnedQualtricsUrl = returnedCode
+          ? makeQualtricsUrl(config, sessionPayload, returnedCode, sessionPayload.session_id)
+          : '';
+        setBackendCompletionCode(returnedCode);
+        setBackendQualtricsUrl(returnedQualtricsUrl);
         setMetricsSaveStatus('saved');
       })
       .catch((error) => {
@@ -1504,7 +1532,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [completionCode, config?.metricsApiBaseUrl, qualtricsUrl, sessionPayload]);
+  }, [config, config?.metricsApiBaseUrl, sessionPayload]);
 
   if (phase === 'loading') {
     return <main className="page-shell"><section className="study-card">Loading study...</section></main>;
@@ -1519,6 +1547,10 @@ export default function App() {
         </section>
       </main>
     );
+  }
+
+  if (phase === 'mturk_required') {
+    return <MturkRequiredPage />;
   }
 
   if (phase === 'consent') return <LandingPage onAccept={acceptConsent} onDecline={declineConsent} />;
@@ -1552,8 +1584,7 @@ export default function App() {
   if (phase === 'complete') {
     return (
       <CompletionPage
-        completionCode={completionCode}
-        qualtricsUrl={qualtricsUrl}
+        qualtricsUrl={backendQualtricsUrl}
         metricsSaveStatus={metricsSaveStatus}
         metricsSaveError={metricsSaveError}
         onRetrySave={retrySaveMetrics}

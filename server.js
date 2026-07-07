@@ -1,4 +1,5 @@
 import http from 'node:http';
+import { randomBytes } from 'node:crypto';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { createReadStream, existsSync } from 'node:fs';
 import path from 'node:path';
@@ -49,6 +50,51 @@ function sanitizeFilePart(value) {
   return String(value || 'unknown').replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 120);
 }
 
+function getParticipantParams(payload) {
+  return {
+    workerId: payload.workerId || payload.participant_params?.workerId || '',
+    assignmentId: payload.assignmentId || payload.participant_params?.assignmentId || '',
+    hitId: payload.hitId || payload.participant_params?.hitId || '',
+    participant_id: payload.participant_id || payload.participant_params?.participant_id || '',
+  };
+}
+
+function hasValidMturkParams(payload) {
+  const params = getParticipantParams(payload);
+  return Boolean(params.workerId && params.assignmentId && params.hitId);
+}
+
+function isCompletedPayloadValid(payload) {
+  return payload.completion_status === 'completed'
+    && payload.attention_passed === true
+    && hasValidMturkParams(payload)
+    && Array.isArray(payload.main_questions)
+    && payload.main_questions.length > 0;
+}
+
+function createCompletionCode(prefix = 'VRHELP') {
+  const partA = randomBytes(3).toString('hex').toUpperCase();
+  const partB = randomBytes(3).toString('hex').toUpperCase();
+  return `${prefix}-${partA}-${partB}`;
+}
+
+async function findExistingCompletionCode(sessionId) {
+  if (!sessionId || !existsSync(dataDir)) return '';
+  const files = (await readdir(dataDir)).filter((file) => file.endsWith('.json'));
+  for (const file of files) {
+    try {
+      const raw = await readFile(path.join(dataDir, file), 'utf8');
+      const saved = JSON.parse(raw);
+      if (saved.session_id === sessionId && saved.completion_code) {
+        return saved.completion_code;
+      }
+    } catch {
+      // Ignore malformed session files so one bad file does not block study completion.
+    }
+  }
+  return '';
+}
+
 function readRequestBody(request, limitBytes = 5 * 1024 * 1024) {
   return new Promise((resolve, reject) => {
     let body = '';
@@ -69,15 +115,36 @@ async function saveSession(request, response) {
   try {
     const body = await readRequestBody(request);
     const payload = JSON.parse(body);
+    const completionPrefix = payload.completion_code_prefix || 'VRHELP';
+
+    if (payload.completion_status === 'completed' && !isCompletedPayloadValid(payload)) {
+      sendJson(response, 400, {
+        ok: false,
+        error: 'Completed sessions require MTurk identifiers, passed attention checks, and main-study responses.',
+      });
+      return;
+    }
+
+    const payloadToSave = {
+      ...payload,
+      completion_code: payload.completion_status === 'completed'
+        ? payload.completion_code || await findExistingCompletionCode(payload.session_id) || createCompletionCode(completionPrefix)
+        : '',
+    };
+
     const sessionId = sanitizeFilePart(payload.session_id);
-    const workerId = sanitizeFilePart(payload.workerId || payload.participant_id || payload.participant_params?.workerId || payload.participant_params?.participant_id);
+    const workerId = sanitizeFilePart(payloadToSave.workerId || payloadToSave.participant_id || payloadToSave.participant_params?.workerId || payloadToSave.participant_params?.participant_id);
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `${timestamp}_${workerId}_${sessionId}.json`;
 
     await mkdir(dataDir, { recursive: true });
-    await writeFile(path.join(dataDir, filename), JSON.stringify(payload, null, 2), 'utf8');
+    await writeFile(path.join(dataDir, filename), JSON.stringify(payloadToSave, null, 2), 'utf8');
 
-    sendJson(response, 200, { ok: true, filename });
+    sendJson(response, 200, {
+      ok: true,
+      filename,
+      completion_code: payloadToSave.completion_code,
+    });
   } catch (error) {
     sendJson(response, 400, { ok: false, error: error.message });
   }
@@ -122,6 +189,7 @@ function normalizeSession(session) {
     assignmentId: participantParams.assignmentId || '',
     hitId: participantParams.hitId || '',
     completion_status: session.completion_status || '',
+    attention_passed: session.attention_passed ?? '',
     completion_code: session.completion_code || '',
     attention_checks: (session.attention_checks ?? []).map((check) => ({
       attention_question_id: check.check_id || check.attention_question_id || '',
@@ -159,6 +227,9 @@ function flattenSessionRows(rawSession) {
     workerId: session.workerId || session.participant_params?.workerId || '',
     assignmentId: session.assignmentId || session.participant_params?.assignmentId || '',
     hitId: session.hitId || session.participant_params?.hitId || '',
+    completion_status: session.completion_status || '',
+    attention_passed: session.attention_passed ?? '',
+    completion_code: session.completion_code || '',
     attention_question_ids: joinValues(attentionChecks.map((check) => check.attention_question_id || check.check_id)),
     attention_answers: joinValues(attentionChecks.map((check) => check.answer)),
     attention_correct: joinValues(attentionChecks.map((check) => String(check.is_correct))),
@@ -198,6 +269,9 @@ function buildExcelXml(rows) {
     'workerId',
     'assignmentId',
     'hitId',
+    'completion_status',
+    'attention_passed',
+    'completion_code',
     'attention_question_ids',
     'attention_answers',
     'attention_correct',
