@@ -1210,6 +1210,7 @@ export default function App() {
   const [currentQuestionStartedAt, setCurrentQuestionStartedAt] = useState('');
   const [firstClick, setFirstClick] = useState(null);
   const savedSessionIdRef = useRef('');
+  const phaseStartedAtRef = useRef('');
   const [metricsSaveStatus, setMetricsSaveStatus] = useState('idle');
   const [metricsSaveError, setMetricsSaveError] = useState('');
 
