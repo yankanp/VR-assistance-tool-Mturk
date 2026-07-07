@@ -85,6 +85,58 @@ async function saveSessionMetrics(payload, metricsApiBaseUrl = '') {
 
   return response.json();
 }
+function durationMs(startedAt, endedAt) {
+  if (!startedAt || !endedAt) return '';
+  const duration = Date.parse(endedAt) - Date.parse(startedAt);
+  return Number.isFinite(duration) && duration >= 0 ? duration : '';
+}
+
+function compactClick(click) {
+  return {
+    region_id: click.region_id || click.target_id || '',
+    timestamp: click.timestamp || '',
+  };
+}
+
+function buildMetricsPayload(session, config, completionCode, qualtricsUrl) {
+  const participantParams = session.participant_params ?? {};
+  const timing = session.timing ?? {};
+  const attentionChecks = session.attention_checks ?? [];
+  const mainQuestions = (session.responses ?? []).map((response) => ({
+    question_asked_id: response.question_id,
+    all_regions_clicked_with_timestamp: (response.clicks ?? []).map(compactClick),
+    final_answer_selected: response.selected_region_id,
+    is_correct: response.is_correct,
+    total_time_taken_to_answer_ms: response.response_time_ms,
+  }));
+
+  return {
+    session_id: session.session_id,
+    participant_id: participantParams.participant_id || participantParams.workerId || session.session_id,
+    workerId: participantParams.workerId || '',
+    assignmentId: participantParams.assignmentId || '',
+    hitId: participantParams.hitId || '',
+    completion_status: session.completion_status,
+    completion_code: completionCode,
+    qualtrics_redirect_url: qualtricsUrl,
+    study_name: config?.studyName ?? '',
+    generated_at: getIsoTimestamp(),
+    attention_checks: attentionChecks.map((check) => ({
+      attention_question_id: check.check_id,
+      answer: check.answer,
+      is_correct: check.is_correct,
+      started_at: check.started_at,
+      ended_at: check.ended_at,
+    })),
+    timing: {
+      informed_consent_duration_ms: durationMs(timing.informed_consent_started_at, timing.informed_consent_ended_at),
+      attention_checks_total_duration_ms: durationMs(timing.attention_checks_started_at, timing.attention_checks_ended_at),
+      introduction_duration_ms: durationMs(timing.introduction_started_at, timing.introduction_ended_at),
+      actual_study_total_duration_ms: durationMs(timing.actual_study_started_at, timing.actual_study_ended_at),
+    },
+    main_questions: mainQuestions,
+  };
+}
 
 function LandingPage({ onAccept, onDecline }) {
   return (
@@ -242,9 +294,15 @@ function IntroPage({ onNext }) {
 function AttentionGatePage({ checks, onSubmit }) {
   const [answers, setAnswers] = useState({});
   const [currentCheckIndex, setCurrentCheckIndex] = useState(0);
+  const [answeredResults, setAnsweredResults] = useState([]);
+  const [currentCheckStartedAt, setCurrentCheckStartedAt] = useState(getIsoTimestamp());
   const currentCheck = checks[currentCheckIndex];
   const currentAnswer = currentCheck ? answers[currentCheck.check_id] ?? '' : '';
   const canSubmit = String(currentAnswer).trim().length > 0;
+
+  useEffect(() => {
+    setCurrentCheckStartedAt(getIsoTimestamp());
+  }, [currentCheckIndex]);
 
   function setAnswer(checkId, answer) {
     setAnswers((previous) => ({ ...previous, [checkId]: answer }));
@@ -252,16 +310,27 @@ function AttentionGatePage({ checks, onSubmit }) {
 
   function handleCurrentSubmit() {
     if (!currentCheck) return;
+    const answeredAt = getIsoTimestamp();
     const nextAnswers = { ...answers, [currentCheck.check_id]: currentAnswer };
-    const answeredChecks = checks.slice(0, currentCheckIndex + 1);
     const isCorrect = normalizeAnswer(currentAnswer) === normalizeAnswer(currentCheck.correct_answer);
+    const currentResult = {
+      check_id: currentCheck.check_id,
+      prompt: currentCheck.prompt,
+      answer: currentAnswer,
+      correct_answer: currentCheck.correct_answer,
+      is_correct: isCorrect,
+      started_at: currentCheckStartedAt,
+      ended_at: answeredAt,
+    };
+    const nextResults = [...answeredResults, currentResult];
 
     if (!isCorrect || currentCheckIndex === checks.length - 1) {
-      onSubmit(nextAnswers, answeredChecks);
+      onSubmit(nextResults);
       return;
     }
 
     setAnswers(nextAnswers);
+    setAnsweredResults(nextResults);
     setCurrentCheckIndex((index) => index + 1);
   }
 
@@ -1174,10 +1243,15 @@ export default function App() {
   const answeredMainQuestions = session?.responses?.length ?? 0;
 
   useEffect(() => {
+    phaseStartedAtRef.current = getIsoTimestamp();
+  }, [phase]);
+
+  useEffect(() => {
     if (phase !== 'main') return;
     setCurrentQuestionStartedAt(getIsoTimestamp());
     setSelectedRegionId('');
     setFirstClick(null);
+    setCurrentQuestionClicks([]);
   }, [phase, flowIndex]);
 
   useEffect(() => {
@@ -1199,6 +1273,7 @@ export default function App() {
       attention_failure_count: 0,
       responses: [],
       attention_checks: [],
+      timing: {},
       events: [
         { type: 'session_started', timestamp: getIsoTimestamp(), participant_params: participantParams },
       ],
@@ -1206,7 +1281,17 @@ export default function App() {
   }
 
   function acceptConsent() {
-    setSession(createBaseSession());
+    const now = getIsoTimestamp();
+    const baseSession = createBaseSession();
+    setSession({
+      ...baseSession,
+      timing: {
+        ...baseSession.timing,
+        informed_consent_started_at: phaseStartedAtRef.current || baseSession.started_at,
+        informed_consent_ended_at: now,
+        attention_checks_started_at: now,
+      },
+    });
     setPhase('attention_gate');
   }
 
@@ -1223,6 +1308,15 @@ export default function App() {
   }
 
   function startQuestions() {
+    const now = getIsoTimestamp();
+    setSession((previous) => ({
+      ...previous,
+      timing: {
+        ...previous.timing,
+        introduction_ended_at: now,
+        actual_study_started_at: now,
+      },
+    }));
     setFlowIndex(0);
     setPhase('main');
   }
@@ -1244,6 +1338,11 @@ export default function App() {
         offset_y: Math.round(event?.nativeEvent?.offsetY ?? 0),
       });
     }
+    const clickRecord = {
+      region_id: regionId,
+      timestamp,
+    };
+    setCurrentQuestionClicks((previous) => [...previous, clickRecord]);
     setSelectedRegionId(regionId);
     recordEvent({
       type: 'dashboard_region_clicked',
@@ -1283,6 +1382,7 @@ export default function App() {
           final_click_timestamp: answeredAt,
           question_started_at: currentQuestionStartedAt,
           response_time_ms: Date.parse(answeredAt) - Date.parse(currentQuestionStartedAt),
+          clicks: currentQuestionClicks,
           is_correct: isCorrect,
           screen_variant: question.screen_variant,
         },
@@ -1302,19 +1402,8 @@ export default function App() {
     continueFlow();
   }
 
-  function handleAttentionGateSubmit(answers, submittedChecks = attentionChecks) {
+  function handleAttentionGateSubmit(results) {
     const answeredAt = getIsoTimestamp();
-    const results = submittedChecks.map((check) => {
-      const answer = answers[check.check_id] ?? '';
-      return {
-        check_id: check.check_id,
-        prompt: check.prompt,
-        answer,
-        correct_answer: check.correct_answer,
-        is_correct: normalizeAnswer(answer) === normalizeAnswer(check.correct_answer),
-        answered_at: answeredAt,
-      };
-    });
     const failureCount = results.filter((result) => !result.is_correct).length;
     setSession((previous) => {
       const endedAt = failureCount > 0 ? getIsoTimestamp() : '';
@@ -1325,6 +1414,11 @@ export default function App() {
         attention_failure_count: failureCount,
         attention_checks: results,
         attention_passed: failureCount === 0,
+        timing: {
+          ...previous.timing,
+          attention_checks_ended_at: answeredAt,
+          ...(failureCount === 0 ? { introduction_started_at: answeredAt } : {}),
+        },
         events: [
           ...previous.events,
           {
@@ -1352,6 +1446,10 @@ export default function App() {
       ended_at: endedAt,
       completion_status: status,
       attention_passed: status !== 'attention_failed',
+      timing: {
+        ...previous.timing,
+        actual_study_ended_at: endedAt,
+      },
       events: [
         ...previous.events,
         { type: 'session_finished', timestamp: endedAt, completion_status: status },
@@ -1360,21 +1458,16 @@ export default function App() {
     setPhase(status === 'attention_failed' ? 'stopped' : 'complete');
   }
 
+  const completionCode = session && config
+    ? getCompletionCode(config, session.session_id)
+    : '';
+  const qualtricsUrl = session && config
+    ? makeQualtricsUrl(config, session.participant_params, completionCode, session.session_id)
+    : '';
   const sessionPayload = useMemo(() => {
-    if (!session) return null;
-    return {
-      ...session,
-      study_name: config?.studyName ?? '',
-      generated_at: getIsoTimestamp(),
-    };
-  }, [config?.studyName, session]);
-
-  const completionCode = sessionPayload && config
-    ? getCompletionCode(config, sessionPayload.session_id)
-    : '';
-  const qualtricsUrl = sessionPayload && config
-    ? makeQualtricsUrl(config, sessionPayload.participant_params, completionCode, sessionPayload.session_id)
-    : '';
+    if (!session || !config || !completionCode) return null;
+    return buildMetricsPayload(session, config, completionCode, qualtricsUrl);
+  }, [completionCode, config, qualtricsUrl, session]);
 
   function retrySaveMetrics() {
     savedSessionIdRef.current = '';
@@ -1393,11 +1486,7 @@ export default function App() {
     setMetricsSaveStatus('saving');
     setMetricsSaveError('');
 
-    saveSessionMetrics({
-      ...sessionPayload,
-      completion_code: completionCode,
-      qualtrics_redirect_url: qualtricsUrl,
-    }, config?.metricsApiBaseUrl)
+    saveSessionMetrics(sessionPayload, config?.metricsApiBaseUrl)
       .then(() => {
         if (cancelled) return;
         setMetricsSaveStatus('saved');

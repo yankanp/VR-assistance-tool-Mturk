@@ -70,7 +70,7 @@ async function saveSession(request, response) {
     const body = await readRequestBody(request);
     const payload = JSON.parse(body);
     const sessionId = sanitizeFilePart(payload.session_id);
-    const workerId = sanitizeFilePart(payload.participant_params?.workerId || payload.participant_params?.participant_id);
+    const workerId = sanitizeFilePart(payload.workerId || payload.participant_id || payload.participant_params?.workerId || payload.participant_params?.participant_id);
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `${timestamp}_${workerId}_${sessionId}.json`;
 
@@ -92,54 +92,102 @@ function xmlEscape(value) {
 }
 
 function getParticipantId(session) {
-  return session.participant_params?.participant_id
+  return session.participant_id
+    || session.participant_params?.participant_id
+    || session.workerId
     || session.participant_params?.workerId
     || session.session_id
     || '';
 }
 
-function flattenSessionRows(session) {
-  const participantId = getParticipantId(session);
-  const base = {
+function joinValues(values) {
+  return values.filter((value) => value !== undefined && value !== null && value !== '').join('; ');
+}
+
+function formatClicks(clicks = []) {
+  return clicks
+    .map((click) => `${click.region_id || click.target_id || ''} @ ${click.timestamp || ''}`.trim())
+    .filter(Boolean)
+    .join('; ');
+}
+
+function normalizeSession(session) {
+  if (Array.isArray(session.main_questions)) return session;
+
+  const participantParams = session.participant_params ?? {};
+  return {
     session_id: session.session_id,
-    participant_id: participantId,
-    workerId: session.participant_params?.workerId || '',
-    assignmentId: session.participant_params?.assignmentId || '',
-    hitId: session.participant_params?.hitId || '',
-    completion_status: session.completion_status,
-    attention_passed: session.attention_passed,
-    attention_failure_count: session.attention_failure_count,
-    started_at: session.started_at,
-    ended_at: session.ended_at,
+    participant_id: participantParams.participant_id || participantParams.workerId || session.session_id,
+    workerId: participantParams.workerId || '',
+    assignmentId: participantParams.assignmentId || '',
+    hitId: participantParams.hitId || '',
+    completion_status: session.completion_status || '',
     completion_code: session.completion_code || '',
+    attention_checks: (session.attention_checks ?? []).map((check) => ({
+      attention_question_id: check.check_id || check.attention_question_id || '',
+      answer: check.answer || '',
+      is_correct: check.is_correct ?? '',
+      started_at: check.started_at || '',
+      ended_at: check.ended_at || check.answered_at || '',
+    })),
+    timing: {
+      informed_consent_duration_ms: session.timing?.informed_consent_duration_ms || '',
+      attention_checks_total_duration_ms: session.timing?.attention_checks_total_duration_ms || '',
+      introduction_duration_ms: session.timing?.introduction_duration_ms || '',
+      actual_study_total_duration_ms: session.timing?.actual_study_total_duration_ms || '',
+    },
+    main_questions: (session.responses ?? []).map((response) => ({
+      question_asked_id: response.question_id || '',
+      all_regions_clicked_with_timestamp: (response.clicks ?? []).map((click) => ({
+        region_id: click.region_id || '',
+        timestamp: click.timestamp || '',
+      })),
+      final_answer_selected: response.selected_region_id || '',
+      is_correct: response.is_correct ?? '',
+      total_time_taken_to_answer_ms: response.response_time_ms || '',
+    })),
+  };
+}
+
+function flattenSessionRows(rawSession) {
+  const session = normalizeSession(rawSession);
+  const attentionChecks = session.attention_checks ?? [];
+  const timing = session.timing ?? {};
+  const base = {
+    session_id: session.session_id || '',
+    participant_id: getParticipantId(session),
+    workerId: session.workerId || session.participant_params?.workerId || '',
+    assignmentId: session.assignmentId || session.participant_params?.assignmentId || '',
+    hitId: session.hitId || session.participant_params?.hitId || '',
+    attention_question_ids: joinValues(attentionChecks.map((check) => check.attention_question_id || check.check_id)),
+    attention_answers: joinValues(attentionChecks.map((check) => check.answer)),
+    attention_correct: joinValues(attentionChecks.map((check) => String(check.is_correct))),
+    attention_started_times: joinValues(attentionChecks.map((check) => check.started_at)),
+    attention_ended_times: joinValues(attentionChecks.map((check) => check.ended_at)),
+    informed_consent_duration_ms: timing.informed_consent_duration_ms || '',
+    attention_checks_total_duration_ms: timing.attention_checks_total_duration_ms || '',
+    introduction_duration_ms: timing.introduction_duration_ms || '',
+    actual_study_total_duration_ms: timing.actual_study_total_duration_ms || '',
   };
 
-  if (!session.responses?.length) {
+  if (!session.main_questions?.length) {
     return [{
       ...base,
-      question_id: '',
-      prompt: '',
-      target_feature: '',
-      selected_region_id: '',
-      first_click_region_id: '',
+      question_asked_id: '',
+      all_regions_clicked_with_timestamp: '',
+      final_answer_selected: '',
       is_correct: '',
-      response_time_ms: '',
-      question_started_at: '',
-      final_click_timestamp: '',
+      total_time_taken_to_answer_ms: '',
     }];
   }
 
-  return session.responses.map((response) => ({
+  return session.main_questions.map((question) => ({
     ...base,
-    question_id: response.question_id,
-    prompt: response.prompt,
-    target_feature: response.target_feature,
-    selected_region_id: response.selected_region_id,
-    first_click_region_id: response.first_click_region_id,
-    is_correct: response.is_correct,
-    response_time_ms: response.response_time_ms,
-    question_started_at: response.question_started_at,
-    final_click_timestamp: response.final_click_timestamp,
+    question_asked_id: question.question_asked_id || '',
+    all_regions_clicked_with_timestamp: formatClicks(question.all_regions_clicked_with_timestamp),
+    final_answer_selected: question.final_answer_selected || '',
+    is_correct: question.is_correct ?? '',
+    total_time_taken_to_answer_ms: question.total_time_taken_to_answer_ms || '',
   }));
 }
 
@@ -150,21 +198,20 @@ function buildExcelXml(rows) {
     'workerId',
     'assignmentId',
     'hitId',
-    'completion_status',
-    'attention_passed',
-    'attention_failure_count',
-    'started_at',
-    'ended_at',
-    'completion_code',
-    'question_id',
-    'prompt',
-    'target_feature',
-    'selected_region_id',
-    'first_click_region_id',
+    'attention_question_ids',
+    'attention_answers',
+    'attention_correct',
+    'attention_started_times',
+    'attention_ended_times',
+    'question_asked_id',
+    'all_regions_clicked_with_timestamp',
+    'final_answer_selected',
     'is_correct',
-    'response_time_ms',
-    'question_started_at',
-    'final_click_timestamp',
+    'total_time_taken_to_answer_ms',
+    'informed_consent_duration_ms',
+    'attention_checks_total_duration_ms',
+    'introduction_duration_ms',
+    'actual_study_total_duration_ms',
   ];
 
   const header = columns
@@ -193,7 +240,6 @@ function buildExcelXml(rows) {
   </Worksheet>
 </Workbook>`;
 }
-
 async function exportMetrics(response) {
   await mkdir(dataDir, { recursive: true });
   const files = (await readdir(dataDir)).filter((file) => file.endsWith('.json'));
