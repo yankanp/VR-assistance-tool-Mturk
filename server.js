@@ -167,17 +167,6 @@ function getParticipantId(session) {
     || '';
 }
 
-function joinValues(values) {
-  return values.filter((value) => value !== undefined && value !== null && value !== '').join('; ');
-}
-
-function formatClicks(clicks = []) {
-  return clicks
-    .map((click) => `${click.region_id || click.target_id || ''} @ ${click.timestamp || ''}`.trim())
-    .filter(Boolean)
-    .join('; ');
-}
-
 function normalizeSession(session) {
   if (Array.isArray(session.main_questions)) return session;
 
@@ -230,6 +219,8 @@ function normalizeSession(session) {
         base_region_id: click.base_region_id || '',
         region_label: click.region_label || '',
         timestamp: click.timestamp || '',
+        x: click.x ?? '',
+        y: click.y ?? '',
       })),
       final_answer_selected: response.selected_region_id || '',
       final_answer_selected_base_region_id: response.selected_base_region_id || '',
@@ -249,23 +240,6 @@ function durationMs(startedAt, endedAt) {
   return Number.isFinite(duration) && duration >= 0 ? duration : '';
 }
 
-function formatClicksJson(clicks = []) {
-  return JSON.stringify((clicks ?? []).map((click) => ({
-    timestamp: click.timestamp || '',
-    region_id: click.region_id || '',
-    base_region_id: click.base_region_id || '',
-    region_label: click.region_label || '',
-  })));
-}
-
-function firstClickTimestamp(clicks = []) {
-  return clicks?.[0]?.timestamp || '';
-}
-
-function lastClickTimestamp(clicks = []) {
-  return clicks?.length ? clicks[clicks.length - 1].timestamp || '' : '';
-}
-
 function getEvent(session, type) {
   return (session.events ?? []).find((event) => event.type === type) ?? null;
 }
@@ -278,31 +252,30 @@ function makeBaseRow(session) {
     workerId: session.workerId || session.participant_params?.workerId || '',
     assignmentId: session.assignmentId || session.participant_params?.assignmentId || '',
     hitId: session.hitId || session.participant_params?.hitId || '',
-    row_type: '',
-    row_id: '',
-    row_order: '',
     screen_name: '',
-    prompt: '',
-    answer_given: '',
-    final_selected_region_id: '',
-    final_selected_base_region_id: '',
-    final_selected_region_label: '',
-    correct_answer: '',
+    question_asked: '',
+    final_answer: '',
+    all_clicked_elements: '[]',
+    click_count: 0,
     is_correct: '',
-    requires_manual_review: '',
-    all_clicks_json: '',
-    first_interaction_timestamp: '',
-    last_interaction_timestamp: '',
-    screen_started_at: '',
-    screen_ended_at: '',
-    time_taken_ms: '',
-    completion_code: session.completion_code || '',
+    time_spent_ms: '',
     browser: clientInfo.browser || '',
     screen_width: clientInfo.screen_width || '',
     screen_height: clientInfo.screen_height || '',
-    study_status: session.completion_status || '',
-    attention_passed: session.attention_passed ?? '',
+    completion_code: session.completion_code || '',
+    // Internal-only field used to order rows chronologically by when the
+    // screen was shown to the participant. Stripped before writing the XLS.
+    _screen_started_at: '',
   };
+}
+
+function formatClickedElements(clicks = []) {
+  return JSON.stringify((clicks ?? []).map((click) => ({
+    element_clicked: click.region_id || click.target_id || '',
+    timestamp: click.timestamp || '',
+    x: click.x ?? '',
+    y: click.y ?? '',
+  })));
 }
 
 function flattenSessionRows(rawSession) {
@@ -310,66 +283,51 @@ function flattenSessionRows(rawSession) {
   const timing = session.timing ?? {};
   const rows = [];
   const base = makeBaseRow(session);
-  let rowOrder = 1;
 
   const consentEvent = getEvent(session, 'consent_declined') || getEvent(session, 'consent_accepted');
+  const consentStartedAt = timing.informed_consent_started_at || session.started_at || '';
+  const consentEndedAt = timing.informed_consent_ended_at || consentEvent?.timestamp || '';
+  const consentClicks = consentEvent
+    ? [{ timestamp: consentEvent.timestamp, region_id: consentEvent.type === 'consent_declined' ? 'I do not consent' : 'I consent and want to continue' }]
+    : [];
   rows.push({
     ...base,
-    row_type: 'consent',
-    row_id: 'consent',
-    row_order: rowOrder++,
     screen_name: 'Informed Consent',
-    prompt: 'Consent form shown',
-    answer_given: consentEvent?.type === 'consent_declined' ? 'declined' : 'consented',
-    final_selected_region_id: consentEvent?.type || '',
-    final_selected_region_label: consentEvent?.type === 'consent_declined' ? 'I do not consent' : 'I consent and want to continue',
-    all_clicks_json: consentEvent ? formatClicksJson([{ timestamp: consentEvent.timestamp, region_id: consentEvent.type, region_label: consentEvent.type }]) : '',
-    first_interaction_timestamp: consentEvent?.timestamp || '',
-    last_interaction_timestamp: consentEvent?.timestamp || '',
-    screen_started_at: timing.informed_consent_started_at || session.started_at || '',
-    screen_ended_at: timing.informed_consent_ended_at || consentEvent?.timestamp || '',
-    time_taken_ms: timing.informed_consent_duration_ms || durationMs(timing.informed_consent_started_at || session.started_at, timing.informed_consent_ended_at || consentEvent?.timestamp),
+    question_asked: 'Consent form shown',
+    final_answer: consentEvent?.type === 'consent_declined' ? 'declined' : 'consented',
+    all_clicked_elements: formatClickedElements(consentClicks),
+    click_count: consentClicks.length,
+    time_spent_ms: timing.informed_consent_duration_ms || durationMs(consentStartedAt, consentEndedAt),
+    _screen_started_at: consentStartedAt,
   });
 
   if (timing.introduction_started_at || timing.introduction_ended_at) {
     const introEvent = getEvent(session, 'introduction_continued');
+    const introClicks = introEvent ? [{ timestamp: introEvent.timestamp, region_id: 'Start study questions' }] : [];
     rows.push({
       ...base,
-      row_type: 'introduction',
-      row_id: 'introduction',
-      row_order: rowOrder++,
       screen_name: 'Study Introduction',
-      prompt: 'Study instructions shown',
-      answer_given: introEvent ? 'continued' : '',
-      final_selected_region_id: introEvent?.type || '',
-      final_selected_region_label: 'Start study questions',
-      all_clicks_json: introEvent ? formatClicksJson([{ timestamp: introEvent.timestamp, region_id: introEvent.type, region_label: 'Start study questions' }]) : '',
-      first_interaction_timestamp: introEvent?.timestamp || '',
-      last_interaction_timestamp: introEvent?.timestamp || '',
-      screen_started_at: timing.introduction_started_at || '',
-      screen_ended_at: timing.introduction_ended_at || introEvent?.timestamp || '',
-      time_taken_ms: timing.introduction_duration_ms || durationMs(timing.introduction_started_at, timing.introduction_ended_at || introEvent?.timestamp),
+      question_asked: 'Study instructions shown',
+      final_answer: introEvent ? 'continued' : '',
+      all_clicked_elements: formatClickedElements(introClicks),
+      click_count: introClicks.length,
+      time_spent_ms: timing.introduction_duration_ms || durationMs(timing.introduction_started_at, timing.introduction_ended_at || introEvent?.timestamp),
+      _screen_started_at: timing.introduction_started_at || '',
     });
   }
 
   for (const check of session.attention_checks ?? []) {
+    const checkClicks = check.answer ? [{ timestamp: check.ended_at, region_id: check.answer }] : [];
     rows.push({
       ...base,
-      row_type: 'attention',
-      row_id: check.attention_question_id || check.check_id || '',
-      row_order: rowOrder++,
       screen_name: 'Attention Check',
-      prompt: check.prompt || '',
-      answer_given: check.answer || '',
-      final_selected_region_id: check.answer || '',
-      final_selected_base_region_id: check.answer_base_region_id || '',
-      final_selected_region_label: check.answer_label || '',
-      correct_answer: check.correct_answer || '',
+      question_asked: check.prompt || '',
+      final_answer: check.answer_label || check.answer || '',
+      all_clicked_elements: formatClickedElements(checkClicks),
+      click_count: checkClicks.length,
       is_correct: check.is_correct ?? '',
-      requires_manual_review: check.requires_manual_review ?? '',
-      screen_started_at: check.started_at || '',
-      screen_ended_at: check.ended_at || '',
-      time_taken_ms: durationMs(check.started_at, check.ended_at),
+      time_spent_ms: durationMs(check.started_at, check.ended_at),
+      _screen_started_at: check.started_at || '',
     });
   }
 
@@ -377,43 +335,48 @@ function flattenSessionRows(rawSession) {
     const clicks = question.all_regions_clicked_with_timestamp ?? [];
     rows.push({
       ...base,
-      row_type: question.is_attention_check ? 'attention_dashboard' : 'study_question',
-      row_id: question.question_asked_id || '',
-      row_order: rowOrder++,
       screen_name: question.is_attention_check ? 'Dashboard Attention Check' : 'Dashboard Question',
-      prompt: question.prompt || '',
-      answer_given: question.final_answer_selected || '',
-      final_selected_region_id: question.final_answer_selected || '',
-      final_selected_base_region_id: question.final_answer_selected_base_region_id || '',
-      final_selected_region_label: question.final_answer_selected_label || '',
-      correct_answer: question.correct_answer || '',
+      question_asked: question.prompt || '',
+      final_answer: question.final_answer_selected_label || question.final_answer_selected || '',
+      all_clicked_elements: formatClickedElements(clicks),
+      click_count: clicks.length,
       is_correct: question.is_correct ?? '',
-      all_clicks_json: formatClicksJson(clicks),
-      first_interaction_timestamp: firstClickTimestamp(clicks),
-      last_interaction_timestamp: lastClickTimestamp(clicks),
-      screen_started_at: question.question_started_at || '',
-      screen_ended_at: question.question_ended_at || '',
-      time_taken_ms: question.total_time_taken_to_answer_ms || durationMs(question.question_started_at, question.question_ended_at),
+      time_spent_ms: question.total_time_taken_to_answer_ms || durationMs(question.question_started_at, question.question_ended_at),
+      _screen_started_at: question.question_started_at || '',
     });
   }
 
   const completedAt = session.ended_at || timing.actual_study_ended_at || '';
   rows.push({
     ...base,
-    row_type: 'completion',
-    row_id: 'completion',
-    row_order: rowOrder++,
     screen_name: 'Completion / Qualtrics Code',
-    prompt: 'Participant reached completion screen and received/submitted completion code',
-    answer_given: session.completion_code || '',
-    final_selected_region_id: 'completion_code',
-    final_selected_region_label: 'Completion code',
-    screen_started_at: completedAt,
-    screen_ended_at: completedAt,
+    question_asked: 'Participant reached completion screen and received/submitted completion code',
+    final_answer: session.completion_code || '',
+    all_clicked_elements: '[]',
+    click_count: 0,
     completion_code: session.completion_code || '',
+    _screen_started_at: completedAt,
   });
 
-  return rows;
+  // Order rows by when the screen was actually shown to the participant,
+  // not by row category. Rows with a missing/unparsable timestamp keep
+  // their original (flow) position via a stable sort.
+  const withIndex = rows.map((row, index) => ({ row, index }));
+  withIndex.sort((a, b) => {
+    const aTime = Date.parse(a.row._screen_started_at);
+    const bTime = Date.parse(b.row._screen_started_at);
+    const aValid = Number.isFinite(aTime);
+    const bValid = Number.isFinite(bTime);
+    if (aValid && bValid && aTime !== bTime) return aTime - bTime;
+    if (aValid && !bValid) return -1;
+    if (!aValid && bValid) return 1;
+    return a.index - b.index;
+  });
+
+  return withIndex.map(({ row }) => {
+    const { _screen_started_at, ...exportRow } = row;
+    return exportRow;
+  });
 }
 
 function buildExcelXml(rows) {
@@ -423,30 +386,17 @@ function buildExcelXml(rows) {
     'workerId',
     'assignmentId',
     'hitId',
-    'row_type',
-    'row_id',
-    'row_order',
     'screen_name',
-    'prompt',
-    'answer_given',
-    'final_selected_region_id',
-    'final_selected_base_region_id',
-    'final_selected_region_label',
-    'correct_answer',
+    'question_asked',
+    'final_answer',
+    'all_clicked_elements',
+    'click_count',
     'is_correct',
-    'requires_manual_review',
-    'all_clicks_json',
-    'first_interaction_timestamp',
-    'last_interaction_timestamp',
-    'screen_started_at',
-    'screen_ended_at',
-    'time_taken_ms',
-    'completion_code',
+    'time_spent_ms',
     'browser',
     'screen_width',
     'screen_height',
-    'study_status',
-    'attention_passed',
+    'completion_code',
   ];
 
   const header = columns

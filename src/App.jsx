@@ -198,6 +198,8 @@ function compactClick(click) {
     base_region_id: click.base_region_id || click.region_id || click.target_id || '',
     region_label: click.region_label || '',
     timestamp: click.timestamp || '',
+    x: click.x ?? '',
+    y: click.y ?? '',
   };
 }
 
@@ -404,6 +406,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   const controllerVideoRef = useRef(null);
   const demoVideoRef = useRef(null);
   const instructionAudioRef = useRef(null);
+  const dashboardContainerRef = useRef(null);
   const freehandCanvasRef = useRef(null);
   const isDrawingRef = useRef(false);
   const lastDrawPointRef = useRef(null);
@@ -449,7 +452,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     className: `sim-region clickable-region ${selectedRegionId === regionId ? 'selected-region' : ''}`,
     onClick: (event) => {
       event.stopPropagation();
-      onRegionClick(regionId, event);
+      emitRegionClick(regionId, event);
     },
   });
 
@@ -461,7 +464,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     onClick: (event) => {
       event.stopPropagation();
       if (disabled) return;
-      onRegionClick(regionId, event);
+      emitRegionClick(regionId, event);
     },
   });
 
@@ -534,7 +537,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
         .catch(() => setIsInstructionPlaying(false));
     }
 
-    onRegionClick('listen-button', event);
+    emitRegionClick('listen-button', event);
   }
 
   useEffect(() => {
@@ -562,7 +565,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     setSelectedObjectKey(event.target.value);
     setIsControllerVideoPlaying(false);
     setSentControllerVideo(false);
-    onRegionClick(readableRegionId('controller-object-dropdown', selectedOptionLabel), event, {
+    emitRegionClick(readableRegionId('controller-object-dropdown', selectedOptionLabel), event, {
       baseRegionId: 'controller-object-dropdown',
       regionLabel: `controller object dropdown: ${selectedOptionLabel}`,
     });
@@ -571,7 +574,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   function handleControllerSideSelect(event) {
     const selectedOptionLabel = event.target.selectedOptions?.[0]?.textContent?.trim() || event.target.value;
     setControllerSide(event.target.value);
-    onRegionClick(readableRegionId('controller-side-dropdown', selectedOptionLabel), event, {
+    emitRegionClick(readableRegionId('controller-side-dropdown', selectedOptionLabel), event, {
       baseRegionId: 'controller-side-dropdown',
       regionLabel: `controller side dropdown: ${selectedOptionLabel}`,
     });
@@ -583,7 +586,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     setVrViewImage(getObjectViewImage(index));
     setHasActiveAnnotation(true);
     setIsCleared(false);
-    onRegionClick(readableRegionId('object-button', object?.label, object?.id || index), event, {
+    emitRegionClick(readableRegionId('object-button', object?.label, object?.id || index), event, {
       baseRegionId: 'object-button',
       regionLabel: object?.label || object?.id || 'object button',
     });
@@ -639,7 +642,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     isDrawingRef.current = true;
     lastDrawPointRef.current = getCanvasPoint(event);
     event.currentTarget.setPointerCapture?.(event.pointerId);
-    onRegionClick('vr-view', event);
+    emitRegionClick('vr-view', event);
   }
 
   function handleFreehandPointerMove(event) {
@@ -676,9 +679,22 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
 
   const vrViewRegionProps = regionProps('vr-view');
 
+  function emitRegionClick(regionId, event, details = {}) {
+    let x = '';
+    let y = '';
+    const clientX = event?.clientX ?? event?.nativeEvent?.clientX;
+    const clientY = event?.clientY ?? event?.nativeEvent?.clientY;
+    if (dashboardContainerRef.current && typeof clientX === 'number' && typeof clientY === 'number') {
+      const rect = dashboardContainerRef.current.getBoundingClientRect();
+      x = Math.round(clientX - rect.left);
+      y = Math.round(clientY - rect.top);
+    }
+    onRegionClick(regionId, event, { ...details, x, y });
+  }
+
   return (
     <div className="tablet-frame">
-    <div className={`sim-dashboard selected-task-${selectedTaskStatus}`} aria-label="Simulated VR helper dashboard">
+    <div ref={dashboardContainerRef} className={`sim-dashboard selected-task-${selectedTaskStatus}`} aria-label="Simulated VR helper dashboard">
       <section {...regionProps('task-dropdown')} aria-label="Task dropdown and progress">
         <div className="task-select">
           <button
@@ -688,7 +704,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             onClick={(event) => {
               event.stopPropagation();
               setIsTaskDropdownOpen((value) => !value);
-              onRegionClick('task-dropdown', event);
+              emitRegionClick('task-dropdown', event);
             }}
           >
             <span className="task-select-trigger-text">
@@ -706,7 +722,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             data-region-id="task-list"
             onClick={(event) => {
               event.stopPropagation();
-              onRegionClick('task-list');
+              emitRegionClick('task-list');
             }}
           >
             {tasks.map((task) => {
@@ -722,7 +738,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
                     event.stopPropagation();
                     setSelectedTaskId(task.id);
                     setIsTaskDropdownOpen(false);
-                    onRegionClick(rowRegionId, event, {
+                    emitRegionClick(rowRegionId, event, {
                       baseRegionId: rowRegion,
                       regionLabel: rowStatus + ' task option: ' + getTaskNumber(task) + '. ' + task.title,
                     });
@@ -742,7 +758,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           className={`task-progress-line clickable-region ${selectedRegionId === 'task-progress' ? 'selected-region' : ''}`}
           onClick={(event) => {
             event.stopPropagation();
-            onRegionClick('task-progress', event);
+            emitRegionClick('task-progress', event);
           }}
         >
           <span className={`task-status-icon task-status-icon-${selectedTaskStatus}`} aria-hidden="true" />
@@ -758,7 +774,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           className={`instruction-copy clickable-region ${selectedRegionId === 'instructions-written' ? 'selected-region' : ''}`}
           onClick={(event) => {
             event.stopPropagation();
-            onRegionClick('instructions-written', event);
+            emitRegionClick('instructions-written', event);
           }}
         >
           {instructions.map((line, index) => (
@@ -859,7 +875,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               setIsFreehandActive((value) => !value);
               setHasActiveAnnotation(true);
               setIsCleared(false);
-              onRegionClick('freehand-button', event);
+              emitRegionClick('freehand-button', event);
             }}
           >
             {isFreehandActive ? (dashboardText.drawing ?? 'Drawing') : (dashboardText.freeHand ?? 'Free hand')}
@@ -876,7 +892,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               setVrViewImage(FIXED_VR_VIEW_IMAGE);
               setHasActiveAnnotation(false);
               setIsCleared(true);
-              onRegionClick('clear-button', event);
+              emitRegionClick('clear-button', event);
             }}
           >
             {dashboardText.clear ?? 'Clear'}
@@ -892,7 +908,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               className={`clickable-region ${selectedRegionId === 'controller-object-dropdown' ? 'selected-region' : ''}`}
               onClick={(event) => {
                 event.stopPropagation();
-                onRegionClick('controller-object-dropdown', event);
+                emitRegionClick('controller-object-dropdown', event);
               }}
               onChange={handleObjectSelect}
               value={getObjectKey(selectedObject, 0)}
@@ -907,7 +923,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               className={`clickable-region ${selectedRegionId === 'controller-side-dropdown' ? 'selected-region' : ''}`}
               onClick={(event) => {
                 event.stopPropagation();
-                onRegionClick('controller-side-dropdown', event);
+                emitRegionClick('controller-side-dropdown', event);
               }}
               onChange={handleControllerSideSelect}
               value={controllerSide}
@@ -934,11 +950,11 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             onClick={(event) => {
               event.stopPropagation();
               if (!hasControllerVideo) {
-                onRegionClick('controller-video', event);
+                emitRegionClick('controller-video', event);
                 return;
               }
               setIsControllerVideoPlaying((value) => !value);
-              onRegionClick('controller-video', event);
+              emitRegionClick('controller-video', event);
             }}
             style={controllerThumbnail ? { backgroundImage: `linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.55)), url("${assetUrl(controllerThumbnail)}")` } : undefined}
           >
@@ -972,7 +988,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
                 setHasActiveAnnotation(true);
                 setIsCleared(false);
               }
-              onRegionClick('controller-send-button', event);
+              emitRegionClick('controller-send-button', event);
             }}
           >
             {sentControllerVideo ? (dashboardText.removeVideo ?? 'Remove video') : (dashboardText.send ?? 'Send')}
@@ -988,7 +1004,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           onClick={(event) => {
             event.stopPropagation();
             setIsDemoVideoPlaying((value) => !value);
-            onRegionClick('demo-video', event);
+            emitRegionClick('demo-video', event);
           }}
             style={demoThumbnail ? { backgroundImage: `linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.55)), url("${assetUrl(demoThumbnail)}")` } : undefined}
           >
@@ -1020,7 +1036,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               setHasActiveAnnotation(true);
               setIsCleared(false);
             }
-            onRegionClick('demo-send-button', event);
+            emitRegionClick('demo-send-button', event);
           }}
         >
           {sentDemoVideo ? (dashboardText.removeVideo ?? 'Remove video') : (dashboardText.send ?? 'Send')}
@@ -1422,6 +1438,8 @@ export default function App() {
       base_region_id: baseRegionId,
       region_label: regionLabel,
       timestamp,
+      x: details.x ?? '',
+      y: details.y ?? '',
     };
     setCurrentQuestionClicks((previous) => [...previous, clickRecord]);
     setSelectedRegionId(regionId);
