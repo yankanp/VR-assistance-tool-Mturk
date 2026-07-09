@@ -9,6 +9,13 @@ const AVAILABLE_AUDIO_TASKS = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16]
 const FIXED_VR_VIEW_IMAGE = 'img/VR_user_current_view_screenshots/task-18-no-annotation.png';
 const CURRENT_TASK_ORDER = 18;
 
+function getTaskNumber(task) {
+  if (!task) return 0;
+  if (Number.isFinite(task.order)) return task.order;
+  const numericPrefix = String(task.title ?? task.id ?? '').match(/^\s*(\d+)/);
+  return numericPrefix ? Number(numericPrefix[1]) : 0;
+}
+
 function assetUrl(assetPath) {
   if (!assetPath) return undefined;
   const normalized = String(assetPath);
@@ -299,6 +306,36 @@ function getObjectViewImage(index) {
   const objectNumber = index + 1;
   if (objectNumber === 7) return 'img/VR_user_current_view_screenshots/task-18-obj-7).png';
   return `img/VR_user_current_view_screenshots/task-18-obj-${objectNumber}.png`;
+}
+
+function getObjectKey(object, index = 0) {
+  return `${object?.id ?? object?.label ?? 'object'}-${index}`;
+}
+
+function getInstructionLines(task) {
+  return String(task?.writtenInstructions ?? '')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function getButtonsForObject(object, controllerSide) {
+  const buttons = object?.controllerHints?.[controllerSide]?.needsToPress ?? [];
+  return Array.isArray(buttons) ? buttons.filter(Boolean) : [];
+}
+
+function getButtonLabel(buttons) {
+  if (!buttons?.length) return '';
+  return buttons
+    .map((button) => String(button).replace(/_/g, ' '))
+    .map((button) => button.charAt(0).toUpperCase() + button.slice(1))
+    .join(' + ');
+}
+
+function getStudyAudioPath(task) {
+  const taskNumber = getTaskNumber(task);
+  if (task?.sendAudioInstructionMp3Path) return task.sendAudioInstructionMp3Path;
+  return AVAILABLE_AUDIO_TASKS.has(taskNumber) ? `audio/task-${taskNumber}.mp3` : FALLBACK_AUDIO_PATH;
 }
 
 function getRegionFeedbackLabel(regionId, uiText) {
