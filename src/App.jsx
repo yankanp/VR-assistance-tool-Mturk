@@ -195,7 +195,17 @@ function durationMs(startedAt, endedAt) {
 function compactClick(click) {
   return {
     region_id: click.region_id || click.target_id || '',
+    base_region_id: click.base_region_id || click.region_id || click.target_id || '',
+    region_label: click.region_label || '',
     timestamp: click.timestamp || '',
+  };
+}
+
+function getClientInfo() {
+  return {
+    browser: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+    screen_width: typeof window !== 'undefined' ? window.innerWidth : '',
+    screen_height: typeof window !== 'undefined' ? window.innerHeight : '',
   };
 }
 
@@ -209,6 +219,12 @@ function buildMetricsPayload(session, config) {
     is_attention_check: Boolean(response.is_attention_check),
     all_regions_clicked_with_timestamp: (response.clicks ?? []).map(compactClick),
     final_answer_selected: response.selected_region_id,
+    final_answer_selected_base_region_id: response.selected_base_region_id || response.selected_region_id,
+    final_answer_selected_label: response.selected_region_label || '',
+    prompt: response.prompt || '',
+    correct_answer: (response.correct_region_ids ?? []).join('|'),
+    question_started_at: response.question_started_at || '',
+    question_ended_at: response.final_click_timestamp || '',
     is_correct: response.is_correct,
     total_time_taken_to_answer_ms: response.response_time_ms,
   }));
@@ -227,6 +243,7 @@ function buildMetricsPayload(session, config) {
     qualtrics_redirect_url: session.qualtrics_redirect_url || '',
     study_name: config?.studyName ?? '',
     generated_at: getIsoTimestamp(),
+    client_info: getClientInfo(),
     attention_checks: attentionChecks.map((check) => ({
       attention_question_id: check.check_id,
       prompt: check.prompt || '',
@@ -239,9 +256,17 @@ function buildMetricsPayload(session, config) {
       ended_at: check.ended_at,
     })),
     timing: {
+      informed_consent_started_at: timing.informed_consent_started_at || '',
+      informed_consent_ended_at: timing.informed_consent_ended_at || '',
       informed_consent_duration_ms: durationMs(timing.informed_consent_started_at, timing.informed_consent_ended_at),
-      attention_checks_total_duration_ms: durationMs(timing.attention_checks_started_at, timing.attention_checks_ended_at),
+      introduction_started_at: timing.introduction_started_at || '',
+      introduction_ended_at: timing.introduction_ended_at || '',
       introduction_duration_ms: durationMs(timing.introduction_started_at, timing.introduction_ended_at),
+      attention_checks_started_at: timing.attention_checks_started_at || '',
+      attention_checks_ended_at: timing.attention_checks_ended_at || '',
+      attention_checks_total_duration_ms: durationMs(timing.attention_checks_started_at, timing.attention_checks_ended_at),
+      actual_study_started_at: timing.actual_study_started_at || '',
+      actual_study_ended_at: timing.actual_study_ended_at || '',
       actual_study_total_duration_ms: durationMs(timing.actual_study_started_at, timing.actual_study_ended_at),
     },
     main_questions: mainQuestions,
@@ -312,6 +337,10 @@ function getObjectKey(object, index = 0) {
   return `${object?.id ?? object?.label ?? 'object'}-${index}`;
 }
 
+function readableRegionId(prefix, label, fallback = '') {
+  return `${prefix}-${String(label || fallback).trim() || 'unknown'}`;
+}
+
 function getInstructionLines(task) {
   return String(task?.writtenInstructions ?? '')
     .split(/\r?\n/)
@@ -339,12 +368,15 @@ function getStudyAudioPath(task) {
 }
 
 function getRegionFeedbackLabel(regionId, uiText) {
-  if (regionId?.startsWith('object-button-')) return uiText?.regionLabels?.objectButton ?? 'object button';
+  if (regionId?.startsWith('object-button-')) return regionId.replace('object-button-', '') || (uiText?.regionLabels?.objectButton ?? 'object button');
+  if (regionId?.startsWith('task-option-')) return regionId.replace('task-option-', '').replaceAll('-', ' ');
+  if (regionId?.startsWith('controller-object-dropdown-')) return `controller object dropdown: ${regionId.replace('controller-object-dropdown-', '')}`;
+  if (regionId?.startsWith('controller-side-dropdown-')) return `controller side dropdown: ${regionId.replace('controller-side-dropdown-', '')}`;
   return uiText?.regionLabels?.[regionId] ?? regionId.replaceAll('-', ' ');
 }
 
-function isCorrectRegionSelection(selectedRegionId, correctRegionIds) {
-  if (correctRegionIds.includes(selectedRegionId)) return true;
+function isCorrectRegionSelection(selectedRegionId, correctRegionIds, selectedBaseRegionId = '') {
+  if (correctRegionIds.includes(selectedRegionId) || correctRegionIds.includes(selectedBaseRegionId)) return true;
   if (selectedRegionId?.startsWith('object-button-')) {
     return correctRegionIds.includes('object-guide-button')
       || correctRegionIds.includes('object-highlight-button');
@@ -526,15 +558,23 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   }, [isDemoVideoPlaying, demoVideoUrl]);
 
   function handleObjectSelect(event) {
+    const selectedOptionLabel = event.target.selectedOptions?.[0]?.textContent?.trim() || event.target.value;
     setSelectedObjectKey(event.target.value);
     setIsControllerVideoPlaying(false);
     setSentControllerVideo(false);
-    onRegionClick('controller-object-dropdown', event);
+    onRegionClick(readableRegionId('controller-object-dropdown', selectedOptionLabel), event, {
+      baseRegionId: 'controller-object-dropdown',
+      regionLabel: `controller object dropdown: ${selectedOptionLabel}`,
+    });
   }
 
   function handleControllerSideSelect(event) {
+    const selectedOptionLabel = event.target.selectedOptions?.[0]?.textContent?.trim() || event.target.value;
     setControllerSide(event.target.value);
-    onRegionClick('controller-side-dropdown', event);
+    onRegionClick(readableRegionId('controller-side-dropdown', selectedOptionLabel), event, {
+      baseRegionId: 'controller-side-dropdown',
+      regionLabel: `controller side dropdown: ${selectedOptionLabel}`,
+    });
   }
 
   function handleObjectButtonClick(event, object, index) {
@@ -543,7 +583,10 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     setVrViewImage(getObjectViewImage(index));
     setHasActiveAnnotation(true);
     setIsCleared(false);
-    onRegionClick(`object-button-${index}`, event);
+    onRegionClick(readableRegionId('object-button', object?.label, object?.id || index), event, {
+      baseRegionId: 'object-button',
+      regionLabel: object?.label || object?.id || 'object button',
+    });
   }
 
   function prepareFreehandCanvas() {
@@ -669,16 +712,20 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             {tasks.map((task) => {
               const rowStatus = getTaskStatus(task);
               const rowRegion = taskStatusRegion[rowStatus];
+              const rowRegionId = readableRegionId(`task-option-${rowStatus}`, `${getTaskNumber(task)} ${task.title}`, task.id);
               return (
                 <button
                   key={task.id}
                   type="button"
-                  {...actionProps(rowRegion, `task-select-option task-select-option-${rowStatus}`)}
+                  {...actionProps(rowRegionId, `task-select-option task-select-option-${rowStatus}`)}
                   onClick={(event) => {
                     event.stopPropagation();
                     setSelectedTaskId(task.id);
                     setIsTaskDropdownOpen(false);
-                    onRegionClick(rowRegion, event);
+                    onRegionClick(rowRegionId, event, {
+                      baseRegionId: rowRegion,
+                      regionLabel: rowStatus + ' task option: ' + getTaskNumber(task) + '. ' + task.title,
+                    });
                   }}
                 >
                   <span className={`task-status-icon task-status-icon-${rowStatus}`} aria-hidden="true" />
@@ -1208,6 +1255,7 @@ export default function App() {
   const [session, setSession] = useState(null);
   const [flowIndex, setFlowIndex] = useState(0);
   const [selectedRegionId, setSelectedRegionId] = useState('');
+  const [selectedRegionMeta, setSelectedRegionMeta] = useState({ base_region_id: '', region_label: '' });
   const [currentQuestionStartedAt, setCurrentQuestionStartedAt] = useState('');
   const [firstClick, setFirstClick] = useState(null);
   const [currentQuestionClicks, setCurrentQuestionClicks] = useState([]);
@@ -1276,6 +1324,7 @@ export default function App() {
     if (phase !== 'main') return;
     setCurrentQuestionStartedAt(getIsoTimestamp());
     setSelectedRegionId('');
+    setSelectedRegionMeta({ base_region_id: '', region_label: '' });
     setFirstClick(null);
     setCurrentQuestionClicks([]);
   }, [phase, flowIndex]);
@@ -1354,11 +1403,15 @@ export default function App() {
     }));
   }
 
-  function handleRegionClick(regionId, event) {
+  function handleRegionClick(regionId, event, details = {}) {
     const timestamp = getIsoTimestamp();
+    const baseRegionId = details.baseRegionId || regionId;
+    const regionLabel = details.regionLabel || getRegionFeedbackLabel(regionId, uiText);
     if (!firstClick) {
       setFirstClick({
         region_id: regionId,
+        base_region_id: baseRegionId,
+        region_label: regionLabel,
         timestamp,
         offset_x: Math.round(event?.nativeEvent?.offsetX ?? 0),
         offset_y: Math.round(event?.nativeEvent?.offsetY ?? 0),
@@ -1366,15 +1419,20 @@ export default function App() {
     }
     const clickRecord = {
       region_id: regionId,
+      base_region_id: baseRegionId,
+      region_label: regionLabel,
       timestamp,
     };
     setCurrentQuestionClicks((previous) => [...previous, clickRecord]);
     setSelectedRegionId(regionId);
+    setSelectedRegionMeta({ base_region_id: baseRegionId, region_label: regionLabel });
     recordEvent({
       type: 'dashboard_region_clicked',
       question_id: currentFlowItem?.item?.question_id || currentFlowItem?.item?.check_id,
       question_type: currentFlowItem?.type,
       region_id: regionId,
+      base_region_id: baseRegionId,
+      region_label: regionLabel,
     });
   }
 
@@ -1401,7 +1459,7 @@ export default function App() {
     const question = currentFlowItem.item;
     const answeredAt = getIsoTimestamp();
     const correctRegionIds = question.correct_region_ids ?? [];
-    const isCorrect = isCorrectRegionSelection(selectedRegionId, correctRegionIds);
+    const isCorrect = isCorrectRegionSelection(selectedRegionId, correctRegionIds, selectedRegionMeta.base_region_id);
 
     setSession((previous) => {
       const response = {
@@ -1411,7 +1469,11 @@ export default function App() {
         acceptable_features: question.acceptable_features ?? [],
         correct_region_ids: correctRegionIds,
         selected_region_id: selectedRegionId,
+        selected_base_region_id: selectedRegionMeta.base_region_id,
+        selected_region_label: selectedRegionMeta.region_label,
         first_click_region_id: firstClick?.region_id ?? '',
+        first_click_base_region_id: firstClick?.base_region_id ?? '',
+        first_click_region_label: firstClick?.region_label ?? '',
         first_click_timestamp: firstClick?.timestamp ?? '',
         final_click_timestamp: answeredAt,
         question_started_at: currentQuestionStartedAt,
@@ -1443,6 +1505,8 @@ export default function App() {
         prompt: question.prompt,
         type: question.question_type,
         answer: selectedRegionId,
+        answer_base_region_id: selectedRegionMeta.base_region_id,
+        answer_label: selectedRegionMeta.region_label,
         correct_answer: correctRegionIds.join('|'),
         is_correct: isCorrect,
         started_at: currentQuestionStartedAt,

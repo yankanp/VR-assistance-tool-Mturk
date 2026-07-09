@@ -192,88 +192,228 @@ function normalizeSession(session) {
     completion_status: session.completion_status || '',
     attention_passed: session.attention_passed ?? '',
     completion_code: session.completion_code || '',
+    client_info: session.client_info ?? {},
+    timing: {
+      informed_consent_started_at: session.timing?.informed_consent_started_at || '',
+      informed_consent_ended_at: session.timing?.informed_consent_ended_at || '',
+      informed_consent_duration_ms: session.timing?.informed_consent_duration_ms || '',
+      introduction_started_at: session.timing?.introduction_started_at || '',
+      introduction_ended_at: session.timing?.introduction_ended_at || '',
+      introduction_duration_ms: session.timing?.introduction_duration_ms || '',
+      attention_checks_started_at: session.timing?.attention_checks_started_at || '',
+      attention_checks_ended_at: session.timing?.attention_checks_ended_at || '',
+      attention_checks_total_duration_ms: session.timing?.attention_checks_total_duration_ms || '',
+      actual_study_started_at: session.timing?.actual_study_started_at || '',
+      actual_study_ended_at: session.timing?.actual_study_ended_at || '',
+      actual_study_total_duration_ms: session.timing?.actual_study_total_duration_ms || '',
+    },
     attention_checks: (session.attention_checks ?? []).map((check) => ({
       attention_question_id: check.check_id || check.attention_question_id || '',
       prompt: check.prompt || '',
       type: check.type || '',
       answer: check.answer || '',
+      answer_base_region_id: check.answer_base_region_id || '',
+      answer_label: check.answer_label || '',
       correct_answer: check.correct_answer || '',
       is_correct: check.is_correct ?? '',
       requires_manual_review: check.requires_manual_review ?? false,
       started_at: check.started_at || '',
       ended_at: check.ended_at || check.answered_at || '',
     })),
-    timing: {
-      informed_consent_duration_ms: session.timing?.informed_consent_duration_ms || '',
-      attention_checks_total_duration_ms: session.timing?.attention_checks_total_duration_ms || '',
-      introduction_duration_ms: session.timing?.introduction_duration_ms || '',
-      actual_study_total_duration_ms: session.timing?.actual_study_total_duration_ms || '',
-    },
     main_questions: (session.responses ?? []).map((response) => ({
       question_asked_id: response.question_id || '',
       question_type: response.question_type || 'main',
       is_attention_check: response.is_attention_check ?? false,
+      prompt: response.prompt || '',
       all_regions_clicked_with_timestamp: (response.clicks ?? []).map((click) => ({
         region_id: click.region_id || '',
+        base_region_id: click.base_region_id || '',
+        region_label: click.region_label || '',
         timestamp: click.timestamp || '',
       })),
       final_answer_selected: response.selected_region_id || '',
+      final_answer_selected_base_region_id: response.selected_base_region_id || '',
+      final_answer_selected_label: response.selected_region_label || '',
+      correct_answer: (response.correct_region_ids ?? []).join('|'),
       is_correct: response.is_correct ?? '',
+      question_started_at: response.question_started_at || '',
+      question_ended_at: response.final_click_timestamp || '',
       total_time_taken_to_answer_ms: response.response_time_ms || '',
     })),
   };
 }
 
-function flattenSessionRows(rawSession) {
-  const session = normalizeSession(rawSession);
-  const attentionChecks = session.attention_checks ?? [];
-  const timing = session.timing ?? {};
-  const base = {
+function durationMs(startedAt, endedAt) {
+  if (!startedAt || !endedAt) return '';
+  const duration = Date.parse(endedAt) - Date.parse(startedAt);
+  return Number.isFinite(duration) && duration >= 0 ? duration : '';
+}
+
+function formatClicksJson(clicks = []) {
+  return JSON.stringify((clicks ?? []).map((click) => ({
+    timestamp: click.timestamp || '',
+    region_id: click.region_id || '',
+    base_region_id: click.base_region_id || '',
+    region_label: click.region_label || '',
+  })));
+}
+
+function firstClickTimestamp(clicks = []) {
+  return clicks?.[0]?.timestamp || '';
+}
+
+function lastClickTimestamp(clicks = []) {
+  return clicks?.length ? clicks[clicks.length - 1].timestamp || '' : '';
+}
+
+function getEvent(session, type) {
+  return (session.events ?? []).find((event) => event.type === type) ?? null;
+}
+
+function makeBaseRow(session) {
+  const clientInfo = session.client_info ?? {};
+  return {
     session_id: session.session_id || '',
     participant_id: getParticipantId(session),
     workerId: session.workerId || session.participant_params?.workerId || '',
     assignmentId: session.assignmentId || session.participant_params?.assignmentId || '',
     hitId: session.hitId || session.participant_params?.hitId || '',
-    turkSubmitTo: session.turkSubmitTo || session.participant_params?.turkSubmitTo || '',
-    completion_status: session.completion_status || '',
-    attention_passed: session.attention_passed ?? '',
+    row_type: '',
+    row_id: '',
+    row_order: '',
+    screen_name: '',
+    prompt: '',
+    answer_given: '',
+    final_selected_region_id: '',
+    final_selected_base_region_id: '',
+    final_selected_region_label: '',
+    correct_answer: '',
+    is_correct: '',
+    requires_manual_review: '',
+    all_clicks_json: '',
+    first_interaction_timestamp: '',
+    last_interaction_timestamp: '',
+    screen_started_at: '',
+    screen_ended_at: '',
+    time_taken_ms: '',
     completion_code: session.completion_code || '',
-    attention_question_ids: joinValues(attentionChecks.map((check) => check.attention_question_id || check.check_id)),
-    attention_answers: joinValues(attentionChecks.map((check) => check.answer)),
-    attention_correct: joinValues(attentionChecks.map((check) => String(check.is_correct))),
-    attention_types: joinValues(attentionChecks.map((check) => check.type)),
-    attention_manual_review: joinValues(attentionChecks.map((check) => String(Boolean(check.requires_manual_review)))),
-    attention_started_times: joinValues(attentionChecks.map((check) => check.started_at)),
-    attention_ended_times: joinValues(attentionChecks.map((check) => check.ended_at)),
-    informed_consent_duration_ms: timing.informed_consent_duration_ms || '',
-    attention_checks_total_duration_ms: timing.attention_checks_total_duration_ms || '',
-    introduction_duration_ms: timing.introduction_duration_ms || '',
-    actual_study_total_duration_ms: timing.actual_study_total_duration_ms || '',
+    browser: clientInfo.browser || '',
+    screen_width: clientInfo.screen_width || '',
+    screen_height: clientInfo.screen_height || '',
+    study_status: session.completion_status || '',
+    attention_passed: session.attention_passed ?? '',
   };
+}
 
-  if (!session.main_questions?.length) {
-    return [{
+function flattenSessionRows(rawSession) {
+  const session = normalizeSession(rawSession);
+  const timing = session.timing ?? {};
+  const rows = [];
+  const base = makeBaseRow(session);
+  let rowOrder = 1;
+
+  const consentEvent = getEvent(session, 'consent_declined') || getEvent(session, 'consent_accepted');
+  rows.push({
+    ...base,
+    row_type: 'consent',
+    row_id: 'consent',
+    row_order: rowOrder++,
+    screen_name: 'Informed Consent',
+    prompt: 'Consent form shown',
+    answer_given: consentEvent?.type === 'consent_declined' ? 'declined' : 'consented',
+    final_selected_region_id: consentEvent?.type || '',
+    final_selected_region_label: consentEvent?.type === 'consent_declined' ? 'I do not consent' : 'I consent and want to continue',
+    all_clicks_json: consentEvent ? formatClicksJson([{ timestamp: consentEvent.timestamp, region_id: consentEvent.type, region_label: consentEvent.type }]) : '',
+    first_interaction_timestamp: consentEvent?.timestamp || '',
+    last_interaction_timestamp: consentEvent?.timestamp || '',
+    screen_started_at: timing.informed_consent_started_at || session.started_at || '',
+    screen_ended_at: timing.informed_consent_ended_at || consentEvent?.timestamp || '',
+    time_taken_ms: timing.informed_consent_duration_ms || durationMs(timing.informed_consent_started_at || session.started_at, timing.informed_consent_ended_at || consentEvent?.timestamp),
+  });
+
+  if (timing.introduction_started_at || timing.introduction_ended_at) {
+    const introEvent = getEvent(session, 'introduction_continued');
+    rows.push({
       ...base,
-      question_asked_id: '',
-      question_type: '',
-      is_attention_check: '',
-      all_regions_clicked_with_timestamp: '',
-      final_answer_selected: '',
-      is_correct: '',
-      total_time_taken_to_answer_ms: '',
-    }];
+      row_type: 'introduction',
+      row_id: 'introduction',
+      row_order: rowOrder++,
+      screen_name: 'Study Introduction',
+      prompt: 'Study instructions shown',
+      answer_given: introEvent ? 'continued' : '',
+      final_selected_region_id: introEvent?.type || '',
+      final_selected_region_label: 'Start study questions',
+      all_clicks_json: introEvent ? formatClicksJson([{ timestamp: introEvent.timestamp, region_id: introEvent.type, region_label: 'Start study questions' }]) : '',
+      first_interaction_timestamp: introEvent?.timestamp || '',
+      last_interaction_timestamp: introEvent?.timestamp || '',
+      screen_started_at: timing.introduction_started_at || '',
+      screen_ended_at: timing.introduction_ended_at || introEvent?.timestamp || '',
+      time_taken_ms: timing.introduction_duration_ms || durationMs(timing.introduction_started_at, timing.introduction_ended_at || introEvent?.timestamp),
+    });
   }
 
-  return session.main_questions.map((question) => ({
+  for (const check of session.attention_checks ?? []) {
+    rows.push({
+      ...base,
+      row_type: 'attention',
+      row_id: check.attention_question_id || check.check_id || '',
+      row_order: rowOrder++,
+      screen_name: 'Attention Check',
+      prompt: check.prompt || '',
+      answer_given: check.answer || '',
+      final_selected_region_id: check.answer || '',
+      final_selected_base_region_id: check.answer_base_region_id || '',
+      final_selected_region_label: check.answer_label || '',
+      correct_answer: check.correct_answer || '',
+      is_correct: check.is_correct ?? '',
+      requires_manual_review: check.requires_manual_review ?? '',
+      screen_started_at: check.started_at || '',
+      screen_ended_at: check.ended_at || '',
+      time_taken_ms: durationMs(check.started_at, check.ended_at),
+    });
+  }
+
+  for (const question of session.main_questions ?? []) {
+    const clicks = question.all_regions_clicked_with_timestamp ?? [];
+    rows.push({
+      ...base,
+      row_type: question.is_attention_check ? 'attention_dashboard' : 'study_question',
+      row_id: question.question_asked_id || '',
+      row_order: rowOrder++,
+      screen_name: question.is_attention_check ? 'Dashboard Attention Check' : 'Dashboard Question',
+      prompt: question.prompt || '',
+      answer_given: question.final_answer_selected || '',
+      final_selected_region_id: question.final_answer_selected || '',
+      final_selected_base_region_id: question.final_answer_selected_base_region_id || '',
+      final_selected_region_label: question.final_answer_selected_label || '',
+      correct_answer: question.correct_answer || '',
+      is_correct: question.is_correct ?? '',
+      all_clicks_json: formatClicksJson(clicks),
+      first_interaction_timestamp: firstClickTimestamp(clicks),
+      last_interaction_timestamp: lastClickTimestamp(clicks),
+      screen_started_at: question.question_started_at || '',
+      screen_ended_at: question.question_ended_at || '',
+      time_taken_ms: question.total_time_taken_to_answer_ms || durationMs(question.question_started_at, question.question_ended_at),
+    });
+  }
+
+  const completedAt = session.ended_at || timing.actual_study_ended_at || '';
+  rows.push({
     ...base,
-    question_asked_id: question.question_asked_id || '',
-    question_type: question.question_type || '',
-    is_attention_check: question.is_attention_check ?? '',
-    all_regions_clicked_with_timestamp: formatClicks(question.all_regions_clicked_with_timestamp),
-    final_answer_selected: question.final_answer_selected || '',
-    is_correct: question.is_correct ?? '',
-    total_time_taken_to_answer_ms: question.total_time_taken_to_answer_ms || '',
-  }));
+    row_type: 'completion',
+    row_id: 'completion',
+    row_order: rowOrder++,
+    screen_name: 'Completion / Qualtrics Code',
+    prompt: 'Participant reached completion screen and received/submitted completion code',
+    answer_given: session.completion_code || '',
+    final_selected_region_id: 'completion_code',
+    final_selected_region_label: 'Completion code',
+    screen_started_at: completedAt,
+    screen_ended_at: completedAt,
+    completion_code: session.completion_code || '',
+  });
+
+  return rows;
 }
 
 function buildExcelXml(rows) {
@@ -283,28 +423,30 @@ function buildExcelXml(rows) {
     'workerId',
     'assignmentId',
     'hitId',
-    'turkSubmitTo',
-    'completion_status',
-    'attention_passed',
-    'completion_code',
-    'attention_question_ids',
-    'attention_answers',
-    'attention_correct',
-    'attention_types',
-    'attention_manual_review',
-    'attention_started_times',
-    'attention_ended_times',
-    'question_asked_id',
-    'question_type',
-    'is_attention_check',
-    'all_regions_clicked_with_timestamp',
-    'final_answer_selected',
+    'row_type',
+    'row_id',
+    'row_order',
+    'screen_name',
+    'prompt',
+    'answer_given',
+    'final_selected_region_id',
+    'final_selected_base_region_id',
+    'final_selected_region_label',
+    'correct_answer',
     'is_correct',
-    'total_time_taken_to_answer_ms',
-    'informed_consent_duration_ms',
-    'attention_checks_total_duration_ms',
-    'introduction_duration_ms',
-    'actual_study_total_duration_ms',
+    'requires_manual_review',
+    'all_clicks_json',
+    'first_interaction_timestamp',
+    'last_interaction_timestamp',
+    'screen_started_at',
+    'screen_ended_at',
+    'time_taken_ms',
+    'completion_code',
+    'browser',
+    'screen_width',
+    'screen_height',
+    'study_status',
+    'attention_passed',
   ];
 
   const header = columns
