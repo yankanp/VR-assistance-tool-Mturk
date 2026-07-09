@@ -7,6 +7,7 @@ const CONSENT_VERSION = '2026-07-06';
 const FALLBACK_AUDIO_PATH = 'audio/task-16.mp3';
 const AVAILABLE_AUDIO_TASKS = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16]);
 const FIXED_VR_VIEW_IMAGE = 'img/VR_user_current_view_screenshots/task-18-no-annotation.png';
+const CURRENT_TASK_ORDER = 18;
 
 function assetUrl(assetPath) {
   if (!assetPath) return undefined;
@@ -392,101 +393,6 @@ function IntroPage({ onNext }) {
     </main>
   );
 }
-
-function AttentionGatePage({ checks, onSubmit }) {
-  const [answers, setAnswers] = useState({});
-  const [currentCheckIndex, setCurrentCheckIndex] = useState(0);
-  const [answeredResults, setAnsweredResults] = useState([]);
-  const [currentCheckStartedAt, setCurrentCheckStartedAt] = useState(getIsoTimestamp());
-  const currentCheck = checks[currentCheckIndex];
-  const currentAnswer = currentCheck ? answers[currentCheck.check_id] ?? '' : '';
-  const canSubmit = String(currentAnswer).trim().length > 0;
-
-  useEffect(() => {
-    setCurrentCheckStartedAt(getIsoTimestamp());
-  }, [currentCheckIndex]);
-
-  function setAnswer(checkId, answer) {
-    setAnswers((previous) => ({ ...previous, [checkId]: answer }));
-  }
-
-  function handleCurrentSubmit() {
-    if (!currentCheck) return;
-    const answeredAt = getIsoTimestamp();
-    const nextAnswers = { ...answers, [currentCheck.check_id]: currentAnswer };
-    const isCorrect = normalizeAnswer(currentAnswer) === normalizeAnswer(currentCheck.correct_answer);
-    const currentResult = {
-      check_id: currentCheck.check_id,
-      prompt: currentCheck.prompt,
-      answer: currentAnswer,
-      correct_answer: currentCheck.correct_answer,
-      is_correct: isCorrect,
-      started_at: currentCheckStartedAt,
-      ended_at: answeredAt,
-    };
-    const nextResults = [...answeredResults, currentResult];
-
-    if (!isCorrect || currentCheckIndex === checks.length - 1) {
-      onSubmit(nextResults);
-      return;
-    }
-
-    setAnswers(nextAnswers);
-    setAnsweredResults(nextResults);
-    setCurrentCheckIndex((index) => index + 1);
-  }
-
-  return (
-    <main className="page-shell">
-      <section className="study-card attention-card">
-        <h1>Please answer this question before starting the study</h1>
-        <p>Question {currentCheckIndex + 1} of {checks.length}. All screening questions must be answered correctly to continue.</p>
-        {currentCheck && (
-          <div className="attention-gate-item" key={currentCheck.check_id}>
-            <h2>{currentCheck.prompt}</h2>
-            {currentCheck.image_placeholder && (
-              <div className="attention-image" aria-label="Placeholder image with highlighted ship bell">
-                <div className="attention-scene">
-                  <span className="attention-object bell-object">Ship bell</span>
-                  <span className="attention-object barrel-object">Cargo barrel</span>
-                  <span className="attention-highlight" />
-                </div>
-              </div>
-            )}
-            {currentCheck.type === 'multiple_choice' ? (
-              <div className="choice-grid">
-                {(currentCheck.options ?? []).map((option) => (
-                  <button
-                    key={option}
-                    className={`choice-button ${currentAnswer === option ? 'selected' : ''}`}
-                    type="button"
-                    onClick={() => setAnswer(currentCheck.check_id, option)}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <label className="text-answer">
-                <span>Your answer</span>
-                <input
-                  value={currentAnswer}
-                  onChange={(event) => setAnswer(currentCheck.check_id, event.target.value)}
-                />
-              </label>
-            )}
-          </div>
-        )}
-
-        <button className="primary-action" type="button" disabled={!canSubmit} onClick={handleCurrentSubmit}>
-          {currentCheckIndex === checks.length - 1 ? 'Submit screening question' : 'Next screening question'}
-        </button>
-      </section>
-    </main>
-  );
-}
-
-const CURRENT_TASK_ORDER = 18;
 
 function getTaskNumber(task) {
   return Number.isFinite(Number(task?.order)) ? Number(task.order) : 0;
@@ -1284,21 +1190,6 @@ function MainQuestionPage({ question, questionIndex, totalQuestions, selectedReg
   );
 }
 
-function StoppedPage() {
-  return (
-    <main className="page-shell">
-      <section className="study-card">
-        <p className="eyebrow">Study Ended</p>
-        <h1>You are not eligible to continue this study.</h1>
-        <p>
-          Based on the study rules, too many attention checks were answered incorrectly. The session
-          has been marked as attention_passed=false.
-        </p>
-      </section>
-    </main>
-  );
-}
-
 function CompletionPage({
   completionCode,
   qualtricsUrl,
@@ -1525,7 +1416,6 @@ export default function App() {
       ended_at: completionStatus === 'in_progress' ? '' : getIsoTimestamp(),
       completion_status: completionStatus,
       attention_passed: null,
-      attention_failure_count: 0,
       responses: [],
       attention_checks: [],
       timing: {},
@@ -1617,16 +1507,13 @@ export default function App() {
     setFlowIndex((index) => index + 1);
   }
 
-  function applyAttentionResult(previous, result, answeredAt) {
+  function applyAttentionResult(previous, result) {
     const nextAttentionChecks = [...previous.attention_checks, result];
     const failureCount = nextAttentionChecks.filter((check) => check.is_correct === false).length;
-    const failureThreshold = config?.attentionFailureThreshold ?? 1;
-    const shouldStop = failureCount >= failureThreshold;
     return {
       nextAttentionChecks,
       failureCount,
-      shouldStop,
-      endedAt: shouldStop ? answeredAt : '',
+      attentionPassed: failureCount === 0,
     };
   }
 
@@ -1681,35 +1568,19 @@ export default function App() {
         started_at: currentQuestionStartedAt,
         ended_at: answeredAt,
       };
-      const { nextAttentionChecks, failureCount, shouldStop, endedAt } = applyAttentionResult(previous, attentionResult, answeredAt);
+      const { nextAttentionChecks, failureCount, attentionPassed } = applyAttentionResult(previous, attentionResult);
       return {
         ...previous,
-        ended_at: shouldStop ? endedAt : previous.ended_at,
-        completion_status: shouldStop ? 'attention_failed' : previous.completion_status,
         attention_failure_count: failureCount,
         attention_checks: nextAttentionChecks,
-        attention_passed: shouldStop ? false : previous.attention_passed,
+        attention_passed: attentionPassed,
         responses: [...previous.responses, response],
-        timing: {
-          ...previous.timing,
-          ...(shouldStop ? { attention_checks_ended_at: answeredAt, actual_study_ended_at: answeredAt } : {}),
-        },
         events: [
           ...previous.events,
           event,
-          ...(shouldStop ? [{ type: 'session_finished', timestamp: endedAt, completion_status: 'attention_failed' }] : []),
         ],
       };
     });
-
-    if (question.is_attention_check && !isCorrect) {
-      const previousFailures = session?.attention_checks?.filter((check) => check.is_correct === false).length ?? 0;
-      const failureThreshold = config?.attentionFailureThreshold ?? 1;
-      if (previousFailures + 1 >= failureThreshold) {
-        setPhase('stopped');
-        return;
-      }
-    }
 
     continueFlow();
   }
@@ -1731,18 +1602,12 @@ export default function App() {
         started_at: currentQuestionStartedAt,
         ended_at: answeredAt,
       };
-      const { nextAttentionChecks, failureCount, shouldStop, endedAt } = applyAttentionResult(previous, attentionResult, answeredAt);
+      const { nextAttentionChecks, failureCount, attentionPassed } = applyAttentionResult(previous, attentionResult);
       return {
         ...previous,
-        ended_at: shouldStop ? endedAt : previous.ended_at,
-        completion_status: shouldStop ? 'attention_failed' : previous.completion_status,
         attention_failure_count: failureCount,
         attention_checks: nextAttentionChecks,
-        attention_passed: shouldStop ? false : previous.attention_passed,
-        timing: {
-          ...previous.timing,
-          ...(shouldStop ? { attention_checks_ended_at: answeredAt, actual_study_ended_at: answeredAt } : {}),
-        },
+        attention_passed: attentionPassed,
         events: [
           ...previous.events,
           {
@@ -1751,56 +1616,11 @@ export default function App() {
             check_id: check.check_id,
             is_correct: isCorrect,
           },
-          ...(shouldStop ? [{ type: 'session_finished', timestamp: endedAt, completion_status: 'attention_failed' }] : []),
         ],
       };
     });
-
-    const previousFailures = session?.attention_checks?.filter((checkResult) => checkResult.is_correct === false).length ?? 0;
-    const failureThreshold = config?.attentionFailureThreshold ?? 1;
-    if (!isCorrect && previousFailures + 1 >= failureThreshold) {
-      setPhase('stopped');
-      return;
-    }
 
     continueFlow();
-  }
-
-  function handleAttentionGateSubmit(results) {
-    const answeredAt = getIsoTimestamp();
-    const failureCount = results.filter((result) => !result.is_correct).length;
-    setSession((previous) => {
-      const endedAt = failureCount > 0 ? getIsoTimestamp() : '';
-      return {
-        ...previous,
-        ended_at: endedAt,
-        completion_status: failureCount > 0 ? 'attention_failed' : previous.completion_status,
-        attention_failure_count: failureCount,
-        attention_checks: results,
-        attention_passed: failureCount === 0,
-        timing: {
-          ...previous.timing,
-          attention_checks_ended_at: answeredAt,
-          ...(failureCount === 0 ? { introduction_started_at: answeredAt } : {}),
-        },
-        events: [
-          ...previous.events,
-          {
-            type: 'attention_gate_submitted',
-            timestamp: answeredAt,
-            failure_count: failureCount,
-          },
-          ...(failureCount > 0
-            ? [{ type: 'session_finished', timestamp: endedAt, completion_status: 'attention_failed' }]
-            : []),
-        ],
-      };
-    });
-    if (failureCount > 0) {
-      setPhase('stopped');
-      return;
-    }
-    setPhase('intro');
   }
 
   function finishStudy(status) {
@@ -1809,7 +1629,7 @@ export default function App() {
       ...previous,
       ended_at: endedAt,
       completion_status: status,
-      attention_passed: status !== 'attention_failed',
+      attention_passed: previous.attention_passed ?? true,
       timing: {
         ...previous.timing,
         attention_checks_ended_at: previous.timing.attention_checks_ended_at || endedAt,
@@ -1820,7 +1640,7 @@ export default function App() {
         { type: 'session_finished', timestamp: endedAt, completion_status: status },
       ],
     }));
-    setPhase(status === 'attention_failed' ? 'stopped' : 'complete');
+    setPhase('complete');
   }
 
   const sessionPayload = useMemo(() => {
@@ -1839,7 +1659,7 @@ export default function App() {
   useEffect(() => {
     if (!sessionPayload) return;
     if (sessionPayload.completion_status === 'in_progress') return;
-    const saveKey = `${sessionPayload.session_id}:${sessionPayload.completion_status}`;
+    const saveKey = sessionPayload.session_id + ':' + sessionPayload.completion_status;
     if (savedSessionIdRef.current === saveKey) return;
 
     let cancelled = false;
@@ -1920,10 +1740,6 @@ export default function App() {
         metadata={metadata}
       />
     );
-  }
-
-  if (phase === 'stopped') {
-    return <StoppedPage />;
   }
 
   if (phase === 'ended') {

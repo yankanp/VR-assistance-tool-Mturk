@@ -67,7 +67,6 @@ function hasValidMturkParams(payload) {
 
 function isCompletedPayloadValid(payload) {
   return payload.completion_status === 'completed'
-    && payload.attention_passed === true
     && hasValidMturkParams(payload)
     && Array.isArray(payload.main_questions)
     && payload.main_questions.length > 0;
@@ -121,7 +120,7 @@ async function saveSession(request, response) {
     if (payload.completion_status === 'completed' && !isCompletedPayloadValid(payload)) {
       sendJson(response, 400, {
         ok: false,
-        error: 'Completed sessions require MTurk identifiers, passed attention checks, and main-study responses.',
+        error: 'Completed sessions require MTurk identifiers and main-study responses.',
       });
       return;
     }
