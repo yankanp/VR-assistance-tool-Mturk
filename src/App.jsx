@@ -124,7 +124,7 @@ function buildQuestionFlow(questions, attentionChecks, sessionId) {
 
 function isAttentionCheckCorrect(check, answer) {
   if (check.type === 'open_text') {
-    return String(answer || '').trim().split(/\s+/).filter(Boolean).length >= (check.minimum_words ?? 5);
+    return String(answer || '').trim().length > 0;
   }
   return normalizeAnswer(answer) === normalizeAnswer(check.correct_answer);
 }
@@ -1706,7 +1706,7 @@ export default function App() {
       const previousFailures = session?.attention_checks?.filter((check) => check.is_correct === false).length ?? 0;
       const failureThreshold = config?.attentionFailureThreshold ?? 1;
       if (previousFailures + 1 >= failureThreshold) {
-        setPhase('ended');
+        setPhase('stopped');
         return;
       }
     }
@@ -1759,7 +1759,7 @@ export default function App() {
     const previousFailures = session?.attention_checks?.filter((checkResult) => checkResult.is_correct === false).length ?? 0;
     const failureThreshold = config?.attentionFailureThreshold ?? 1;
     if (!isCorrect && previousFailures + 1 >= failureThreshold) {
-      setPhase('ended');
+      setPhase('stopped');
       return;
     }
 
@@ -1797,7 +1797,7 @@ export default function App() {
       };
     });
     if (failureCount > 0) {
-      setPhase('ended');
+      setPhase('stopped');
       return;
     }
     setPhase('intro');
