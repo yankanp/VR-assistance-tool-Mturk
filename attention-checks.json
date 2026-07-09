@@ -21,36 +21,6 @@
     "order": 2
   },
   {
-    "check_id": "ac_repeat_vr_view",
-    "type": "dashboard_click",
-    "question_type": "attention_repetition",
-    "prompt": "Click the area where you would see what the headset user is currently seeing.",
-    "target_feature": "Real-time view of headset user",
-    "acceptable_features": [
-      "vr-view"
-    ],
-    "correct_region_ids": [
-      "vr-view"
-    ],
-    "screen_variant": "default",
-    "order": 3
-  },
-  {
-    "check_id": "ac_clear_imc",
-    "type": "dashboard_click",
-    "question_type": "instructional_manipulation_check",
-    "prompt": "We want to understand whether first-time users can understand the helper tool. Imagine you are helping the headset user. For this question only, click the Clear button.",
-    "target_feature": "Clear annotations button",
-    "acceptable_features": [
-      "clear-button"
-    ],
-    "correct_region_ids": [
-      "clear-button"
-    ],
-    "screen_variant": "default",
-    "order": 4
-  },
-  {
     "check_id": "ac_last_year",
     "type": "multiple_choice",
     "prompt": "What year was last year?",
