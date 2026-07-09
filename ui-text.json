@@ -293,6 +293,7 @@
     "vrViewLabel": "VR user's current view"
   },
   "regionLabels": {
+    "vr-view": "VR user's current view",
     "objectButton": "object button",
     "task-dropdown": "task dropdown",
     "task-list": "activity list",
@@ -306,7 +307,6 @@
     "objects-panel": "current activity objects section",
     "object-guide-button": "object button",
     "object-highlight-button": "object button",
-    "vr-view": "VR user's current view",
     "freehand-button": "Free hand drawing button",
     "clear-button": "Clear button",
     "controller-panel": "controller guidance section",
