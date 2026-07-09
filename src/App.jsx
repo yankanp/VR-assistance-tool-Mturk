@@ -241,190 +241,58 @@ function buildMetricsPayload(session, config) {
   };
 }
 
-function LandingPage({ onAccept, onDecline }) {
+
+function formatTextTemplate(template, values = {}) {
+  return String(template || '').replace(/\{(\w+)\}/g, (_, key) => values[key] ?? '');
+}
+
+function renderTextBlocks(blocks = []) {
+  return blocks.map((block, index) => {
+    if (block.type === 'heading') {
+      return <p key={index}><strong>{block.text}</strong></p>;
+    }
+    if (block.type === 'list') {
+      return <ul key={index}>{(block.items ?? []).map((item) => <li key={item}>{item}</li>)}</ul>;
+    }
+    return <p key={index}>{block.text}</p>;
+  });
+}
+
+function LandingPage({ onAccept, onDecline, uiText }) {
+  const text = uiText?.consent ?? {};
   return (
     <main className="page-shell">
       <section className="study-card consent-card">
-        <h1>Informed Consent</h1>
+        <h1>{text.title ?? 'Informed Consent'}</h1>
         <div className="consent-box consent-full-text">
-          <p><strong>STUDY TITLE</strong></p>
-          <p>Evaluating the understandability of an assistance tool for virtual reality application</p>
-
-          <p><strong>PRINCIPAL INVESTIGATOR</strong></p>
-          <p>Krishna Kumar Venkatasubramanian, Ph.D.</p>
-          <p>Office: (401) 874-2701</p>
-          <p>Email: krish@uri.edu</p>
-
-          <p><strong>STUDENT INVESTIGATORS</strong></p>
-          <p>Piriyankan Kirupaharan</p>
-          <p>Email: pkirupaharan@uri.edu</p>
-
-          <p><strong>OTHER INVESTIGATORS</strong></p>
-          <p>Tina-Marie Ranalli</p>
-          <p>tinamarie.ranalli@uri.edu</p>
-
-          <p><strong>KEY INFORMATION</strong></p>
-
-          <p>Important information to know about this research study:</p>
-
-          <ul>
-            <li>The purpose of this study is to evaluate whether untrained first-time users can correctly identify the appropriate assistance features in the assistance tool, and to measure how efficiently they can do so</li>
-            <li>If you choose to participate, you will interact with a web application designed to help a person using virtual reality application. You will then be asked a few questions about your experience. This will take about 20 minutes.</li>
-            <li>Risks or discomfort from this research are expected to be minimal.</li>
-            <li>The study will have no direct benefits to you.</li>
-            <li>You will be paid $4 for your participation.</li>
-            <li>Taking part in this research project is voluntary. You do not have to participate, and you can stop at any time.</li>
-          </ul>
-
-          <p><strong>INVITATION</strong></p>
-
-          <p>You are invited to take part in this research study. The information in this form is meant to help you decide whether or not to participate. If you have any questions, please ask.</p>
-
-          <p><strong>Why are you being asked to be in this research study?</strong></p>
-
-          <p>You are being asked to be in this study in order to evaluate understandability of an assistance tool. In order to participate you must at least 18 years old.</p>
-
-          <p><strong>What is the reason for doing this research study?</strong></p>
-
-          <p>The goal of this study is to evaluate the understandability of an assistance tool for virtual reality application.</p>
-          <p>This study focuses on whether first-time users can identify the correct assistance feature in the assistance tool when asked what assistance they would provide.</p>
-
-          <p><strong>What will be done during this research study?</strong></p>
-
-          <p>If you agree to participate, you will first read a brief introduction explaining the purpose of the study and your role. You will then complete several attention check questions. These questions are included to ensure that participants are carefully reading the study materials. If you pass the attention checks, you will complete a series of questions about the helper tool. For each question, you will see the assistance tool and your task is to click the part of the assistance tool that best answers the question. The assistance tool includes several regions, after you click a region, the selected region will be highlighted. You may change your selection before moving to the next question. Only your final selected region for each question will be recorded as your answer. You will not be told whether each answer is correct during the study.</p>
-
-          <p>Afterward, you will be asked to complete a short survey with questions your experience using the assistance tool as well as a few demographics questions such as age, gender, and prior VR experience. Your answers to the survey will not affect your compensation in any way. At the end of the survey, you will receive a completion code. You will copy and paste this code into Amazon Mechanical Turk to receive payment for completing the study.</p>
-
-          <p><strong>What are the possible risks of being in this research study?</strong></p>
-
-          <p>There are no known risks to you from being in this research study.</p>
-
-          <p><strong>What are the possible benefits to you?</strong></p>
-
-          <p>You are not expected to get any benefit from being in this study.</p>
-
-          <p><strong>What are the possible benefits to other people?</strong></p>
-          <p>This research may help us understand whether people can use the assistance tool to provide assistance in VR activities. The results may help improve future tools for supporting VR users, including users who may need assistance during VR activities.</p>
-
-          <p><strong>What will being in this research study cost you?</strong></p>
-
-          <p>There is no cost to you to be in this research study.</p>
-
-          <p><strong>Will you be compensated for being in this research study?</strong></p>
-
-          <p>You will receive $4 for participating in this study.</p>
-
-          <p><strong>What should you do if you have a problem during this research study?</strong></p>
-
-          <p>Your welfare is the major concern of every member of the research team. If you have a problem as a direct result of being in this study, you should immediately contact one of the people listed at the beginning of this consent form.</p>
-
-          <p><strong>How will information about you be protected?</strong></p>
-
-          <p>Reasonable steps will be taken to protect your privacy and the confidentiality of your study data.</p>
-
-          <p>The data will be stored electronically through a secure server and will only be seen by the research team during the study and for 5 years or longer after the study is complete.</p>
-
-          <p>The only persons who will have access to your research records are the study personnel, the Institutional Review Board (IRB), and any other person, agency, or sponsor as required by law. The information from this study may be published in scientific journals or presented at scientific meetings but the data will be reported as group or summarized data and your identity will be kept strictly confidential.</p>
-
-          <p><strong>What are your rights as a research subject?</strong></p>
-
-          <p>You may ask any questions concerning this research and have those questions answered before agreeing to participate in or during the study.</p>
-
-          <p>For study related questions, please contact the investigator(s) listed at the beginning of this form.</p>
-
-          <p>For questions concerning your rights or complaints about the research contact the Institutional Review Board (IRB) or Vice President for Research and Economic Development:</p>
-
-          <ul>
-            <li>IRB: (401) 874-4328 / researchintegrity@etal.uri.edu.</li>
-            <li>Vice President for Research and Economic Development: at (401) 874-4576</li>
-          </ul>
-
-          <p><strong>What will happen if you decide not to be in this research study or decide to stop participating once you start?</strong></p>
-
-          <p>You can decide not to be in this research study, or you can stop being in this research study (“withdraw”) at any time before, during, or after the research begins for any reason. Deciding not to be in this research study or deciding to withdraw will not affect your relationship with the investigator or with the University of Rhode Island.</p>
-
-          <p>You will not lose any benefits to which you are entitled.</p>
-
-          <p><strong>Documentation of informed consent</strong></p>
-
-          <p>You are voluntarily making a decision whether or not to be in this research study. Agreeing to this form means that (1) you have read and understood this consent form, (2) you have had your questions answered, and (3) you have decided to be in the research study. You can request a copy of this consent form to keep</p>
+          {renderTextBlocks(text.blocks)}
         </div>
         <div className="consent-actions">
           <button className="primary-action" type="button" onClick={onAccept}>
-            I consent and want to continue
+            {text.acceptButton ?? 'I consent and want to continue'}
           </button>
           <button className="secondary-action" type="button" onClick={onDecline}>
-            I do not consent
+            {text.declineButton ?? 'I do not consent'}
           </button>
         </div>
       </section>
     </main>
   );
 }
-function IntroPage({ onNext }) {
+function IntroPage({ onNext, uiText }) {
+  const text = uiText?.intro ?? {};
   return (
     <main className="page-shell">
       <section className="study-card intro-card">
-        <p className="eyebrow">Study Introduction</p>
-        <h1>How this study works</h1>
-        <p>
-          In this study, you will be shown a helper tool designed to assist a person using a virtual
-          reality (VR) application. The helper tool displays the VR user's current view together with
-          information and features that can be used to assist the VR user during different activities.
-        </p>
-        <p>
-          Imagine that you are observing the VR user through this helper tool. Throughout the study,
-          you will be asked questions about the helper tool, such as where you would find specific
-          information or which feature you would use in a particular situation. For each question,
-          your task is to click the appropriate part of the helper tool that best answers the question.
-        </p>
-        <p>
-          All regions in the dashboard are clickable. You may click any region, button, dropdown,
-          video, or control while answering a question. If you click more than one place, only the
-          last region you clicked before pressing Next will be counted as your chosen answer.
-        </p>
-        <p>
-          The same dashboard region may be the correct answer for more than one question.
-        </p>
+        <p className="eyebrow">{text.eyebrow ?? 'Study Introduction'}</p>
+        <h1>{text.title ?? 'How this study works'}</h1>
+        {(text.paragraphs ?? []).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         <button className="primary-action" type="button" onClick={onNext}>
-          Start study questions
+          {text.startButton ?? 'Start study questions'}
         </button>
       </section>
     </main>
   );
-}
-
-function getTaskNumber(task) {
-  return Number.isFinite(Number(task?.order)) ? Number(task.order) : 0;
-}
-
-function getObjectKey(object, index) {
-  return object?.objectPath || object?.id || `object-${index}`;
-}
-
-function getInstructionLines(task) {
-  return String(task?.writtenInstructions ?? '')
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
-}
-
-function getButtonsForObject(object, controllerSide = 'left') {
-  return object?.controllerHints?.[controllerSide]?.needsToPress ?? [];
-}
-
-function getButtonLabel(buttons) {
-  return buttons?.length
-    ? buttons.map((button) => button[0].toUpperCase() + button.slice(1)).join(' + ')
-    : 'No buttons required';
-}
-
-function getStudyAudioPath(task) {
-  const taskNumber = getTaskNumber(task);
-  if (AVAILABLE_AUDIO_TASKS.has(taskNumber) && task?.sendAudioInstructionMp3Path) {
-    return task.sendAudioInstructionMp3Path;
-  }
-  return FALLBACK_AUDIO_PATH;
 }
 
 function getObjectViewImage(index) {
@@ -433,36 +301,9 @@ function getObjectViewImage(index) {
   return `img/VR_user_current_view_screenshots/task-18-obj-${objectNumber}.png`;
 }
 
-function getRegionFeedbackLabel(regionId) {
-  if (regionId?.startsWith('object-button-')) return 'object button';
-
-  const labels = {
-    'task-dropdown': 'task dropdown',
-    'task-list': 'activity list',
-    'task-progress': 'current task and progress text',
-    'completed-task': 'completed task option',
-    'current-task': 'current task option',
-    'future-task': 'future task option',
-    'instructions-panel': 'current activity section',
-    'instructions-written': 'written instruction text',
-    'listen-button': 'Listen button',
-    'objects-panel': 'current activity objects section',
-    'object-guide-button': 'object button',
-    'object-highlight-button': 'object button',
-    'vr-view': "VR user's current view",
-    'freehand-button': 'Free hand drawing button',
-    'clear-button': 'Clear button',
-    'controller-panel': 'controller guidance section',
-    'controller-object-dropdown': 'controller object dropdown',
-    'controller-side-dropdown': 'left/right controller dropdown',
-    'controller-video': 'controller video player',
-    'controller-send-button': 'controller Send button',
-    'demo-panel': 'current activity demo section',
-    'demo-video': 'activity demo video player',
-    'demo-send-button': 'demo Send button',
-    'vr-sent-video': 'video shown in the VR view',
-  };
-  return labels[regionId] ?? regionId.replaceAll('-', ' ');
+function getRegionFeedbackLabel(regionId, uiText) {
+  if (regionId?.startsWith('object-button-')) return uiText?.regionLabels?.objectButton ?? 'object button';
+  return uiText?.regionLabels?.[regionId] ?? regionId.replaceAll('-', ' ');
 }
 
 function isCorrectRegionSelection(selectedRegionId, correctRegionIds) {
@@ -474,8 +315,9 @@ function isCorrectRegionSelection(selectedRegionId, correctRegionIds) {
   return false;
 }
 
-function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, metadata, resetKey }) {
+function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, metadata, resetKey, uiText }) {
   const tasks = metadata?.tasks ?? [];
+  const dashboardText = uiText?.dashboard ?? {};
   const initialTask = tasks.find((task) => getTaskNumber(task) === CURRENT_TASK_ORDER) ?? tasks[0];
   const [selectedTaskId, setSelectedTaskId] = useState(initialTask?.id ?? '');
   const [selectedObjectKey, setSelectedObjectKey] = useState('');
@@ -524,7 +366,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     current: 'current-task',
     future: 'future-task',
   };
-  const taskStatusLabel = {
+  const taskStatusLabel = dashboardText.statusLabels ?? {
     completed: 'Completed task',
     current: 'Current task',
     future: 'Future task',
@@ -826,7 +668,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
       </section>
 
       <section {...regionProps('instructions-panel')} aria-label="Current activity instructions">
-        <h2>Current activity</h2>
+        <h2>{dashboardText.currentActivityTitle ?? 'Current activity'}</h2>
         <p
           data-region-id="instructions-written"
           className={`instruction-copy clickable-region ${selectedRegionId === 'instructions-written' ? 'selected-region' : ''}`}
@@ -854,13 +696,13 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           {...actionProps('listen-button', 'listen-button', !isCurrentTask || !instructionAudioUrl)}
           onClick={handleListenClick}
         >
-          {isInstructionPlaying ? 'Playing' : 'Listen'}
+          {isInstructionPlaying ? (dashboardText.playing ?? 'Playing') : (dashboardText.listen ?? 'Listen')}
         </button>
       </section>
 
       <section {...regionProps('objects-panel')} aria-label="Current activity objects">
-        <h2>Current activity objects</h2>
-        <p>Tap to highlight and point</p>
+        <h2>{dashboardText.objectsTitle ?? 'Current activity objects'}</h2>
+        <p>{dashboardText.objectsHint ?? 'Tap to highlight and point'}</p>
         <div className="object-button-list">
           {(currentTask?.objects ?? []).map((object, index) => {
             const regionId = `object-button-${index}`;
@@ -936,7 +778,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               onRegionClick('freehand-button', event);
             }}
           >
-            {isFreehandActive ? 'Drawing' : 'Free hand'}
+            {isFreehandActive ? (dashboardText.drawing ?? 'Drawing') : (dashboardText.freeHand ?? 'Free hand')}
           </button>
           <button
             {...actionProps('clear-button', `floating-tool clear ${hasActiveAnnotation ? 'clear-enabled' : ''}`, !isCurrentTask || !hasActiveAnnotation)}
@@ -953,14 +795,14 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               onRegionClick('clear-button', event);
             }}
           >
-            Clear
+            {dashboardText.clear ?? 'Clear'}
           </button>
         </div>
       </section>
 
       <section {...regionProps('controller-panel')} aria-label="Current activity controller guidance">
         <div className="controller-header">
-          <span>Required controls for:</span>
+          <span>{dashboardText.requiredControlsFor ?? 'Required controls for:'}</span>
           <select
             data-region-id="controller-object-dropdown"
               className={`clickable-region ${selectedRegionId === 'controller-object-dropdown' ? 'selected-region' : ''}`}
@@ -987,8 +829,8 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               value={controllerSide}
               aria-label="Controller side selector"
             >
-            <option value="left">Left controller</option>
-            <option value="right">Right controller</option>
+            <option value="left">{dashboardText.leftController ?? 'Left controller'}</option>
+            <option value="right">{dashboardText.rightController ?? 'Right controller'}</option>
           </select>
         </div>
         <div className="controller-body">
@@ -1029,7 +871,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
                 autoPlay={isControllerVideoPlaying}
               />
             ) : (
-              <div className="no-video-message">There is no action required for this object</div>
+              <div className="no-video-message">{dashboardText.noActionRequired ?? 'There is no action required for this object'}</div>
             )}
             {hasControllerVideo && <span className="play-symbol">{isControllerVideoPlaying ? 'Ⅱ' : '▶'}</span>}
           </div>
@@ -1049,13 +891,13 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               onRegionClick('controller-send-button', event);
             }}
           >
-            {sentControllerVideo ? 'Remove video' : 'Send'}
+            {sentControllerVideo ? (dashboardText.removeVideo ?? 'Remove video') : (dashboardText.send ?? 'Send')}
           </button>
         </div>
       </section>
 
       <section {...regionProps('demo-panel')} aria-label="Current activity demonstration video">
-        <h2>Current activity demo</h2>
+        <h2>{dashboardText.demoTitle ?? 'Current activity demo'}</h2>
         <div
           data-region-id="demo-video"
           className={`demo-thumb clickable-region ${selectedRegionId === 'demo-video' ? 'selected-region' : ''}`}
@@ -1097,7 +939,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             onRegionClick('demo-send-button', event);
           }}
         >
-          {sentDemoVideo ? 'Remove video' : 'Send'}
+          {sentDemoVideo ? (dashboardText.removeVideo ?? 'Remove video') : (dashboardText.send ?? 'Send')}
         </button>
       </section>
     </div>
@@ -1105,7 +947,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   );
 }
 
-function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubmit }) {
+function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubmit, uiText }) {
   const [answer, setAnswer] = useState('');
   const canSubmit = String(answer).trim().length > 0;
 
@@ -1113,16 +955,16 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
     <main className="study-interaction-page attention-inline-page">
       <header className="question-bar attention-inline-card">
         <div>
-          <p className="eyebrow">Question {questionIndex + 1} of {totalQuestions}</p>
+          <p className="eyebrow">{formatTextTemplate(uiText?.question?.progressTemplate ?? 'Question {current} of {total}', { current: questionIndex + 1, total: totalQuestions })}</p>
           <h1>{check.prompt}</h1>
           {check.type === 'open_text' && (
             <p className="selection-feedback">
-              Answer in one or two sentences. This response helps us check whether the instruction was understood.
+{uiText?.inlineAttention?.openTextHelp ?? 'Answer in one or two sentences. This response helps us check whether the instruction was understood.'}
             </p>
           )}
         </div>
         <button className="next-button" type="button" disabled={!canSubmit} onClick={() => onSubmit(answer)}>
-          Next
+          {uiText?.question?.nextButton ?? 'Next'}
         </button>
       </header>
       <section className="study-card inline-check-panel">
@@ -1141,12 +983,12 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
           </div>
         ) : (
           <label className="text-answer open-text-answer">
-            <span>Your answer</span>
+            <span>{uiText?.inlineAttention?.answerLabel ?? 'Your answer'}</span>
             <textarea
               value={answer}
               onChange={(event) => setAnswer(event.target.value)}
               rows={7}
-              placeholder="Type your answer here"
+              placeholder={uiText?.inlineAttention?.answerPlaceholder ?? 'Type your answer here'}
             />
           </label>
         )}
@@ -1154,27 +996,27 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
     </main>
   );
 }
-function MainQuestionPage({ question, questionIndex, totalQuestions, selectedRegionId, onRegionClick, onNext, metadata }) {
-  const selectedLabel = selectedRegionId ? getRegionFeedbackLabel(selectedRegionId) : '';
+function MainQuestionPage({ question, questionIndex, totalQuestions, selectedRegionId, onRegionClick, onNext, metadata, uiText }) {
+  const selectedLabel = selectedRegionId ? getRegionFeedbackLabel(selectedRegionId, uiText) : '';
 
   return (
     <main className="study-interaction-page">
       <header className="question-bar">
         <div>
-          <p className="eyebrow">Question {questionIndex + 1} of {totalQuestions}</p>
+          <p className="eyebrow">{formatTextTemplate(uiText?.question?.progressTemplate ?? 'Question {current} of {total}', { current: questionIndex + 1, total: totalQuestions })}</p>
           <h1>{question.prompt}</h1>
           <p className={`selection-feedback ${selectedRegionId ? 'has-selection' : ''}`}>
             {selectedRegionId ? (
               <>
-                You have selected <strong>{selectedLabel}</strong>, highlighted in yellow.
+{formatTextTemplate(uiText?.question?.selectedTemplate ?? 'You have selected {label}, highlighted in yellow.', { label: selectedLabel })}
               </>
             ) : (
-              'Select one region, button, dropdown, or video in the tablet below.'
+              uiText?.question?.noSelection ?? 'Select one region, button, dropdown, or video in the tablet below.'
             )}
           </p>
         </div>
         <button className="next-button" type="button" disabled={!selectedRegionId} onClick={onNext}>
-          Next
+          {uiText?.question?.nextButton ?? 'Next'}
         </button>
       </header>
       <div className="tablet-stage">
@@ -1184,6 +1026,7 @@ function MainQuestionPage({ question, questionIndex, totalQuestions, selectedReg
           screenVariant={question.screen_variant}
           metadata={metadata}
           resetKey={question.question_id}
+          uiText={uiText}
         />
       </div>
     </main>
@@ -1191,6 +1034,7 @@ function MainQuestionPage({ question, questionIndex, totalQuestions, selectedReg
 }
 
 function CompletionPage({
+  uiText,
   completionCode,
   qualtricsUrl,
   externalSubmitUrl,
@@ -1212,7 +1056,7 @@ function CompletionPage({
   function handleSubmitHit(event) {
     if (!canSubmitHit || normalizedEnteredCode !== normalizedCompletionCode) {
       event.preventDefault();
-      setCodeError('The code does not match. Please copy the code exactly from Qualtrics.');
+      setCodeError(uiText?.completion?.codeMismatch ?? 'The code does not match. Please copy the code exactly from Qualtrics.');
       return;
     }
     setCodeError('');
@@ -1221,31 +1065,31 @@ function CompletionPage({
   return (
     <main className="page-shell">
       <section className="study-card completion-card">
-        <h1>Please continue to the exit survey.</h1>
-        <p>Your study responses must be saved before you can submit this HIT.</p>
-        <p>Keep this MTurk page open. The exit survey opens in a new tab.</p>
+        <h1>{uiText?.completion?.title ?? 'Please continue to the exit survey.'}</h1>
+        <p>{uiText?.completion?.saveBeforeSubmit ?? 'Your study responses must be saved before you can submit this HIT.'}</p>
+        <p>{uiText?.completion?.keepOpen ?? 'Keep this MTurk page open. The exit survey opens in a new tab.'}</p>
         <div className="completion-actions">
           {(metricsSaveStatus === 'idle' || metricsSaveStatus === 'saving') && (
             <button className="primary-action" type="button" disabled>
-              Saving responses...
+              {uiText?.completion?.saving ?? 'Saving responses...'}
             </button>
           )}
           {metricsSaveStatus === 'failed' && (
             <>
-              <p className="save-error">Responses could not be saved. Please retry before continuing.</p>
+              <p className="save-error">{uiText?.completion?.saveFailed ?? 'Responses could not be saved. Please retry before continuing.'}</p>
               <button className="primary-action" type="button" onClick={onRetrySave}>
-                Retry saving responses
+                {uiText?.completion?.retrySaving ?? 'Retry saving responses'}
               </button>
             </>
           )}
           {metricsSaveStatus === 'saved' && qualtricsUrl && (
             <a className="primary-action link-action" href={qualtricsUrl} target="_blank" rel="noopener noreferrer">
-              Open exit survey
+              {uiText?.completion?.openSurvey ?? 'Open exit survey'}
             </a>
           )}
           {metricsSaveStatus === 'saved' && !qualtricsUrl && (
             <button className="primary-action" type="button" disabled>
-              Qualtrics URL not configured
+              {uiText?.completion?.qualtricsMissing ?? 'Qualtrics URL not configured'}
             </button>
           )}
         </div>
@@ -1257,22 +1101,22 @@ function CompletionPage({
             <input type="hidden" name="study_worker_id" value={participantParams?.workerId || ''} />
             <input type="hidden" name="study_hit_id" value={participantParams?.hitId || ''} />
             <label className="completion-code-entry">
-              <span>Completion code from Qualtrics</span>
+              <span>{uiText?.completion?.codeLabel ?? 'Completion code from Qualtrics'}</span>
               <input
                 value={enteredCode}
                 onChange={(event) => {
                   setEnteredCode(event.target.value);
                   setCodeError('');
                 }}
-                placeholder="Paste the code shown at the end of Qualtrics"
+                placeholder={uiText?.completion?.codePlaceholder ?? 'Paste the code shown at the end of Qualtrics'}
                 autoComplete="off"
               />
             </label>
             <button className="primary-action" type="submit" disabled={!canSubmitHit}>
-              Submit HIT
+              {uiText?.completion?.submitHit ?? 'Submit HIT'}
             </button>
             {!externalSubmitUrl && (
-              <p className="save-error">MTurk submit URL is missing. Please open this study from the MTurk HIT page.</p>
+              <p className="save-error">{uiText?.completion?.missingSubmitUrl ?? 'MTurk submit URL is missing. Please open this study from the MTurk HIT page.'}</p>
             )}
             {codeError && <p className="save-error">{codeError}</p>}
           </form>
@@ -1283,40 +1127,34 @@ function CompletionPage({
   );
 }
 
-function ThankYouPage() {
+function ThankYouPage({ uiText }) {
   return (
     <main className="page-shell">
       <section className="study-card completion-card">
-        <h1>Thank you for your time.</h1>
-        <p>The study has ended. You may close this page.</p>
+        <h1>{uiText?.thankYou?.title ?? 'Thank you for your time.'}</h1>
+        <p>{uiText?.thankYou?.body ?? 'The study has ended. You may close this page.'}</p>
       </section>
     </main>
   );
 }
 
-function MturkRequiredPage() {
+function MturkRequiredPage({ uiText }) {
   return (
     <main className="page-shell">
       <section className="study-card completion-card">
-        <h1>Please open this study from the MTurk HIT page.</h1>
-        <p>
-          This study requires a valid MTurk worker ID, assignment ID, and HIT ID. Please return to
-          MTurk and use the survey link shown inside the HIT.
-        </p>
+        <h1>{uiText?.access?.mturkRequiredTitle ?? 'Please open this study from the MTurk HIT page.'}</h1>
+        <p>{uiText?.access?.mturkRequiredBody ?? 'This study requires a valid MTurk worker ID, assignment ID, and HIT ID. Please return to MTurk and use the survey link shown inside the HIT.'}</p>
       </section>
     </main>
   );
 }
 
-function MturkPreviewPage() {
+function MturkPreviewPage({ uiText }) {
   return (
     <main className="page-shell">
       <section className="study-card completion-card">
-        <h1>Please accept the HIT before starting the study.</h1>
-        <p>
-          You are currently previewing this HIT. After you accept it on MTurk, this study will open
-          with your assignment information and you can begin.
-        </p>
+        <h1>{uiText?.access?.mturkPreviewTitle ?? 'Please accept the HIT before starting the study.'}</h1>
+        <p>{uiText?.access?.mturkPreviewBody ?? 'You are currently previewing this HIT. After you accept it on MTurk, this study will open with your assignment information and you can begin.'}</p>
       </section>
     </main>
   );
@@ -1327,6 +1165,7 @@ export default function App() {
   const [questions, setQuestions] = useState([]);
   const [attentionChecks, setAttentionChecks] = useState([]);
   const [metadata, setMetadata] = useState(null);
+  const [uiText, setUiText] = useState(null);
   const [loadError, setLoadError] = useState('');
   const [phase, setPhase] = useState('loading');
   const [session, setSession] = useState(null);
@@ -1348,14 +1187,16 @@ export default function App() {
       fetch(assetUrl('questions.json')).then((response) => response.json()),
       fetch(assetUrl('attention-checks.json')).then((response) => response.json()),
       fetch(assetUrl('task_metadata.json')).then((response) => response.json()),
+      fetch(assetUrl('ui-text.json')).then((response) => response.json()),
     ])
-      .then(([loadedConfig, loadedQuestions, loadedAttentionChecks, loadedMetadata]) => {
+      .then(([loadedConfig, loadedQuestions, loadedAttentionChecks, loadedMetadata, loadedUiText]) => {
         const participantParams = getUrlParams();
         if (loadedConfig.requireMturkParams && isMturkPreview(participantParams)) {
           setConfig(loadedConfig);
           setQuestions(loadedQuestions);
           setAttentionChecks(loadedAttentionChecks);
           setMetadata(loadedMetadata);
+          setUiText(loadedUiText);
           setPhase('mturk_preview');
           return;
         }
@@ -1364,6 +1205,7 @@ export default function App() {
           setQuestions(loadedQuestions);
           setAttentionChecks(loadedAttentionChecks);
           setMetadata(loadedMetadata);
+          setUiText(loadedUiText);
           setPhase('mturk_required');
           return;
         }
@@ -1371,6 +1213,7 @@ export default function App() {
         setQuestions(loadedQuestions);
         setAttentionChecks(loadedAttentionChecks);
         setMetadata(loadedMetadata);
+        setUiText(loadedUiText);
         setPhase('consent');
       })
       .catch((error) => {
@@ -1692,14 +1535,14 @@ export default function App() {
   }, [config, config?.metricsApiBaseUrl, sessionPayload]);
 
   if (phase === 'loading') {
-    return <main className="page-shell"><section className="study-card">Loading study...</section></main>;
+    return <main className="page-shell"><section className="study-card">{uiText?.access?.loading ?? 'Loading study...'}</section></main>;
   }
 
   if (phase === 'error') {
     return (
       <main className="page-shell">
         <section className="study-card">
-          <h1>Study could not load</h1>
+          <h1>{uiText?.access?.loadErrorTitle ?? 'Study could not load'}</h1>
           <p>{loadError}</p>
         </section>
       </main>
@@ -1707,15 +1550,15 @@ export default function App() {
   }
 
   if (phase === 'mturk_required') {
-    return <MturkRequiredPage />;
+    return <MturkRequiredPage uiText={uiText} />;
   }
 
   if (phase === 'mturk_preview') {
-    return <MturkPreviewPage />;
+    return <MturkPreviewPage uiText={uiText} />;
   }
 
-  if (phase === 'consent') return <LandingPage onAccept={acceptConsent} onDecline={declineConsent} />;
-  if (phase === 'intro') return <IntroPage onNext={startQuestions} />;
+  if (phase === 'consent') return <LandingPage onAccept={acceptConsent} onDecline={declineConsent} uiText={uiText} />;
+  if (phase === 'intro') return <IntroPage onNext={startQuestions} uiText={uiText} />;
 
   if (phase === 'main' && currentFlowItem?.type === 'attention_check') {
     return (
@@ -1724,6 +1567,7 @@ export default function App() {
         questionIndex={displayedQuestionIndex}
         totalQuestions={totalQuestionCount}
         onSubmit={handleInlineAttentionSubmit}
+        uiText={uiText}
       />
     );
   }
@@ -1738,17 +1582,19 @@ export default function App() {
         onRegionClick={handleRegionClick}
         onNext={handleMainNext}
         metadata={metadata}
+        uiText={uiText}
       />
     );
   }
 
   if (phase === 'ended') {
-    return <ThankYouPage />;
+    return <ThankYouPage uiText={uiText} />;
   }
 
   if (phase === 'complete') {
     return (
       <CompletionPage
+        uiText={uiText}
         completionCode={backendCompletionCode}
         qualtricsUrl={backendQualtricsUrl}
         externalSubmitUrl={makeExternalSubmitUrl(session?.participant_params?.turkSubmitTo)}
