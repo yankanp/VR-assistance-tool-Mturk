@@ -315,15 +315,59 @@ function LandingPage({ onAccept, onDecline, uiText }) {
 }
 function IntroPage({ onNext, uiText }) {
   const text = uiText?.intro ?? {};
+  const slides = text.slides ?? [];
+  const [slideIndex, setSlideIndex] = useState(0);
+  const totalSlides = slides.length;
+  const currentSlide = slides[slideIndex];
+  const isLastSlide = slideIndex >= totalSlides - 1;
+
+  function goBack() {
+    setSlideIndex((index) => Math.max(index - 1, 0));
+  }
+
+  function goNext() {
+    if (isLastSlide) {
+      onNext();
+      return;
+    }
+    setSlideIndex((index) => Math.min(index + 1, totalSlides - 1));
+  }
+
   return (
     <main className="page-shell">
-      <section className="study-card intro-card">
-        <p className="eyebrow">{text.eyebrow ?? 'Study Introduction'}</p>
-        <h1>{text.title ?? 'How this study works'}</h1>
-        {(text.paragraphs ?? []).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-        <button className="primary-action" type="button" onClick={onNext}>
-          {text.startButton ?? 'Start study questions'}
-        </button>
+      <section className="study-card intro-card intro-slide-card">
+        <div className="intro-slide-header">
+          <div>
+            <p className="eyebrow">{text.eyebrow ?? 'Study Introduction'}</p>
+            <h1>{text.title ?? 'How this study works'}</h1>
+          </div>
+          {totalSlides > 0 && (
+            <p className="intro-slide-counter">{slideIndex + 1} / {totalSlides}</p>
+          )}
+        </div>
+
+        {currentSlide ? (
+          <div className="intro-slide-frame">
+            <img
+              src={assetUrl(currentSlide)}
+              alt={`${text.slideAltPrefix ?? 'Introduction slide'} ${slideIndex + 1}`}
+              className="intro-slide-image"
+            />
+          </div>
+        ) : (
+          <div className="intro-slide-fallback">
+            {(text.paragraphs ?? []).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </div>
+        )}
+
+        <div className="intro-slide-actions">
+          <button className="secondary-action" type="button" onClick={goBack} disabled={slideIndex === 0}>
+            {text.backButton ?? 'Back'}
+          </button>
+          <button className="primary-action" type="button" onClick={goNext}>
+            {isLastSlide ? (text.startButton ?? 'Start study questions') : (text.nextButton ?? 'Next')}
+          </button>
+        </div>
       </section>
     </main>
   );

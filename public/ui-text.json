@@ -1,322 +1,327 @@
 {
-  "consent": {
-    "title": "Informed Consent",
-    "acceptButton": "I consent and want to continue",
-    "declineButton": "I do not consent",
-    "blocks": [
-      {
-        "type": "heading",
-        "text": "STUDY TITLE"
-      },
-      {
-        "type": "paragraph",
-        "text": "Evaluating the understandability of an assistance tool for virtual reality application"
-      },
-      {
-        "type": "heading",
-        "text": "PRINCIPAL INVESTIGATOR"
-      },
-      {
-        "type": "paragraph",
-        "text": "Krishna Kumar Venkatasubramanian, Ph.D."
-      },
-      {
-        "type": "paragraph",
-        "text": "Office: (401) 874-2701"
-      },
-      {
-        "type": "paragraph",
-        "text": "Email: krish@uri.edu"
-      },
-      {
-        "type": "heading",
-        "text": "STUDENT INVESTIGATORS"
-      },
-      {
-        "type": "paragraph",
-        "text": "Piriyankan Kirupaharan"
-      },
-      {
-        "type": "paragraph",
-        "text": "Email: pkirupaharan@uri.edu"
-      },
-      {
-        "type": "heading",
-        "text": "OTHER INVESTIGATORS"
-      },
-      {
-        "type": "paragraph",
-        "text": "Tina-Marie Ranalli"
-      },
-      {
-        "type": "paragraph",
-        "text": "tinamarie.ranalli@uri.edu"
-      },
-      {
-        "type": "heading",
-        "text": "KEY INFORMATION"
-      },
-      {
-        "type": "paragraph",
-        "text": "Important information to know about this research study:"
-      },
-      {
-        "type": "list",
-        "items": [
-          "The purpose of this study is to evaluate whether untrained first-time users can correctly identify the appropriate assistance features in the assistance tool, and to measure how efficiently they can do so",
-          "If you choose to participate, you will interact with a web application designed to help a person using virtual reality application. You will then be asked a few questions about your experience. This will take about 20 minutes.",
-          "Risks or discomfort from this research are expected to be minimal.",
-          "The study will have no direct benefits to you.",
-          "You will be paid $4 for your participation.",
-          "Taking part in this research project is voluntary. You do not have to participate, and you can stop at any time."
-        ]
-      },
-      {
-        "type": "heading",
-        "text": "INVITATION"
-      },
-      {
-        "type": "paragraph",
-        "text": "You are invited to take part in this research study. The information in this form is meant to help you decide whether or not to participate. If you have any questions, please ask."
-      },
-      {
-        "type": "heading",
-        "text": "Why are you being asked to be in this research study?"
-      },
-      {
-        "type": "paragraph",
-        "text": "You are being asked to be in this study in order to evaluate understandability of an assistance tool. In order to participate you must at least 18 years old."
-      },
-      {
-        "type": "heading",
-        "text": "What is the reason for doing this research study?"
-      },
-      {
-        "type": "paragraph",
-        "text": "The goal of this study is to evaluate the understandability of an assistance tool for virtual reality application."
-      },
-      {
-        "type": "paragraph",
-        "text": "This study focuses on whether first-time users can identify the correct assistance feature in the assistance tool when asked what assistance they would provide."
-      },
-      {
-        "type": "heading",
-        "text": "What will be done during this research study?"
-      },
-      {
-        "type": "paragraph",
-        "text": "If you agree to participate, you will first read a brief introduction explaining the purpose of the study and your role. You will then answer a series of questions about the helper tool. For each question, you will see the assistance tool and your task is to click the part of the assistance tool that best answers the question. The assistance tool includes several regions, after you click a region, the selected region will be highlighted. You may change your selection before moving to the next question. Only your final selected region for each question will be recorded as your answer. You will not be told whether each answer is correct during the study."
-      },
-      {
-        "type": "paragraph",
-        "text": "Afterward, you will be asked to complete a short survey with questions your experience using the assistance tool as well as a few demographics questions such as age, gender, and prior VR experience. Your answers to the survey will not affect your compensation in any way. At the end of the survey, you will receive a completion code. You will copy and paste this code into Amazon Mechanical Turk to receive payment for completing the study."
-      },
-      {
-        "type": "heading",
-        "text": "What are the possible risks of being in this research study?"
-      },
-      {
-        "type": "paragraph",
-        "text": "There are no known risks to you from being in this research study."
-      },
-      {
-        "type": "heading",
-        "text": "What are the possible benefits to you?"
-      },
-      {
-        "type": "paragraph",
-        "text": "You are not expected to get any benefit from being in this study."
-      },
-      {
-        "type": "heading",
-        "text": "What are the possible benefits to other people?"
-      },
-      {
-        "type": "paragraph",
-        "text": "This research may help us understand whether people can use the assistance tool to provide assistance in VR activities. The results may help improve future tools for supporting VR users, including users who may need assistance during VR activities."
-      },
-      {
-        "type": "heading",
-        "text": "What will being in this research study cost you?"
-      },
-      {
-        "type": "paragraph",
-        "text": "There is no cost to you to be in this research study."
-      },
-      {
-        "type": "heading",
-        "text": "Will you be compensated for being in this research study?"
-      },
-      {
-        "type": "paragraph",
-        "text": "You will receive $4 for participating in this study."
-      },
-      {
-        "type": "heading",
-        "text": "What should you do if you have a problem during this research study?"
-      },
-      {
-        "type": "paragraph",
-        "text": "Your welfare is the major concern of every member of the research team. If you have a problem as a direct result of being in this study, you should immediately contact one of the people listed at the beginning of this consent form."
-      },
-      {
-        "type": "heading",
-        "text": "How will information about you be protected?"
-      },
-      {
-        "type": "paragraph",
-        "text": "Reasonable steps will be taken to protect your privacy and the confidentiality of your study data."
-      },
-      {
-        "type": "paragraph",
-        "text": "The data will be stored electronically through a secure server and will only be seen by the research team during the study and for 5 years or longer after the study is complete."
-      },
-      {
-        "type": "paragraph",
-        "text": "The only persons who will have access to your research records are the study personnel, the Institutional Review Board (IRB), and any other person, agency, or sponsor as required by law. The information from this study may be published in scientific journals or presented at scientific meetings but the data will be reported as group or summarized data and your identity will be kept strictly confidential."
-      },
-      {
-        "type": "heading",
-        "text": "What are your rights as a research subject?"
-      },
-      {
-        "type": "paragraph",
-        "text": "You may ask any questions concerning this research and have those questions answered before agreeing to participate in or during the study."
-      },
-      {
-        "type": "paragraph",
-        "text": "For study related questions, please contact the investigator(s) listed at the beginning of this form."
-      },
-      {
-        "type": "paragraph",
-        "text": "For questions concerning your rights or complaints about the research contact the Institutional Review Board (IRB) or Vice President for Research and Economic Development:"
-      },
-      {
-        "type": "list",
-        "items": [
-          "IRB: (401) 874-4328 / researchintegrity@etal.uri.edu.",
-          "Vice President for Research and Economic Development: at (401) 874-4576"
-        ]
-      },
-      {
-        "type": "heading",
-        "text": "What will happen if you decide not to be in this research study or decide to stop participating once you start?"
-      },
-      {
-        "type": "paragraph",
-        "text": "You can decide not to be in this research study, or you can stop being in this research study (withdraw) at any time before, during, or after the research begins for any reason. Deciding not to be in this research study or deciding to withdraw will not affect your relationship with the investigator or with the University of Rhode Island."
-      },
-      {
-        "type": "paragraph",
-        "text": "You will not lose any benefits to which you are entitled."
-      },
-      {
-        "type": "heading",
-        "text": "Documentation of informed consent"
-      },
-      {
-        "type": "paragraph",
-        "text": "You are voluntarily making a decision whether or not to be in this research study. Agreeing to this form means that (1) you have read and understood this consent form, (2) you have had your questions answered, and (3) you have decided to be in the research study. You can request a copy of this consent form to keep"
-      }
-    ]
-  },
-  "intro": {
-    "eyebrow": "Study Introduction",
-    "title": "How this study works",
-    "paragraphs": [
-      "In this study, you will be shown a helper tool designed to assist a person using a virtual reality (VR) application. The helper tool displays the VR user's current view together with information and features that can be used to assist the VR user during different activities.",
-      "Imagine that you are observing the VR user through this helper tool. Throughout the study, you will be asked questions about the helper tool, such as where you would find specific information or which feature you would use in a particular situation. For each question, your task is to click the appropriate part of the helper tool that best answers the question.",
-      "All regions in the dashboard are clickable. You may click any region, button, dropdown, video, or control while answering a question. If you click more than one place, only the last region you clicked before pressing Next will be counted as your chosen answer.",
-      "The same dashboard region may be the correct answer for more than one question."
-    ],
-    "startButton": "Start study questions"
-  },
-  "question": {
-    "progressTemplate": "Question {current} of {total}",
-    "selectedTemplate": "You have selected {label}, highlighted in yellow.",
-    "noSelection": "Select anywhere on the tool.",
-    "nextButton": "Next"
-  },
-  "inlineAttention": {
-    "openTextHelp": "Answer in one or two sentences. This response helps us check whether the instruction was understood.",
-    "answerLabel": "Your answer",
-    "answerPlaceholder": "Type your answer here"
-  },
-  "access": {
-    "loading": "Loading study...",
-    "loadErrorTitle": "Study could not load",
-    "mturkRequiredTitle": "Please open this study from the MTurk HIT page.",
-    "mturkRequiredBody": "This study requires a valid MTurk worker ID, assignment ID, and HIT ID. Please return to MTurk and use the survey link shown inside the HIT.",
-    "mturkPreviewTitle": "Please accept the HIT before starting the study.",
-    "mturkPreviewBody": "You are currently previewing this HIT. After you accept it on MTurk, this study will open with your assignment information and you can begin."
-  },
-  "completion": {
-    "title": "Please continue to the exit survey.",
-    "saveBeforeSubmit": "Your study responses must be saved before you can submit this HIT.",
-    "keepOpen": "Keep this MTurk page open. The exit survey opens in a new tab.",
-    "saving": "Saving responses...",
-    "saveFailed": "Responses could not be saved. Please retry before continuing.",
-    "retrySaving": "Retry saving responses",
-    "openSurvey": "Open exit survey",
-    "qualtricsMissing": "Qualtrics URL not configured",
-    "codeLabel": "Completion code from Qualtrics",
-    "codePlaceholder": "Paste the code shown at the end of Qualtrics",
-    "submitHit": "Submit HIT",
-    "missingSubmitUrl": "MTurk submit URL is missing. Please open this study from the MTurk HIT page.",
-    "codeMismatch": "The code does not match. Please copy the code exactly from Qualtrics."
-  },
-  "thankYou": {
-    "title": "Thank you for your time.",
-    "body": "The study has ended. You may close this page."
-  },
-  "dashboard": {
-    "statusLabels": {
-      "completed": "Completed task",
-      "current": "Current task",
-      "future": "Future task"
-    },
-    "currentActivityTitle": "Current activity",
-    "objectsTitle": "Current activity objects",
-    "objectsHint": "Tap to highlight and point",
-    "requiredControlsFor": "Required controls for:",
-    "leftController": "Left controller",
-    "rightController": "Right controller",
-    "demoTitle": "Current activity demo",
-    "noActionRequired": "There is no action required for this object",
-    "listen": "Listen",
-    "playing": "Playing",
-    "drawing": "Drawing",
-    "freeHand": "Free hand",
-    "clear": "Clear",
-    "send": "Send",
-    "removeVideo": "Remove video",
-    "vrViewLabel": "VR user's current view"
-  },
-  "regionLabels": {
-    "vr-view": "VR user's current view",
-    "objectButton": "object button",
-    "task-dropdown": "task dropdown",
-    "task-list": "activity list",
-    "task-progress": "current task and progress text",
-    "completed-task": "completed task option",
-    "current-task": "current task option",
-    "future-task": "future task option",
-    "instructions-panel": "current activity section",
-    "instructions-written": "written instruction text",
-    "listen-button": "Listen button",
-    "objects-panel": "current activity objects section",
-    "object-guide-button": "object button",
-    "object-highlight-button": "object button",
-    "freehand-button": "Free hand drawing button",
-    "clear-button": "Clear button",
-    "controller-panel": "controller guidance section",
-    "controller-object-dropdown": "controller object dropdown",
-    "controller-side-dropdown": "left/right controller dropdown",
-    "controller-video": "controller video player",
-    "controller-send-button": "controller Send button",
-    "demo-panel": "current activity demo section",
-    "demo-video": "activity demo video player",
-    "demo-send-button": "demo Send button",
-    "vr-sent-video": "video shown in the VR view"
-  }
+    "consent":  {
+                    "title":  "Informed Consent",
+                    "acceptButton":  "I consent and want to continue",
+                    "declineButton":  "I do not consent",
+                    "blocks":  [
+                                   {
+                                       "type":  "heading",
+                                       "text":  "STUDY TITLE"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "Evaluating the understandability of an assistance tool for virtual reality application"
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "PRINCIPAL INVESTIGATOR"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "Krishna Kumar Venkatasubramanian, Ph.D."
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "Office: (401) 874-2701"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "Email: krish@uri.edu"
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "STUDENT INVESTIGATORS"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "Piriyankan Kirupaharan"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "Email: pkirupaharan@uri.edu"
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "OTHER INVESTIGATORS"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "Tina-Marie Ranalli"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "tinamarie.ranalli@uri.edu"
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "KEY INFORMATION"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "Important information to know about this research study:"
+                                   },
+                                   {
+                                       "type":  "list",
+                                       "items":  [
+                                                     "The purpose of this study is to evaluate whether untrained first-time users can correctly identify the appropriate assistance features in the assistance tool, and to measure how efficiently they can do so",
+                                                     "If you choose to participate, you will interact with a web application designed to help a person using virtual reality application. You will then be asked a few questions about your experience. This will take about 20 minutes.",
+                                                     "Risks or discomfort from this research are expected to be minimal.",
+                                                     "The study will have no direct benefits to you.",
+                                                     "You will be paid $4 for your participation.",
+                                                     "Taking part in this research project is voluntary. You do not have to participate, and you can stop at any time."
+                                                 ]
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "INVITATION"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "You are invited to take part in this research study. The information in this form is meant to help you decide whether or not to participate. If you have any questions, please ask."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "Why are you being asked to be in this research study?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "You are being asked to be in this study in order to evaluate understandability of an assistance tool. In order to participate you must at least 18 years old."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "What is the reason for doing this research study?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "The goal of this study is to evaluate the understandability of an assistance tool for virtual reality application."
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "This study focuses on whether first-time users can identify the correct assistance feature in the assistance tool when asked what assistance they would provide."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "What will be done during this research study?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "If you agree to participate, you will first read a brief introduction explaining the purpose of the study and your role. You will then answer a series of questions about the helper tool. For each question, you will see the assistance tool and your task is to click the part of the assistance tool that best answers the question. The assistance tool includes several regions, after you click a region, the selected region will be highlighted. You may change your selection before moving to the next question. Only your final selected region for each question will be recorded as your answer. You will not be told whether each answer is correct during the study."
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "Afterward, you will be asked to complete a short survey with questions your experience using the assistance tool as well as a few demographics questions such as age, gender, and prior VR experience. Your answers to the survey will not affect your compensation in any way. At the end of the survey, you will receive a completion code. You will copy and paste this code into Amazon Mechanical Turk to receive payment for completing the study."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "What are the possible risks of being in this research study?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "There are no known risks to you from being in this research study."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "What are the possible benefits to you?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "You are not expected to get any benefit from being in this study."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "What are the possible benefits to other people?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "This research may help us understand whether people can use the assistance tool to provide assistance in VR activities. The results may help improve future tools for supporting VR users, including users who may need assistance during VR activities."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "What will being in this research study cost you?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "There is no cost to you to be in this research study."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "Will you be compensated for being in this research study?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "You will receive $4 for participating in this study."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "What should you do if you have a problem during this research study?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "Your welfare is the major concern of every member of the research team. If you have a problem as a direct result of being in this study, you should immediately contact one of the people listed at the beginning of this consent form."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "How will information about you be protected?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "Reasonable steps will be taken to protect your privacy and the confidentiality of your study data."
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "The data will be stored electronically through a secure server and will only be seen by the research team during the study and for 5 years or longer after the study is complete."
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "The only persons who will have access to your research records are the study personnel, the Institutional Review Board (IRB), and any other person, agency, or sponsor as required by law. The information from this study may be published in scientific journals or presented at scientific meetings but the data will be reported as group or summarized data and your identity will be kept strictly confidential."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "What are your rights as a research subject?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "You may ask any questions concerning this research and have those questions answered before agreeing to participate in or during the study."
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "For study related questions, please contact the investigator(s) listed at the beginning of this form."
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "For questions concerning your rights or complaints about the research contact the Institutional Review Board (IRB) or Vice President for Research and Economic Development:"
+                                   },
+                                   {
+                                       "type":  "list",
+                                       "items":  [
+                                                     "IRB: (401) 874-4328 / researchintegrity@etal.uri.edu.",
+                                                     "Vice President for Research and Economic Development: at (401) 874-4576"
+                                                 ]
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "What will happen if you decide not to be in this research study or decide to stop participating once you start?"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "You can decide not to be in this research study, or you can stop being in this research study (withdraw) at any time before, during, or after the research begins for any reason. Deciding not to be in this research study or deciding to withdraw will not affect your relationship with the investigator or with the University of Rhode Island."
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "You will not lose any benefits to which you are entitled."
+                                   },
+                                   {
+                                       "type":  "heading",
+                                       "text":  "Documentation of informed consent"
+                                   },
+                                   {
+                                       "type":  "paragraph",
+                                       "text":  "You are voluntarily making a decision whether or not to be in this research study. Agreeing to this form means that (1) you have read and understood this consent form, (2) you have had your questions answered, and (3) you have decided to be in the research study. You can request a copy of this consent form to keep"
+                                   }
+                               ]
+                },
+    "intro":  {
+                  "eyebrow":  "Study Introduction",
+                  "title":  "How this study works",
+                  "startButton":  "Start study questions",
+                  "slides":  [
+                                 "img/introduction/1.PNG",
+                                 "img/introduction/2.PNG",
+                                 "img/introduction/3.PNG",
+                                 "img/introduction/4.PNG",
+                                 "img/introduction/5.PNG",
+                                 "img/introduction/6.PNG"
+                             ],
+                  "backButton":  "Back",
+                  "nextButton":  "Next",
+                  "slideAltPrefix":  "Study introduction slide"
+              },
+    "question":  {
+                     "progressTemplate":  "Question {current} of {total}",
+                     "selectedTemplate":  "You have selected {label}, highlighted in yellow.",
+                     "noSelection":  "Select anywhere on the tool.",
+                     "nextButton":  "Next"
+                 },
+    "inlineAttention":  {
+                            "openTextHelp":  "Answer in one or two sentences. This response helps us check whether the instruction was understood.",
+                            "answerLabel":  "Your answer",
+                            "answerPlaceholder":  "Type your answer here"
+                        },
+    "access":  {
+                   "loading":  "Loading study...",
+                   "loadErrorTitle":  "Study could not load",
+                   "mturkRequiredTitle":  "Please open this study from the MTurk HIT page.",
+                   "mturkRequiredBody":  "This study requires a valid MTurk account",
+                   "mturkPreviewTitle":  "Please accept the HIT before starting the study.",
+                   "mturkPreviewBody":  "You are currently previewing this HIT. After you accept it on MTurk, this study will open with your assignment information and you can begin."
+               },
+    "completion":  {
+                       "title":  "Please continue to the exit survey.",
+                       "saveBeforeSubmit":  "Your study responses must be saved before you can submit this HIT.",
+                       "keepOpen":  "Keep this MTurk page open. The exit survey opens in a new tab.",
+                       "saving":  "Saving responses...",
+                       "saveFailed":  "Responses could not be saved. Please retry before continuing.",
+                       "retrySaving":  "Retry saving responses",
+                       "openSurvey":  "Open exit survey",
+                       "qualtricsMissing":  "Qualtrics URL not configured",
+                       "codeLabel":  "Completion code from Qualtrics",
+                       "codePlaceholder":  "Paste the code shown at the end of Qualtrics",
+                       "submitHit":  "Submit HIT",
+                       "missingSubmitUrl":  "MTurk submit URL is missing. Please open this study from the MTurk HIT page.",
+                       "codeMismatch":  "The code does not match. Please copy the code exactly from Qualtrics."
+                   },
+    "thankYou":  {
+                     "title":  "Thank you for your time.",
+                     "body":  "The study has ended. You may close this page."
+                 },
+    "dashboard":  {
+                      "statusLabels":  {
+                                           "completed":  "Completed task",
+                                           "current":  "Current task",
+                                           "future":  "Future task"
+                                       },
+                      "currentActivityTitle":  "Current activity",
+                      "objectsTitle":  "Current activity objects",
+                      "objectsHint":  "Tap to highlight and point",
+                      "requiredControlsFor":  "Required controls for:",
+                      "leftController":  "Left controller",
+                      "rightController":  "Right controller",
+                      "demoTitle":  "Current activity demo",
+                      "noActionRequired":  "There is no action required for this object",
+                      "listen":  "Listen",
+                      "playing":  "Playing",
+                      "drawing":  "Drawing",
+                      "freeHand":  "Free hand",
+                      "clear":  "Clear",
+                      "send":  "Send",
+                      "removeVideo":  "Remove video",
+                      "vrViewLabel":  "VR user\u0027s current view"
+                  },
+    "regionLabels":  {
+                         "vr-view":  "VR user\u0027s current view",
+                         "objectButton":  "object button",
+                         "task-dropdown":  "task dropdown",
+                         "task-list":  "activity list",
+                         "task-progress":  "current task and progress text",
+                         "completed-task":  "completed task option",
+                         "current-task":  "current task option",
+                         "future-task":  "future task option",
+                         "instructions-panel":  "current activity section",
+                         "instructions-written":  "written instruction text",
+                         "listen-button":  "Listen button",
+                         "objects-panel":  "current activity objects section",
+                         "object-guide-button":  "object button",
+                         "object-highlight-button":  "object button",
+                         "freehand-button":  "Free hand drawing button",
+                         "clear-button":  "Clear button",
+                         "controller-panel":  "controller guidance section",
+                         "controller-object-dropdown":  "controller object dropdown",
+                         "controller-side-dropdown":  "left/right controller dropdown",
+                         "controller-video":  "controller video player",
+                         "controller-send-button":  "controller Send button",
+                         "demo-panel":  "current activity demo section",
+                         "demo-video":  "activity demo video player",
+                         "demo-send-button":  "demo Send button",
+                         "vr-sent-video":  "video shown in the VR view"
+                     }
 }
