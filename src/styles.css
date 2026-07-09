@@ -1451,3 +1451,25 @@ button:disabled {
 .consent-full-text strong {
   color: inherit;
 }
+
+
+.attention-inline-page {
+  grid-template-columns: minmax(22rem, 34rem) minmax(0, 1fr);
+}
+
+.inline-check-panel {
+  align-self: center;
+  width: min(56rem, 100%);
+}
+
+.open-text-answer textarea {
+  min-height: 12rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #8f9aae;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  color: #172033;
+  font: inherit;
+  font-size: 1.35rem;
+  resize: vertical;
+}

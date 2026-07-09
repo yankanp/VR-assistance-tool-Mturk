@@ -46,10 +46,87 @@ function normalizeAnswer(value) {
   return String(value ?? '').trim().toLowerCase();
 }
 
-function buildQuestionFlow(questions) {
-  return [...questions]
+function hashString(value) {
+  let hash = 2166136261;
+  for (let index = 0; index < String(value).length; index += 1) {
+    hash ^= String(value).charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function createSeededRandom(seedValue) {
+  let seed = hashString(seedValue || 'vr-helper-mturk-study');
+  return () => {
+    seed = Math.imul(seed + 0x6d2b79f5, 1);
+    let value = seed;
+    value ^= value >>> 15;
+    value = Math.imul(value, value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function getAttentionInsertionSlots(mainCount, checkCount, seedValue) {
+  const random = createSeededRandom(seedValue);
+  const slots = Array.from({ length: Math.max(mainCount - 1, 1) }, (_, index) => index + 1);
+  for (let index = slots.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [slots[index], slots[swapIndex]] = [slots[swapIndex], slots[index]];
+  }
+  return slots.slice(0, checkCount).sort((a, b) => a - b);
+}
+
+function makeDashboardAttentionQuestion(check) {
+  return {
+    question_id: check.check_id,
+    prompt: check.prompt,
+    target_feature: check.target_feature || 'Attention check',
+    acceptable_features: check.acceptable_features || [],
+    correct_region_ids: check.correct_region_ids || [],
+    question_type: check.question_type || check.type,
+    screen_variant: check.screen_variant || 'default',
+    is_attention_check: true,
+    check_id: check.check_id,
+  };
+}
+
+function buildQuestionFlow(questions, attentionChecks, sessionId) {
+  const mainItems = [...questions]
     .sort((a, b) => a.order - b.order)
-    .map((question) => ({ type: 'main', id: question.question_id, item: question }));
+    .map((question) => ({ type: 'dashboard', id: question.question_id, item: { ...question, is_attention_check: false } }));
+  const checkItems = [...attentionChecks]
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    .map((check) => (
+      check.type === 'dashboard_click'
+        ? { type: 'dashboard', id: check.check_id, item: makeDashboardAttentionQuestion(check), check }
+        : { type: 'attention_check', id: check.check_id, item: check }
+    ));
+
+  if (!checkItems.length) return mainItems;
+
+  const slots = getAttentionInsertionSlots(mainItems.length, checkItems.length, sessionId);
+  const flow = [];
+  let checkIndex = 0;
+  mainItems.forEach((item, index) => {
+    flow.push(item);
+    while (slots[checkIndex] === index + 1) {
+      flow.push(checkItems[checkIndex]);
+      checkIndex += 1;
+    }
+  });
+  while (checkIndex < checkItems.length) {
+    flow.push(checkItems[checkIndex]);
+    checkIndex += 1;
+  }
+  return flow;
+}
+
+function isAttentionCheckCorrect(check, answer) {
+  if (check.type === 'open_text') {
+    return String(answer || '').trim().split(/\s+/).filter(Boolean).length >= (check.minimum_words ?? 5);
+  }
+  return normalizeAnswer(answer) === normalizeAnswer(check.correct_answer);
 }
 
 function makeQualtricsUrl(config, participantParams, completionCode, sessionId) {
@@ -120,6 +197,8 @@ function buildMetricsPayload(session, config) {
   const attentionChecks = session.attention_checks ?? [];
   const mainQuestions = (session.responses ?? []).map((response) => ({
     question_asked_id: response.question_id,
+    question_type: response.question_type || 'main',
+    is_attention_check: Boolean(response.is_attention_check),
     all_regions_clicked_with_timestamp: (response.clicks ?? []).map(compactClick),
     final_answer_selected: response.selected_region_id,
     is_correct: response.is_correct,
@@ -142,8 +221,12 @@ function buildMetricsPayload(session, config) {
     generated_at: getIsoTimestamp(),
     attention_checks: attentionChecks.map((check) => ({
       attention_question_id: check.check_id,
+      prompt: check.prompt || '',
+      type: check.type || '',
       answer: check.answer,
+      correct_answer: check.correct_answer || '',
       is_correct: check.is_correct,
+      requires_manual_review: Boolean(check.requires_manual_review),
       started_at: check.started_at,
       ended_at: check.ended_at,
     })),
@@ -1116,6 +1199,55 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   );
 }
 
+function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubmit }) {
+  const [answer, setAnswer] = useState('');
+  const canSubmit = String(answer).trim().length > 0;
+
+  return (
+    <main className="study-interaction-page attention-inline-page">
+      <header className="question-bar attention-inline-card">
+        <div>
+          <p className="eyebrow">Question {questionIndex + 1} of {totalQuestions}</p>
+          <h1>{check.prompt}</h1>
+          {check.type === 'open_text' && (
+            <p className="selection-feedback">
+              Answer in one or two sentences. This response helps us check whether the instruction was understood.
+            </p>
+          )}
+        </div>
+        <button className="next-button" type="button" disabled={!canSubmit} onClick={() => onSubmit(answer)}>
+          Next
+        </button>
+      </header>
+      <section className="study-card inline-check-panel">
+        {check.type === 'multiple_choice' ? (
+          <div className="choice-grid">
+            {(check.options ?? []).map((option) => (
+              <button
+                key={option}
+                className={'choice-button ' + (answer === option ? 'selected' : '')}
+                type="button"
+                onClick={() => setAnswer(option)}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <label className="text-answer open-text-answer">
+            <span>Your answer</span>
+            <textarea
+              value={answer}
+              onChange={(event) => setAnswer(event.target.value)}
+              rows={7}
+              placeholder="Type your answer here"
+            />
+          </label>
+        )}
+      </section>
+    </main>
+  );
+}
 function MainQuestionPage({ question, questionIndex, totalQuestions, selectedRegionId, onRegionClick, onNext, metadata }) {
   const selectedLabel = selectedRegionId ? getRegionFeedbackLabel(selectedRegionId) : '';
 
@@ -1357,13 +1489,13 @@ export default function App() {
   }, []);
 
   const flow = useMemo(
-    () => buildQuestionFlow(questions),
-    [questions],
+    () => buildQuestionFlow(questions, attentionChecks, session?.session_id),
+    [questions, attentionChecks, session?.session_id],
   );
 
   const currentFlowItem = flow[flowIndex];
-  const mainQuestionCount = questions.length;
-  const answeredMainQuestions = session?.responses?.length ?? 0;
+  const totalQuestionCount = flow.length;
+  const displayedQuestionIndex = flowIndex;
 
   useEffect(() => {
     phaseStartedAtRef.current = getIsoTimestamp();
@@ -1412,10 +1544,10 @@ export default function App() {
         ...baseSession.timing,
         informed_consent_started_at: phaseStartedAtRef.current || baseSession.started_at,
         informed_consent_ended_at: now,
-        attention_checks_started_at: now,
+        introduction_started_at: now,
       },
     });
-    setPhase('attention_gate');
+    setPhase('intro');
   }
 
   function declineConsent() {
@@ -1437,6 +1569,7 @@ export default function App() {
       timing: {
         ...previous.timing,
         introduction_ended_at: now,
+        attention_checks_started_at: now,
         actual_study_started_at: now,
       },
     }));
@@ -1469,7 +1602,8 @@ export default function App() {
     setSelectedRegionId(regionId);
     recordEvent({
       type: 'dashboard_region_clicked',
-      question_id: currentFlowItem?.item?.question_id,
+      question_id: currentFlowItem?.item?.question_id || currentFlowItem?.item?.check_id,
+      question_type: currentFlowItem?.type,
       region_id: regionId,
     });
   }
@@ -1483,44 +1617,151 @@ export default function App() {
     setFlowIndex((index) => index + 1);
   }
 
+  function applyAttentionResult(previous, result, answeredAt) {
+    const nextAttentionChecks = [...previous.attention_checks, result];
+    const failureCount = nextAttentionChecks.filter((check) => check.is_correct === false).length;
+    const failureThreshold = config?.attentionFailureThreshold ?? 1;
+    const shouldStop = failureCount >= failureThreshold;
+    return {
+      nextAttentionChecks,
+      failureCount,
+      shouldStop,
+      endedAt: shouldStop ? answeredAt : '',
+    };
+  }
+
   function handleMainNext() {
     const question = currentFlowItem.item;
     const answeredAt = getIsoTimestamp();
     const correctRegionIds = question.correct_region_ids ?? [];
     const isCorrect = isCorrectRegionSelection(selectedRegionId, correctRegionIds);
 
-    setSession((previous) => ({
-      ...previous,
-      responses: [
-        ...previous.responses,
-        {
-          question_id: question.question_id,
-          prompt: question.prompt,
-          target_feature: question.target_feature,
-          acceptable_features: question.acceptable_features ?? [],
-          correct_region_ids: correctRegionIds,
-          selected_region_id: selectedRegionId,
-          first_click_region_id: firstClick?.region_id ?? '',
-          first_click_timestamp: firstClick?.timestamp ?? '',
-          final_click_timestamp: answeredAt,
-          question_started_at: currentQuestionStartedAt,
-          response_time_ms: Date.parse(answeredAt) - Date.parse(currentQuestionStartedAt),
-          clicks: currentQuestionClicks,
-          is_correct: isCorrect,
-          screen_variant: question.screen_variant,
+    setSession((previous) => {
+      const response = {
+        question_id: question.question_id,
+        prompt: question.prompt,
+        target_feature: question.target_feature,
+        acceptable_features: question.acceptable_features ?? [],
+        correct_region_ids: correctRegionIds,
+        selected_region_id: selectedRegionId,
+        first_click_region_id: firstClick?.region_id ?? '',
+        first_click_timestamp: firstClick?.timestamp ?? '',
+        final_click_timestamp: answeredAt,
+        question_started_at: currentQuestionStartedAt,
+        response_time_ms: Date.parse(answeredAt) - Date.parse(currentQuestionStartedAt),
+        clicks: currentQuestionClicks,
+        is_correct: isCorrect,
+        screen_variant: question.screen_variant,
+        question_type: question.question_type,
+        is_attention_check: Boolean(question.is_attention_check),
+      };
+      const event = {
+        type: question.is_attention_check ? 'attention_dashboard_question_answered' : 'main_question_answered',
+        timestamp: answeredAt,
+        question_id: question.question_id,
+        selected_region_id: selectedRegionId,
+        is_correct: isCorrect,
+      };
+
+      if (!question.is_attention_check) {
+        return {
+          ...previous,
+          responses: [...previous.responses, response],
+          events: [...previous.events, event],
+        };
+      }
+
+      const attentionResult = {
+        check_id: question.check_id || question.question_id,
+        prompt: question.prompt,
+        type: question.question_type,
+        answer: selectedRegionId,
+        correct_answer: correctRegionIds.join('|'),
+        is_correct: isCorrect,
+        started_at: currentQuestionStartedAt,
+        ended_at: answeredAt,
+      };
+      const { nextAttentionChecks, failureCount, shouldStop, endedAt } = applyAttentionResult(previous, attentionResult, answeredAt);
+      return {
+        ...previous,
+        ended_at: shouldStop ? endedAt : previous.ended_at,
+        completion_status: shouldStop ? 'attention_failed' : previous.completion_status,
+        attention_failure_count: failureCount,
+        attention_checks: nextAttentionChecks,
+        attention_passed: shouldStop ? false : previous.attention_passed,
+        responses: [...previous.responses, response],
+        timing: {
+          ...previous.timing,
+          ...(shouldStop ? { attention_checks_ended_at: answeredAt, actual_study_ended_at: answeredAt } : {}),
         },
-      ],
-      events: [
-        ...previous.events,
-        {
-          type: 'main_question_answered',
-          timestamp: answeredAt,
-          question_id: question.question_id,
-          selected_region_id: selectedRegionId,
-          is_correct: isCorrect,
+        events: [
+          ...previous.events,
+          event,
+          ...(shouldStop ? [{ type: 'session_finished', timestamp: endedAt, completion_status: 'attention_failed' }] : []),
+        ],
+      };
+    });
+
+    if (question.is_attention_check && !isCorrect) {
+      const previousFailures = session?.attention_checks?.filter((check) => check.is_correct === false).length ?? 0;
+      const failureThreshold = config?.attentionFailureThreshold ?? 1;
+      if (previousFailures + 1 >= failureThreshold) {
+        setPhase('ended');
+        return;
+      }
+    }
+
+    continueFlow();
+  }
+
+  function handleInlineAttentionSubmit(answer) {
+    const check = currentFlowItem.item;
+    const answeredAt = getIsoTimestamp();
+    const isCorrect = isAttentionCheckCorrect(check, answer);
+
+    setSession((previous) => {
+      const attentionResult = {
+        check_id: check.check_id,
+        prompt: check.prompt,
+        type: check.type,
+        answer,
+        correct_answer: check.correct_answer || '',
+        is_correct: isCorrect,
+        requires_manual_review: Boolean(check.requires_manual_review),
+        started_at: currentQuestionStartedAt,
+        ended_at: answeredAt,
+      };
+      const { nextAttentionChecks, failureCount, shouldStop, endedAt } = applyAttentionResult(previous, attentionResult, answeredAt);
+      return {
+        ...previous,
+        ended_at: shouldStop ? endedAt : previous.ended_at,
+        completion_status: shouldStop ? 'attention_failed' : previous.completion_status,
+        attention_failure_count: failureCount,
+        attention_checks: nextAttentionChecks,
+        attention_passed: shouldStop ? false : previous.attention_passed,
+        timing: {
+          ...previous.timing,
+          ...(shouldStop ? { attention_checks_ended_at: answeredAt, actual_study_ended_at: answeredAt } : {}),
         },
-      ],
-    }));
+        events: [
+          ...previous.events,
+          {
+            type: 'inline_attention_check_answered',
+            timestamp: answeredAt,
+            check_id: check.check_id,
+            is_correct: isCorrect,
+          },
+          ...(shouldStop ? [{ type: 'session_finished', timestamp: endedAt, completion_status: 'attention_failed' }] : []),
+        ],
+      };
+    });
+
+    const previousFailures = session?.attention_checks?.filter((checkResult) => checkResult.is_correct === false).length ?? 0;
+    const failureThreshold = config?.attentionFailureThreshold ?? 1;
+    if (!isCorrect && previousFailures + 1 >= failureThreshold) {
+      setPhase('ended');
+      return;
+    }
 
     continueFlow();
   }
@@ -1571,6 +1812,7 @@ export default function App() {
       attention_passed: status !== 'attention_failed',
       timing: {
         ...previous.timing,
+        attention_checks_ended_at: previous.timing.attention_checks_ended_at || endedAt,
         actual_study_ended_at: endedAt,
       },
       events: [
@@ -1653,17 +1895,25 @@ export default function App() {
   }
 
   if (phase === 'consent') return <LandingPage onAccept={acceptConsent} onDecline={declineConsent} />;
-  if (phase === 'attention_gate') {
-    return <AttentionGatePage checks={attentionChecks} onSubmit={handleAttentionGateSubmit} />;
-  }
   if (phase === 'intro') return <IntroPage onNext={startQuestions} />;
 
-  if (phase === 'main' && currentFlowItem?.type === 'main') {
+  if (phase === 'main' && currentFlowItem?.type === 'attention_check') {
+    return (
+      <InlineAttentionCheckPage
+        check={currentFlowItem.item}
+        questionIndex={displayedQuestionIndex}
+        totalQuestions={totalQuestionCount}
+        onSubmit={handleInlineAttentionSubmit}
+      />
+    );
+  }
+
+  if (phase === 'main' && currentFlowItem?.type === 'dashboard') {
     return (
       <MainQuestionPage
         question={currentFlowItem.item}
-        questionIndex={answeredMainQuestions}
-        totalQuestions={mainQuestionCount}
+        questionIndex={displayedQuestionIndex}
+        totalQuestions={totalQuestionCount}
         selectedRegionId={selectedRegionId}
         onRegionClick={handleRegionClick}
         onNext={handleMainNext}

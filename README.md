@@ -214,3 +214,38 @@ If your GitHub Pages site is under a repository path, the app uses relative asse
 $env:VITE_BASE_PATH='/your-repo-name/'
 npm run build
 ```
+
+
+## MTurk requester scripts
+
+Install the requester dependency locally:
+
+```powershell
+pip install boto3
+```
+
+List submitted assignments for a HIT:
+
+```powershell
+python scripts/mturk_assignments.py list --hit-id YOUR_HIT_ID --sandbox
+```
+
+Validate submitted completion codes against saved study sessions on the backend:
+
+```powershell
+python scripts/mturk_assignments.py validate --hit-id YOUR_HIT_ID --sandbox --backend-url https://vr-assistance-tool-mturk-backend.onrender.com
+```
+
+Dry-run approval for valid assignments:
+
+```powershell
+python scripts/mturk_assignments.py approve --hit-id YOUR_HIT_ID --sandbox --backend-url https://vr-assistance-tool-mturk-backend.onrender.com
+```
+
+Actually approve valid assignments:
+
+```powershell
+python scripts/mturk_assignments.py approve --hit-id YOUR_HIT_ID --sandbox --backend-url https://vr-assistance-tool-mturk-backend.onrender.com --approve
+```
+
+Use the production requester endpoint by omitting `--sandbox`. The script only approves assignments whose MTurk-submitted completion code matches a completed saved session with the same worker ID, assignment ID, and HIT ID.

@@ -195,8 +195,12 @@ function normalizeSession(session) {
     completion_code: session.completion_code || '',
     attention_checks: (session.attention_checks ?? []).map((check) => ({
       attention_question_id: check.check_id || check.attention_question_id || '',
+      prompt: check.prompt || '',
+      type: check.type || '',
       answer: check.answer || '',
+      correct_answer: check.correct_answer || '',
       is_correct: check.is_correct ?? '',
+      requires_manual_review: check.requires_manual_review ?? false,
       started_at: check.started_at || '',
       ended_at: check.ended_at || check.answered_at || '',
     })),
@@ -208,6 +212,8 @@ function normalizeSession(session) {
     },
     main_questions: (session.responses ?? []).map((response) => ({
       question_asked_id: response.question_id || '',
+      question_type: response.question_type || 'main',
+      is_attention_check: response.is_attention_check ?? false,
       all_regions_clicked_with_timestamp: (response.clicks ?? []).map((click) => ({
         region_id: click.region_id || '',
         timestamp: click.timestamp || '',
@@ -236,6 +242,8 @@ function flattenSessionRows(rawSession) {
     attention_question_ids: joinValues(attentionChecks.map((check) => check.attention_question_id || check.check_id)),
     attention_answers: joinValues(attentionChecks.map((check) => check.answer)),
     attention_correct: joinValues(attentionChecks.map((check) => String(check.is_correct))),
+    attention_types: joinValues(attentionChecks.map((check) => check.type)),
+    attention_manual_review: joinValues(attentionChecks.map((check) => String(Boolean(check.requires_manual_review)))),
     attention_started_times: joinValues(attentionChecks.map((check) => check.started_at)),
     attention_ended_times: joinValues(attentionChecks.map((check) => check.ended_at)),
     informed_consent_duration_ms: timing.informed_consent_duration_ms || '',
@@ -248,6 +256,8 @@ function flattenSessionRows(rawSession) {
     return [{
       ...base,
       question_asked_id: '',
+      question_type: '',
+      is_attention_check: '',
       all_regions_clicked_with_timestamp: '',
       final_answer_selected: '',
       is_correct: '',
@@ -258,6 +268,8 @@ function flattenSessionRows(rawSession) {
   return session.main_questions.map((question) => ({
     ...base,
     question_asked_id: question.question_asked_id || '',
+    question_type: question.question_type || '',
+    is_attention_check: question.is_attention_check ?? '',
     all_regions_clicked_with_timestamp: formatClicks(question.all_regions_clicked_with_timestamp),
     final_answer_selected: question.final_answer_selected || '',
     is_correct: question.is_correct ?? '',
@@ -279,9 +291,13 @@ function buildExcelXml(rows) {
     'attention_question_ids',
     'attention_answers',
     'attention_correct',
+    'attention_types',
+    'attention_manual_review',
     'attention_started_times',
     'attention_ended_times',
     'question_asked_id',
+    'question_type',
+    'is_attention_check',
     'all_regions_clicked_with_timestamp',
     'final_answer_selected',
     'is_correct',
@@ -318,13 +334,40 @@ function buildExcelXml(rows) {
   </Worksheet>
 </Workbook>`;
 }
-async function exportMetrics(response) {
+async function readSavedSessions() {
   await mkdir(dataDir, { recursive: true });
   const files = (await readdir(dataDir)).filter((file) => file.endsWith('.json'));
-  const sessions = await Promise.all(files.map(async (file) => {
+  return Promise.all(files.map(async (file) => {
     const raw = await readFile(path.join(dataDir, file), 'utf8');
-    return JSON.parse(raw);
+    return { filename: file, session: JSON.parse(raw) };
   }));
+}
+
+function summarizeSession(filename, rawSession) {
+  const session = normalizeSession(rawSession);
+  return {
+    filename,
+    session_id: session.session_id || '',
+    participant_id: getParticipantId(session),
+    workerId: session.workerId || session.participant_params?.workerId || '',
+    assignmentId: session.assignmentId || session.participant_params?.assignmentId || '',
+    hitId: session.hitId || session.participant_params?.hitId || '',
+    completion_status: session.completion_status || '',
+    attention_passed: session.attention_passed ?? '',
+    completion_code: session.completion_code || '',
+    main_question_count: session.main_questions?.length || 0,
+    attention_check_count: session.attention_checks?.length || 0,
+  };
+}
+
+async function listSessions(response) {
+  const saved = await readSavedSessions();
+  sendJson(response, 200, { ok: true, sessions: saved.map(({ filename, session }) => summarizeSession(filename, session)) });
+}
+
+async function exportMetrics(response) {
+  const saved = await readSavedSessions();
+  const sessions = saved.map(({ session }) => session);
   const rows = sessions.flatMap(flattenSessionRows);
   const workbook = buildExcelXml(rows);
 
@@ -369,6 +412,11 @@ const server = http.createServer(async (request, response) => {
 
   if (request.method === 'GET' && url.pathname === '/api/export') {
     await exportMetrics(response);
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/sessions') {
+    await listSessions(response);
     return;
   }
 
