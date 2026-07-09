@@ -71,6 +71,11 @@ function makeQualtricsUrl(config, participantParams, completionCode, sessionId) 
   }
 }
 
+function makeExternalSubmitUrl(turkSubmitTo) {
+  const base = String(turkSubmitTo || '').replace(/\/+$/, '');
+  return base ? `${base}/mturk/externalSubmit` : '';
+}
+
 async function saveSessionMetrics(payload, metricsApiBaseUrl = '') {
   const trimmedBaseUrl = String(metricsApiBaseUrl || '').replace(/\/+$/, '');
   const endpoint = trimmedBaseUrl ? `${trimmedBaseUrl}/api/session` : '/api/session';
@@ -1162,13 +1167,40 @@ function StoppedPage() {
   );
 }
 
-function CompletionPage({ qualtricsUrl, metricsSaveStatus, metricsSaveError, onRetrySave }) {
+function CompletionPage({
+  completionCode,
+  qualtricsUrl,
+  externalSubmitUrl,
+  participantParams,
+  sessionId,
+  metricsSaveStatus,
+  metricsSaveError,
+  onRetrySave,
+}) {
+  const [enteredCode, setEnteredCode] = useState('');
+  const [codeError, setCodeError] = useState('');
+  const normalizedEnteredCode = enteredCode.trim().toUpperCase();
+  const normalizedCompletionCode = String(completionCode || '').trim().toUpperCase();
+  const canSubmitHit = metricsSaveStatus === 'saved'
+    && Boolean(externalSubmitUrl)
+    && Boolean(normalizedCompletionCode)
+    && Boolean(normalizedEnteredCode);
+
+  function handleSubmitHit(event) {
+    if (!canSubmitHit || normalizedEnteredCode !== normalizedCompletionCode) {
+      event.preventDefault();
+      setCodeError('The code does not match. Please copy the code exactly from Qualtrics.');
+      return;
+    }
+    setCodeError('');
+  }
+
   return (
     <main className="page-shell">
       <section className="study-card completion-card">
         <h1>Please continue to the exit survey.</h1>
-        <p>Your study responses have been saved. Please continue to the exit survey to receive your MTurk completion code.</p>
-        <p>Your responses will not affect your compensation.</p>
+        <p>Your study responses must be saved before you can submit this HIT.</p>
+        <p>Keep this MTurk page open. The exit survey opens in a new tab.</p>
         <div className="completion-actions">
           {(metricsSaveStatus === 'idle' || metricsSaveStatus === 'saving') && (
             <button className="primary-action" type="button" disabled>
@@ -1184,8 +1216,8 @@ function CompletionPage({ qualtricsUrl, metricsSaveStatus, metricsSaveError, onR
             </>
           )}
           {metricsSaveStatus === 'saved' && qualtricsUrl && (
-            <a className="primary-action link-action" href={qualtricsUrl}>
-              Continue to exit survey
+            <a className="primary-action link-action" href={qualtricsUrl} target="_blank" rel="noopener noreferrer">
+              Open exit survey
             </a>
           )}
           {metricsSaveStatus === 'saved' && !qualtricsUrl && (
@@ -1194,6 +1226,34 @@ function CompletionPage({ qualtricsUrl, metricsSaveStatus, metricsSaveError, onR
             </button>
           )}
         </div>
+        {metricsSaveStatus === 'saved' && (
+          <form className="mturk-submit-form" method="post" action={externalSubmitUrl} onSubmit={handleSubmitHit}>
+            <input type="hidden" name="assignmentId" value={participantParams?.assignmentId || ''} />
+            <input type="hidden" name="completion_code" value={completionCode || ''} />
+            <input type="hidden" name="session_id" value={sessionId || ''} />
+            <input type="hidden" name="study_worker_id" value={participantParams?.workerId || ''} />
+            <input type="hidden" name="study_hit_id" value={participantParams?.hitId || ''} />
+            <label className="completion-code-entry">
+              <span>Completion code from Qualtrics</span>
+              <input
+                value={enteredCode}
+                onChange={(event) => {
+                  setEnteredCode(event.target.value);
+                  setCodeError('');
+                }}
+                placeholder="Paste the code shown at the end of Qualtrics"
+                autoComplete="off"
+              />
+            </label>
+            <button className="primary-action" type="submit" disabled={!canSubmitHit}>
+              Submit HIT
+            </button>
+            {!externalSubmitUrl && (
+              <p className="save-error">MTurk submit URL is missing. Please open this study from the MTurk HIT page.</p>
+            )}
+            {codeError && <p className="save-error">{codeError}</p>}
+          </form>
+        )}
         {metricsSaveError && <p className="save-error-detail">{metricsSaveError}</p>}
       </section>
     </main>
@@ -1623,7 +1683,11 @@ export default function App() {
   if (phase === 'complete') {
     return (
       <CompletionPage
+        completionCode={backendCompletionCode}
         qualtricsUrl={backendQualtricsUrl}
+        externalSubmitUrl={makeExternalSubmitUrl(session?.participant_params?.turkSubmitTo)}
+        participantParams={session?.participant_params}
+        sessionId={session?.session_id}
         metricsSaveStatus={metricsSaveStatus}
         metricsSaveError={metricsSaveError}
         onRetrySave={retrySaveMetrics}

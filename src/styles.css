@@ -714,6 +714,35 @@ button:disabled {
   align-items: center;
 }
 
+.mturk-submit-form {
+  display: grid;
+  gap: 0.9rem;
+  width: min(100%, 44rem);
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 211, 106, 0.55);
+  border-radius: 0.6rem;
+  background: rgba(255, 211, 106, 0.08);
+}
+
+.completion-code-entry {
+  display: grid;
+  gap: 0.45rem;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.completion-code-entry input {
+  min-height: 3rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #8f9aae;
+  border-radius: 0.4rem;
+  background: #ffffff;
+  color: #172033;
+  font: inherit;
+}
+
 .compact-json {
   max-height: 12rem;
   overflow: auto;
