@@ -252,7 +252,7 @@ function buildMetricsPayload(session, config) {
     ...values,
   });
   const clicksJson = (clicks = []) => JSON.stringify((clicks ?? []).map((click) => ({
-    element_clicked: click.region_id || click.target_id || '',
+    element_clicked: click.element_clicked || click.region_id || click.target_id || '',
     timestamp: click.timestamp || '',
     x: click.x ?? click.offset_x ?? '',
     y: click.y ?? click.offset_y ?? '',
@@ -263,7 +263,12 @@ function buildMetricsPayload(session, config) {
   const consentStartedAt = timing.informed_consent_started_at || session.started_at || '';
   const consentEndedAt = timing.informed_consent_ended_at || consentEvent?.timestamp || '';
   const consentClicks = consentEvent
-    ? [{ timestamp: consentEvent.timestamp, region_id: consentEvent.type === 'consent_declined' ? 'I do not consent' : 'I consent and want to continue' }]
+    ? [{
+      timestamp: consentEvent.timestamp,
+      element_clicked: consentEvent.type === 'consent_declined'
+        ? 'informed_consent_decline_button'
+        : 'informed_consent_accept_button',
+    }]
     : [];
   rows.push(makeRow({
     screen_name: 'Informed Consent',
@@ -277,7 +282,7 @@ function buildMetricsPayload(session, config) {
 
   if (timing.introduction_started_at || timing.introduction_ended_at) {
     const introEvent = findEvent('introduction_continued');
-    const introClicks = introEvent ? [{ timestamp: introEvent.timestamp, region_id: 'Start study questions' }] : [];
+    const introClicks = introEvent ? [{ timestamp: introEvent.timestamp, element_clicked: 'study_introduction_start_questions_button' }] : [];
     rows.push(makeRow({
       screen_name: 'Study Introduction',
       question_asked: 'Study instructions shown',
@@ -304,6 +309,7 @@ function buildMetricsPayload(session, config) {
   }
 
   for (const response of session.responses ?? []) {
+    if (response.is_attention_check) continue;
     const clicks = response.clicks ?? [];
     rows.push(makeRow({
       screen_name: response.is_attention_check ? 'Dashboard Attention Check' : 'Dashboard Question',
@@ -322,8 +328,8 @@ function buildMetricsPayload(session, config) {
     screen_name: 'Completion / Qualtrics Code',
     question_asked: 'Participant reached completion screen and received/submitted completion code',
     final_answer: session.completion_code || '',
-    all_clicked_elements: '[]',
-    click_count: 0,
+    all_clicked_elements: clicksJson(completedAt ? [{ timestamp: completedAt, element_clicked: 'completion_qualtrics_code_generated' }] : []),
+    click_count: completedAt ? 1 : 0,
     time_spent_ms: '',
     _screen_started_at: completedAt,
   }));
@@ -1504,6 +1510,10 @@ export default function App() {
     const baseSession = createBaseSession();
     setSession({
       ...baseSession,
+      events: [
+        ...baseSession.events,
+        { type: 'consent_accepted', timestamp: now },
+      ],
       timing: {
         ...baseSession.timing,
         informed_consent_started_at: phaseStartedAtRef.current || baseSession.started_at,
@@ -1530,6 +1540,10 @@ export default function App() {
     const now = getIsoTimestamp();
     setSession((previous) => ({
       ...previous,
+      events: [
+        ...previous.events,
+        { type: 'introduction_continued', timestamp: now },
+      ],
       timing: {
         ...previous.timing,
         introduction_ended_at: now,
@@ -1665,7 +1679,6 @@ export default function App() {
         attention_failure_count: failureCount,
         attention_checks: nextAttentionChecks,
         attention_passed: attentionPassed,
-        responses: [...previous.responses, response],
         events: [
           ...previous.events,
           event,

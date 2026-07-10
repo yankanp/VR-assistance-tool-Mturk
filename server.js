@@ -133,13 +133,15 @@ async function saveSession(request, response) {
       ...payload,
       completion_code: generatedCompletionCode,
       rows: Array.isArray(payload.rows)
-        ? payload.rows.map((row) => ({
-          ...row,
-          completion_code: row.completion_code || generatedCompletionCode,
-          final_answer: row.screen_name === 'Completion / Qualtrics Code'
-            ? generatedCompletionCode
-            : row.final_answer,
-        }))
+        ? payload.rows
+          .filter((row) => row.screen_name !== 'Dashboard Attention Check')
+          .map((row) => ({
+            ...row,
+            completion_code: row.completion_code || generatedCompletionCode,
+            final_answer: row.screen_name === 'Completion / Qualtrics Code'
+              ? generatedCompletionCode
+              : row.final_answer,
+          }))
         : [],
     };
 
@@ -292,7 +294,9 @@ function formatClickedElements(clicks = []) {
 
 function flattenSessionRows(rawSession) {
   const session = normalizeSession(rawSession);
-  if (Array.isArray(session.rows)) return session.rows;
+  if (Array.isArray(session.rows)) {
+    return session.rows.filter((row) => row.screen_name !== 'Dashboard Attention Check');
+  }
 
   const timing = session.timing ?? {};
   const rows = [];
@@ -462,11 +466,13 @@ function summarizeSession(filename, rawSession) {
     completion_code: session.completion_code || '',
     main_question_count: Array.isArray(session.rows)
       ? session.rows.filter((row) => row.screen_name === 'Dashboard Question').length
-      : session.main_questions?.length || 0,
+      : session.main_questions?.filter((question) => !question.is_attention_check).length || 0,
     attention_check_count: Array.isArray(session.rows)
-      ? session.rows.filter((row) => row.screen_name === 'Attention Check' || row.screen_name === 'Dashboard Attention Check').length
+      ? session.rows.filter((row) => row.screen_name === 'Attention Check').length
       : session.attention_checks?.length || 0,
-    row_count: Array.isArray(session.rows) ? session.rows.length : 0,
+    row_count: Array.isArray(session.rows)
+      ? session.rows.filter((row) => row.screen_name !== 'Dashboard Attention Check').length
+      : 0,
   };
 }
 
