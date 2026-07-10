@@ -54,6 +54,18 @@ function normalizeAnswer(value) {
   return String(value ?? '').trim().toLowerCase();
 }
 
+function getOptionValue(option) {
+  return typeof option === 'object' && option !== null
+    ? String(option.value ?? option.label ?? '')
+    : String(option ?? '');
+}
+
+function getOptionLabel(option) {
+  return typeof option === 'object' && option !== null
+    ? String(option.label ?? option.value ?? '')
+    : String(option ?? '');
+}
+
 function hashString(value) {
   let hash = 2166136261;
   for (let index = 0; index < String(value).length; index += 1) {
@@ -1161,6 +1173,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
 
 function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubmit, uiText }) {
   const [answer, setAnswer] = useState('');
+  const selectedOption = (check.options ?? []).find((option) => getOptionValue(option) === answer);
   const canSubmit = String(answer).trim().length > 0;
 
   return (
@@ -1175,23 +1188,27 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
             </p>
           )}
         </div>
-        <button className="next-button" type="button" disabled={!canSubmit} onClick={() => onSubmit(answer)}>
+        <button className="next-button" type="button" disabled={!canSubmit} onClick={() => onSubmit(answer, selectedOption ? getOptionLabel(selectedOption) : answer)}>
           {uiText?.question?.nextButton ?? 'Next'}
         </button>
       </header>
       <section className="study-card inline-check-panel">
         {check.type === 'multiple_choice' ? (
           <div className="choice-grid">
-            {(check.options ?? []).map((option) => (
-              <button
-                key={option}
-                className={'choice-button ' + (answer === option ? 'selected' : '')}
-                type="button"
-                onClick={() => setAnswer(option)}
-              >
-                {option}
-              </button>
-            ))}
+            {(check.options ?? []).map((option) => {
+              const optionValue = getOptionValue(option);
+              const optionLabel = getOptionLabel(option);
+              return (
+                <button
+                  key={optionValue}
+                  className={'choice-button ' + (answer === optionValue ? 'selected' : '')}
+                  type="button"
+                  onClick={() => setAnswer(optionValue)}
+                >
+                  {optionLabel}
+                </button>
+              );
+            })}
           </div>
         ) : (
           <label className="text-answer open-text-answer">
@@ -1659,7 +1676,7 @@ export default function App() {
     continueFlow();
   }
 
-  function handleInlineAttentionSubmit(answer) {
+  function handleInlineAttentionSubmit(answer, answerLabel = answer) {
     const check = currentFlowItem.item;
     const answeredAt = getIsoTimestamp();
     const isCorrect = isAttentionCheckCorrect(check, answer);
@@ -1670,6 +1687,7 @@ export default function App() {
         prompt: check.prompt,
         type: check.type,
         answer,
+        answer_label: answerLabel,
         correct_answer: check.correct_answer || '',
         is_correct: isCorrect,
         requires_manual_review: Boolean(check.requires_manual_review),
@@ -1688,6 +1706,8 @@ export default function App() {
             type: 'inline_attention_check_answered',
             timestamp: answeredAt,
             check_id: check.check_id,
+            answer,
+            answer_label: answerLabel,
             is_correct: isCorrect,
           },
         ],
