@@ -4,5 +4,6 @@
   "metricsApiBaseUrl": "https://vr-assistance-tool-mturk-backend.onrender.com",
   "completionCodePrefix": "VRHELP",
   "requireMturkParams": true,
-  "autoRedirectToQualtrics": false
+  "autoRedirectToQualtrics": false,
+  "debugMode": true
 }
