@@ -213,30 +213,126 @@ function getClientInfo() {
 
 function buildMetricsPayload(session, config) {
   const participantParams = session.participant_params ?? {};
-  const timing = session.timing ?? {};
-  const attentionChecks = session.attention_checks ?? [];
-  const mainQuestions = (session.responses ?? []).map((response) => ({
-    question_asked_id: response.question_id,
-    question_type: response.question_type || 'main',
-    is_attention_check: Boolean(response.is_attention_check),
-    all_regions_clicked_with_timestamp: (response.clicks ?? []).map(compactClick),
-    final_answer_selected: response.selected_region_id,
-    final_answer_selected_base_region_id: response.selected_base_region_id || response.selected_region_id,
-    final_answer_selected_label: response.selected_region_label || '',
-    prompt: response.prompt || '',
-    correct_answer: (response.correct_region_ids ?? []).join('|'),
-    question_started_at: response.question_started_at || '',
-    question_ended_at: response.final_click_timestamp || '',
-    is_correct: response.is_correct,
-    total_time_taken_to_answer_ms: response.response_time_ms,
-  }));
-
-  return {
+  const clientInfo = getClientInfo();
+  const base = {
     session_id: session.session_id,
     participant_id: participantParams.participant_id || participantParams.workerId || session.session_id,
     workerId: participantParams.workerId || '',
     assignmentId: participantParams.assignmentId || '',
     hitId: participantParams.hitId || '',
+    browser: clientInfo.browser,
+    screen_width: clientInfo.screen_width,
+    screen_height: clientInfo.screen_height,
+    completion_code: session.completion_code || '',
+  };
+  const timing = session.timing ?? {};
+  const rows = [];
+
+  const makeRow = (values) => ({
+    ...base,
+    screen_name: '',
+    question_asked: '',
+    final_answer: '',
+    all_clicked_elements: '[]',
+    click_count: 0,
+    is_correct: '',
+    time_spent_ms: '',
+    ...values,
+  });
+  const clicksJson = (clicks = []) => JSON.stringify((clicks ?? []).map((click) => ({
+    element_clicked: click.region_id || click.target_id || '',
+    timestamp: click.timestamp || '',
+    x: click.x ?? click.offset_x ?? '',
+    y: click.y ?? click.offset_y ?? '',
+  })));
+  const findEvent = (type) => (session.events ?? []).find((event) => event.type === type);
+
+  const consentEvent = findEvent('consent_declined') || findEvent('consent_accepted');
+  const consentStartedAt = timing.informed_consent_started_at || session.started_at || '';
+  const consentEndedAt = timing.informed_consent_ended_at || consentEvent?.timestamp || '';
+  const consentClicks = consentEvent
+    ? [{ timestamp: consentEvent.timestamp, region_id: consentEvent.type === 'consent_declined' ? 'I do not consent' : 'I consent and want to continue' }]
+    : [];
+  rows.push(makeRow({
+    screen_name: 'Informed Consent',
+    question_asked: 'Consent form shown',
+    final_answer: consentEvent?.type === 'consent_declined' ? 'declined' : 'consented',
+    all_clicked_elements: clicksJson(consentClicks),
+    click_count: consentClicks.length,
+    time_spent_ms: durationMs(consentStartedAt, consentEndedAt),
+    _screen_started_at: consentStartedAt,
+  }));
+
+  if (timing.introduction_started_at || timing.introduction_ended_at) {
+    const introEvent = findEvent('introduction_continued');
+    const introClicks = introEvent ? [{ timestamp: introEvent.timestamp, region_id: 'Start study questions' }] : [];
+    rows.push(makeRow({
+      screen_name: 'Study Introduction',
+      question_asked: 'Study instructions shown',
+      final_answer: introEvent ? 'continued' : '',
+      all_clicked_elements: clicksJson(introClicks),
+      click_count: introClicks.length,
+      time_spent_ms: durationMs(timing.introduction_started_at, timing.introduction_ended_at || introEvent?.timestamp),
+      _screen_started_at: timing.introduction_started_at || '',
+    }));
+  }
+
+  for (const check of session.attention_checks ?? []) {
+    const checkClicks = check.answer ? [{ timestamp: check.ended_at, region_id: check.answer_label || check.answer }] : [];
+    rows.push(makeRow({
+      screen_name: 'Attention Check',
+      question_asked: check.prompt || '',
+      final_answer: check.answer_label || check.answer || '',
+      all_clicked_elements: clicksJson(checkClicks),
+      click_count: checkClicks.length,
+      is_correct: check.is_correct ?? '',
+      time_spent_ms: durationMs(check.started_at, check.ended_at),
+      _screen_started_at: check.started_at || '',
+    }));
+  }
+
+  for (const response of session.responses ?? []) {
+    const clicks = response.clicks ?? [];
+    rows.push(makeRow({
+      screen_name: response.is_attention_check ? 'Dashboard Attention Check' : 'Dashboard Question',
+      question_asked: response.prompt || '',
+      final_answer: response.selected_region_label || response.selected_region_id || '',
+      all_clicked_elements: clicksJson(clicks),
+      click_count: clicks.length,
+      is_correct: response.is_correct ?? '',
+      time_spent_ms: response.response_time_ms || durationMs(response.question_started_at, response.final_click_timestamp),
+      _screen_started_at: response.question_started_at || '',
+    }));
+  }
+
+  const completedAt = session.ended_at || timing.actual_study_ended_at || '';
+  rows.push(makeRow({
+    screen_name: 'Completion / Qualtrics Code',
+    question_asked: 'Participant reached completion screen and received/submitted completion code',
+    final_answer: session.completion_code || '',
+    all_clicked_elements: '[]',
+    click_count: 0,
+    time_spent_ms: '',
+    _screen_started_at: completedAt,
+  }));
+
+  rows.sort((a, b) => {
+    const aTime = Date.parse(a._screen_started_at);
+    const bTime = Date.parse(b._screen_started_at);
+    const aValid = Number.isFinite(aTime);
+    const bValid = Number.isFinite(bTime);
+    if (aValid && bValid && aTime !== bTime) return aTime - bTime;
+    if (aValid && !bValid) return -1;
+    if (!aValid && bValid) return 1;
+    return 0;
+  });
+
+  return {
+    session_id: session.session_id,
+    participant_id: base.participant_id,
+    workerId: base.workerId,
+    assignmentId: base.assignmentId,
+    hitId: base.hitId,
     turkSubmitTo: participantParams.turkSubmitTo || '',
     completion_status: session.completion_status,
     attention_passed: session.attention_passed,
@@ -245,37 +341,9 @@ function buildMetricsPayload(session, config) {
     qualtrics_redirect_url: session.qualtrics_redirect_url || '',
     study_name: config?.studyName ?? '',
     generated_at: getIsoTimestamp(),
-    client_info: getClientInfo(),
-    attention_checks: attentionChecks.map((check) => ({
-      attention_question_id: check.check_id,
-      prompt: check.prompt || '',
-      type: check.type || '',
-      answer: check.answer,
-      correct_answer: check.correct_answer || '',
-      is_correct: check.is_correct,
-      requires_manual_review: Boolean(check.requires_manual_review),
-      started_at: check.started_at,
-      ended_at: check.ended_at,
-    })),
-    timing: {
-      informed_consent_started_at: timing.informed_consent_started_at || '',
-      informed_consent_ended_at: timing.informed_consent_ended_at || '',
-      informed_consent_duration_ms: durationMs(timing.informed_consent_started_at, timing.informed_consent_ended_at),
-      introduction_started_at: timing.introduction_started_at || '',
-      introduction_ended_at: timing.introduction_ended_at || '',
-      introduction_duration_ms: durationMs(timing.introduction_started_at, timing.introduction_ended_at),
-      attention_checks_started_at: timing.attention_checks_started_at || '',
-      attention_checks_ended_at: timing.attention_checks_ended_at || '',
-      attention_checks_total_duration_ms: durationMs(timing.attention_checks_started_at, timing.attention_checks_ended_at),
-      actual_study_started_at: timing.actual_study_started_at || '',
-      actual_study_ended_at: timing.actual_study_ended_at || '',
-      actual_study_total_duration_ms: durationMs(timing.actual_study_started_at, timing.actual_study_ended_at),
-    },
-    main_questions: mainQuestions,
+    rows: rows.map(({ _screen_started_at, ...row }) => row),
   };
 }
-
-
 function formatTextTemplate(template, values = {}) {
   return String(template || '').replace(/\{(\w+)\}/g, (_, key) => values[key] ?? '');
 }

@@ -68,8 +68,9 @@ function hasValidMturkParams(payload) {
 function isCompletedPayloadValid(payload) {
   return payload.completion_status === 'completed'
     && hasValidMturkParams(payload)
-    && Array.isArray(payload.main_questions)
-    && payload.main_questions.length > 0;
+    && Array.isArray(payload.rows)
+    && payload.rows.length > 0
+    && payload.rows.some((row) => row.screen_name === 'Dashboard Question');
 }
 
 function createCompletionCode(prefix = 'VRHELP') {
@@ -120,16 +121,26 @@ async function saveSession(request, response) {
     if (payload.completion_status === 'completed' && !isCompletedPayloadValid(payload)) {
       sendJson(response, 400, {
         ok: false,
-        error: 'Completed sessions require MTurk identifiers and main-study responses.',
+        error: 'Completed sessions require MTurk identifiers and row-based study responses.',
       });
       return;
     }
 
+    const generatedCompletionCode = payload.completion_status === 'completed'
+      ? payload.completion_code || await findExistingCompletionCode(payload.session_id) || createCompletionCode(completionPrefix)
+      : '';
     const payloadToSave = {
       ...payload,
-      completion_code: payload.completion_status === 'completed'
-        ? payload.completion_code || await findExistingCompletionCode(payload.session_id) || createCompletionCode(completionPrefix)
-        : '',
+      completion_code: generatedCompletionCode,
+      rows: Array.isArray(payload.rows)
+        ? payload.rows.map((row) => ({
+          ...row,
+          completion_code: row.completion_code || generatedCompletionCode,
+          final_answer: row.screen_name === 'Completion / Qualtrics Code'
+            ? generatedCompletionCode
+            : row.final_answer,
+        }))
+        : [],
     };
 
     const sessionId = sanitizeFilePart(payload.session_id);
@@ -168,6 +179,7 @@ function getParticipantId(session) {
 }
 
 function normalizeSession(session) {
+  if (Array.isArray(session.rows)) return session;
   if (Array.isArray(session.main_questions)) return session;
 
   const participantParams = session.participant_params ?? {};
@@ -280,6 +292,8 @@ function formatClickedElements(clicks = []) {
 
 function flattenSessionRows(rawSession) {
   const session = normalizeSession(rawSession);
+  if (Array.isArray(session.rows)) return session.rows;
+
   const timing = session.timing ?? {};
   const rows = [];
   const base = makeBaseRow(session);
@@ -446,14 +460,62 @@ function summarizeSession(filename, rawSession) {
     completion_status: session.completion_status || '',
     attention_passed: session.attention_passed ?? '',
     completion_code: session.completion_code || '',
-    main_question_count: session.main_questions?.length || 0,
-    attention_check_count: session.attention_checks?.length || 0,
+    main_question_count: Array.isArray(session.rows)
+      ? session.rows.filter((row) => row.screen_name === 'Dashboard Question').length
+      : session.main_questions?.length || 0,
+    attention_check_count: Array.isArray(session.rows)
+      ? session.rows.filter((row) => row.screen_name === 'Attention Check' || row.screen_name === 'Dashboard Attention Check').length
+      : session.attention_checks?.length || 0,
+    row_count: Array.isArray(session.rows) ? session.rows.length : 0,
   };
 }
 
 async function listSessions(response) {
   const saved = await readSavedSessions();
   sendJson(response, 200, { ok: true, sessions: saved.map(({ filename, session }) => summarizeSession(filename, session)) });
+}
+
+async function listSessionJsonFiles(response) {
+  const saved = await readSavedSessions();
+  sendJson(response, 200, {
+    ok: true,
+    files: saved.map(({ filename, session }) => ({
+      filename,
+      download_url: `/api/session-json/${encodeURIComponent(filename)}`,
+      summary: summarizeSession(filename, session),
+    })),
+  });
+}
+
+async function downloadSessionJson(response, filename) {
+  const safeFilename = path.basename(filename || '');
+  if (!safeFilename || safeFilename !== filename || !safeFilename.endsWith('.json')) {
+    sendJson(response, 400, { ok: false, error: 'Invalid JSON session filename.' });
+    return;
+  }
+
+  const filePath = path.join(dataDir, safeFilename);
+  if (!filePath.startsWith(dataDir) || !existsSync(filePath)) {
+    sendJson(response, 404, { ok: false, error: 'JSON session file not found.' });
+    return;
+  }
+
+  response.writeHead(200, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Content-Disposition': `attachment; filename="${safeFilename}"`,
+    'Access-Control-Allow-Origin': allowedOrigin,
+  });
+  createReadStream(filePath).pipe(response);
+}
+
+async function downloadAllSessionJson(response) {
+  const saved = await readSavedSessions();
+  response.writeHead(200, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Content-Disposition': 'attachment; filename="mturk_session_json_files.json"',
+    'Access-Control-Allow-Origin': allowedOrigin,
+  });
+  response.end(JSON.stringify({ ok: true, files: saved }, null, 2));
 }
 
 async function exportMetrics(response) {
@@ -506,6 +568,22 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (request.method === 'GET' && url.pathname === '/api/session-json') {
+    await listSessionJsonFiles(response);
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname === '/api/session-json-all') {
+    await downloadAllSessionJson(response);
+    return;
+  }
+
+  if (request.method === 'GET' && url.pathname.startsWith('/api/session-json/')) {
+    const filename = decodeURIComponent(url.pathname.slice('/api/session-json/'.length));
+    await downloadSessionJson(response, filename);
+    return;
+  }
+
   if (request.method === 'GET' && url.pathname === '/api/sessions') {
     await listSessions(response);
     return;
@@ -518,4 +596,6 @@ server.listen(port, () => {
   console.log(`MTurk study server running at http://localhost:${port}`);
   console.log(`Saved sessions: ${dataDir}`);
   console.log(`Excel export: http://localhost:${port}/api/export`);
+  console.log(`JSON files: http://localhost:${port}/api/session-json`);
+  console.log(`All JSON download: http://localhost:${port}/api/session-json-all`);
 });
