@@ -1547,3 +1547,11 @@ button:disabled {
     height: 48vh;
   }
 }
+.debug-mode-banner {
+  border: 2px solid #ffcc00;
+  background: #332800;
+  color: #ffe680;
+  padding: 0.65rem 0.85rem;
+  border-radius: 6px;
+  font-weight: 700;
+}

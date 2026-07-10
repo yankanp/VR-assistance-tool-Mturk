@@ -46,6 +46,19 @@ function getUrlParams() {
   };
 }
 
+function getParticipantParams(config) {
+  const params = getUrlParams();
+  if (!config?.debugMode) return params;
+
+  return {
+    ...params,
+    workerId: params.workerId || params.participant_id || 'debug',
+    assignmentId: params.assignmentId || 'DEBUG_ASSIGNMENT',
+    hitId: params.hitId || 'DEBUG_HIT',
+    participant_id: params.participant_id || params.workerId || 'debug',
+  };
+}
+
 function isMturkPreview(participantParams) {
   return participantParams?.assignmentId === 'ASSIGNMENT_ID_NOT_AVAILABLE';
 }
@@ -236,6 +249,7 @@ function buildMetricsPayload(session, config) {
     screen_width: clientInfo.screen_width,
     screen_height: clientInfo.screen_height,
     completion_code: session.completion_code || '',
+    debug_mode: Boolean(config?.debugMode),
   };
   const timing = session.timing ?? {};
   const rows = [];
@@ -282,7 +296,16 @@ function buildMetricsPayload(session, config) {
 
   if (timing.introduction_started_at || timing.introduction_ended_at) {
     const introEvent = findEvent('introduction_continued');
-    const introClicks = introEvent ? [{ timestamp: introEvent.timestamp, element_clicked: 'study_introduction_start_questions_button' }] : [];
+    const introClicks = (session.events ?? [])
+      .filter((event) => event.type === 'introduction_click')
+      .map((event) => ({
+        timestamp: event.timestamp,
+        element_clicked: event.element_clicked,
+        slide_index: event.slide_index,
+      }));
+    if (!introClicks.length && introEvent) {
+      introClicks.push({ timestamp: introEvent.timestamp, element_clicked: 'study_introduction_start_questions_button' });
+    }
     rows.push(makeRow({
       screen_name: 'Study Introduction',
       question_asked: 'Study instructions shown',
@@ -295,7 +318,9 @@ function buildMetricsPayload(session, config) {
   }
 
   for (const check of session.attention_checks ?? []) {
-    const checkClicks = check.answer ? [{ timestamp: check.ended_at, region_id: check.answer_label || check.answer }] : [];
+    const checkClicks = Array.isArray(check.clicks) && check.clicks.length
+      ? check.clicks
+      : (check.answer ? [{ timestamp: check.ended_at, element_clicked: check.answer_label || check.answer }] : []);
     rows.push(makeRow({
       screen_name: 'Attention Check',
       question_asked: check.prompt || '',
@@ -351,6 +376,7 @@ function buildMetricsPayload(session, config) {
     workerId: base.workerId,
     assignmentId: base.assignmentId,
     hitId: base.hitId,
+    debug_mode: Boolean(config?.debugMode),
     turkSubmitTo: participantParams.turkSubmitTo || '',
     completion_status: session.completion_status,
     attention_passed: session.attention_passed,
@@ -399,7 +425,7 @@ function LandingPage({ onAccept, onDecline, uiText }) {
     </main>
   );
 }
-function IntroPage({ onNext, uiText }) {
+function IntroPage({ onNext, onInteraction, uiText }) {
   const text = uiText?.intro ?? {};
   const slides = text.slides ?? [];
   const [slideIndex, setSlideIndex] = useState(0);
@@ -407,15 +433,26 @@ function IntroPage({ onNext, uiText }) {
   const currentSlide = slides[slideIndex];
   const isLastSlide = slideIndex >= totalSlides - 1;
 
+  function recordIntroClick(elementName) {
+    onInteraction?.({
+      type: 'introduction_click',
+      element_clicked: elementName,
+      slide_index: slideIndex,
+    });
+  }
+
   function goBack() {
+    recordIntroClick('study_introduction_back_button');
     setSlideIndex((index) => Math.max(index - 1, 0));
   }
 
   function goNext() {
     if (isLastSlide) {
+      recordIntroClick('study_introduction_start_questions_button');
       onNext();
       return;
     }
+    recordIntroClick('study_introduction_next_button');
     setSlideIndex((index) => Math.min(index + 1, totalSlides - 1));
   }
 
@@ -1179,8 +1216,21 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
 
 function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubmit, uiText }) {
   const [answer, setAnswer] = useState('');
+  const [clicks, setClicks] = useState([]);
+  const clicksRef = useRef([]);
   const selectedOption = (check.options ?? []).find((option) => getOptionValue(option) === answer);
   const canSubmit = String(answer).trim().length > 0;
+
+  function recordInlineClick(elementName, event) {
+    const click = {
+      element_clicked: elementName,
+      timestamp: getIsoTimestamp(),
+      x: Math.round(event?.nativeEvent?.offsetX ?? 0),
+      y: Math.round(event?.nativeEvent?.offsetY ?? 0),
+    };
+    clicksRef.current = [...clicksRef.current, click];
+    setClicks(clicksRef.current);
+  }
 
   return (
     <main className="study-interaction-page attention-inline-page">
@@ -1194,7 +1244,11 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
             </p>
           )}
         </div>
-        <button className="next-button" type="button" disabled={!canSubmit} onClick={() => onSubmit(answer, selectedOption ? getOptionLabel(selectedOption) : answer)}>
+        <button className="next-button" type="button" disabled={!canSubmit} onClick={(event) => {
+          recordInlineClick('attention_check_next_button', event);
+          const finalClicks = clicksRef.current;
+          onSubmit(answer, selectedOption ? getOptionLabel(selectedOption) : answer, finalClicks);
+        }}>
           {uiText?.question?.nextButton ?? 'Next'}
         </button>
       </header>
@@ -1209,7 +1263,10 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
                   key={optionValue}
                   className={'choice-button ' + (answer === optionValue ? 'selected' : '')}
                   type="button"
-                  onClick={() => setAnswer(optionValue)}
+                  onClick={(event) => {
+                    recordInlineClick(`attention_check_option_${optionLabel}`, event);
+                    setAnswer(optionValue);
+                  }}
                 >
                   {optionLabel}
                 </button>
@@ -1221,7 +1278,12 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
             <span>{uiText?.inlineAttention?.answerLabel ?? 'Your answer'}</span>
             <textarea
               value={answer}
-              onChange={(event) => setAnswer(event.target.value)}
+              onChange={(event) => {
+                if (!answer) {
+                  recordInlineClick('attention_check_text_answer', event);
+                }
+                setAnswer(event.target.value);
+              }}
               rows={7}
               placeholder={uiText?.inlineAttention?.answerPlaceholder ?? 'Type your answer here'}
             />
@@ -1278,6 +1340,7 @@ function CompletionPage({
   metricsSaveStatus,
   metricsSaveError,
   onRetrySave,
+  debugMode = false,
 }) {
   const [enteredCode, setEnteredCode] = useState('');
   const [codeError, setCodeError] = useState('');
@@ -1301,8 +1364,9 @@ function CompletionPage({
     <main className="page-shell">
       <section className="study-card completion-card">
         <h1>{uiText?.completion?.title ?? 'Please continue to the exit survey.'}</h1>
+        {debugMode && <p className="debug-mode-banner">Debug mode is enabled. MTurk code validation is bypassed.</p>}
         <p>{uiText?.completion?.saveBeforeSubmit ?? 'Your study responses must be saved before you can submit this HIT.'}</p>
-        <p>{uiText?.completion?.keepOpen ?? 'Keep this MTurk page open. The exit survey opens in a new tab.'}</p>
+        {!debugMode && <p>{uiText?.completion?.keepOpen ?? 'Keep this MTurk page open. The exit survey opens in a new tab.'}</p>}
         <div className="completion-actions">
           {(metricsSaveStatus === 'idle' || metricsSaveStatus === 'saving') && (
             <button className="primary-action" type="button" disabled>
@@ -1328,7 +1392,7 @@ function CompletionPage({
             </button>
           )}
         </div>
-        {metricsSaveStatus === 'saved' && (
+        {metricsSaveStatus === 'saved' && !debugMode && (
           <form className="mturk-submit-form" method="post" action={externalSubmitUrl} onSubmit={handleSubmitHit}>
             <input type="hidden" name="assignmentId" value={participantParams?.assignmentId || ''} />
             <input type="hidden" name="completion_code" value={completionCode || ''} />
@@ -1410,6 +1474,7 @@ export default function App() {
   const [currentQuestionStartedAt, setCurrentQuestionStartedAt] = useState('');
   const [firstClick, setFirstClick] = useState(null);
   const [currentQuestionClicks, setCurrentQuestionClicks] = useState([]);
+  const currentQuestionClicksRef = useRef([]);
   const savedSessionIdRef = useRef('');
   const phaseStartedAtRef = useRef('');
   const [metricsSaveStatus, setMetricsSaveStatus] = useState('idle');
@@ -1426,8 +1491,9 @@ export default function App() {
       fetch(assetUrl('ui-text.json')).then((response) => response.json()),
     ])
       .then(([loadedConfig, loadedQuestions, loadedAttentionChecks, loadedMetadata, loadedUiText]) => {
-        const participantParams = getUrlParams();
-        if (loadedConfig.requireMturkParams && isMturkPreview(participantParams)) {
+        const participantParams = getParticipantParams(loadedConfig);
+        const shouldRequireMturkParams = loadedConfig.requireMturkParams && !loadedConfig.debugMode;
+        if (shouldRequireMturkParams && isMturkPreview(participantParams)) {
           setConfig(loadedConfig);
           setQuestions(loadedQuestions);
           setAttentionChecks(loadedAttentionChecks);
@@ -1436,7 +1502,7 @@ export default function App() {
           setPhase('mturk_preview');
           return;
         }
-        if (loadedConfig.requireMturkParams && !hasRequiredMturkParams(participantParams)) {
+        if (shouldRequireMturkParams && !hasRequiredMturkParams(participantParams)) {
           setConfig(loadedConfig);
           setQuestions(loadedQuestions);
           setAttentionChecks(loadedAttentionChecks);
@@ -1478,6 +1544,7 @@ export default function App() {
     setSelectedRegionMeta({ base_region_id: '', region_label: '' });
     setFirstClick(null);
     setCurrentQuestionClicks([]);
+    currentQuestionClicksRef.current = [];
   }, [phase, flowIndex]);
 
   useEffect(() => {
@@ -1486,7 +1553,7 @@ export default function App() {
   }, [session]);
 
   function createBaseSession(completionStatus = 'in_progress') {
-    const participantParams = getUrlParams();
+    const participantParams = getParticipantParams(config);
     const sessionId = createSessionId();
     return {
       session_id: sessionId,
@@ -1584,7 +1651,8 @@ export default function App() {
       x: details.x ?? '',
       y: details.y ?? '',
     };
-    setCurrentQuestionClicks((previous) => [...previous, clickRecord]);
+    currentQuestionClicksRef.current = [...currentQuestionClicksRef.current, clickRecord];
+    setCurrentQuestionClicks(currentQuestionClicksRef.current);
     setSelectedRegionId(regionId);
     setSelectedRegionMeta({ base_region_id: baseRegionId, region_label: regionLabel });
     recordEvent({
@@ -1616,9 +1684,20 @@ export default function App() {
     };
   }
 
-  function handleMainNext() {
+  function handleMainNext(event) {
     const question = currentFlowItem.item;
     const answeredAt = getIsoTimestamp();
+    const nextClick = {
+      region_id: 'question_next_button',
+      base_region_id: 'question_next_button',
+      region_label: 'Question Next button',
+      timestamp: answeredAt,
+      x: Math.round(event?.nativeEvent?.offsetX ?? 0),
+      y: Math.round(event?.nativeEvent?.offsetY ?? 0),
+    };
+    const finalQuestionClicks = [...currentQuestionClicksRef.current, nextClick];
+    currentQuestionClicksRef.current = finalQuestionClicks;
+    setCurrentQuestionClicks(finalQuestionClicks);
     const correctRegionIds = question.correct_region_ids ?? [];
     const isCorrect = isCorrectRegionSelection(selectedRegionId, correctRegionIds, selectedRegionMeta.base_region_id);
 
@@ -1639,7 +1718,7 @@ export default function App() {
         final_click_timestamp: answeredAt,
         question_started_at: currentQuestionStartedAt,
         response_time_ms: Date.parse(answeredAt) - Date.parse(currentQuestionStartedAt),
-        clicks: currentQuestionClicks,
+        clicks: finalQuestionClicks,
         is_correct: isCorrect,
         screen_variant: question.screen_variant,
         question_type: question.question_type,
@@ -1672,6 +1751,7 @@ export default function App() {
         is_correct: isCorrect,
         started_at: currentQuestionStartedAt,
         ended_at: answeredAt,
+        clicks: finalQuestionClicks,
       };
       const { nextAttentionChecks, failureCount, attentionPassed } = applyAttentionResult(previous, attentionResult);
       return {
@@ -1689,7 +1769,7 @@ export default function App() {
     continueFlow();
   }
 
-  function handleInlineAttentionSubmit(answer, answerLabel = answer) {
+  function handleInlineAttentionSubmit(answer, answerLabel = answer, clicks = []) {
     const check = currentFlowItem.item;
     const answeredAt = getIsoTimestamp();
     const isCorrect = isAttentionCheckCorrect(check, answer);
@@ -1706,6 +1786,7 @@ export default function App() {
         requires_manual_review: Boolean(check.requires_manual_review),
         started_at: currentQuestionStartedAt,
         ended_at: answeredAt,
+        clicks,
       };
       const { nextAttentionChecks, failureCount, attentionPassed } = applyAttentionResult(previous, attentionResult);
       return {
@@ -1784,6 +1865,9 @@ export default function App() {
         setBackendCompletionCode(returnedCode);
         setBackendQualtricsUrl(returnedQualtricsUrl);
         setMetricsSaveStatus('saved');
+        if (config?.debugMode && returnedQualtricsUrl) {
+          window.location.assign(returnedQualtricsUrl);
+        }
       })
       .catch((error) => {
         if (cancelled) return;
@@ -1822,7 +1906,7 @@ export default function App() {
   }
 
   if (phase === 'consent') return <LandingPage onAccept={acceptConsent} onDecline={declineConsent} uiText={uiText} />;
-  if (phase === 'intro') return <IntroPage onNext={startQuestions} uiText={uiText} />;
+  if (phase === 'intro') return <IntroPage onNext={startQuestions} onInteraction={recordEvent} uiText={uiText} />;
 
   if (phase === 'main' && currentFlowItem?.type === 'attention_check') {
     return (
@@ -1867,6 +1951,7 @@ export default function App() {
         metricsSaveStatus={metricsSaveStatus}
         metricsSaveError={metricsSaveError}
         onRetrySave={retrySaveMetrics}
+        debugMode={Boolean(config?.debugMode)}
       />
     );
   }

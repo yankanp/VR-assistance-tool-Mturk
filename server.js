@@ -66,8 +66,9 @@ function hasValidMturkParams(payload) {
 }
 
 function isCompletedPayloadValid(payload) {
+  const mturkParamsAreValid = payload.debug_mode === true || hasValidMturkParams(payload);
   return payload.completion_status === 'completed'
-    && hasValidMturkParams(payload)
+    && mturkParamsAreValid
     && Array.isArray(payload.rows)
     && payload.rows.length > 0
     && payload.rows.some((row) => row.screen_name === 'Dashboard Question');
