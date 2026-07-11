@@ -5,5 +5,5 @@
   "completionCodePrefix": "VRHELP",
   "requireMturkParams": true,
   "autoRedirectToQualtrics": false,
-  "debugMode": false
+  "debugMode": true
 }
