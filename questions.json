@@ -1,172 +1,138 @@
-[
+﻿[
   {
-    "question_id": "q_1_1",
-    "prompt": "Click the area where you would see what the VR user is currently seeing.",
-    "target_feature": "Real-time view of VR user",
-    "acceptable_features": ["vr-view"],
-    "correct_region_ids": ["vr-view"],
+    "question_id": "q_1",
+    "prompt": "Click the region where you would see what the headset user is currently seeing.",
     "question_type": "main",
     "screen_variant": "default",
-    "order": 1
+    "order": 1,
+    "correct_answers": ["VR-user-current-view-region"]
   },
   {
-    "question_id": "q_2_1",
-    "prompt": "Click where you would see the list of activities.",
-    "target_feature": "Dropdown section / current task list",
-    "acceptable_features": ["task-dropdown"],
-    "correct_region_ids": ["task-dropdown", "task-list"],
+    "question_id": "q_2",
+    "prompt": "Click the region where you would see the selected activity description.",
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 2,
+    "correct_answers": ["task-description-region"]
+  },
+  {
+    "question_id": "q_3",
+    "prompt": "Click the region where you would see the headset user's progress through the activities.",
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 3,
+    "correct_answers": ["task-progress-region"]
+  },
+  {
+    "question_id": "q_4",
+    "prompt": "Click the region where you would see all the virtual objects for the selected activity.",
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 4,
+    "correct_answers": ["objects-region"]
+  },
+  {
+    "question_id": "q_5",
+    "prompt": "Click the region where you would see which controller button(s) should be pressed for the selected activity.",
+    "question_type": "main",
+    "screen_variant": "default",
+    "order": 5,
+    "correct_answers": ["controller-region"]
+  },
+  {
+    "question_id": "q_6",
+    "prompt": "Click where you would find the list of activities.",
     "question_type": "main",
     "screen_variant": "dropdown-open",
-    "order": 2
+    "order": 6,
+    "correct_answers": ["dropdown"]
   },
   {
-    "question_id": "q_2_2",
-    "prompt": "Click where you would check the VR user's progress.",
-    "target_feature": "Dropdown section / current task progress",
-    "acceptable_features": ["task-progress"],
-    "correct_region_ids": ["task-progress", "task-dropdown"],
-    "question_type": "main",
-    "screen_variant": "default",
-    "order": 3
-  },
-  {
-    "question_id": "q_2_3",
-    "prompt": "Click where you would check a completed activity.",
-    "target_feature": "Completed activity in task list",
-    "acceptable_features": ["completed-task"],
-    "correct_region_ids": ["completed-task", "task-list"],
+    "question_id": "q_7",
+    "prompt": "Click where you would find a previously completed activity.",
     "question_type": "main",
     "screen_variant": "dropdown-open",
-    "order": 4
+    "order": 7,
+    "correct_answers": ["dropdown-value"]
   },
   {
-    "question_id": "q_2_4",
-    "prompt": "Click where you would check a future activity.",
-    "target_feature": "Future activity in task list",
-    "acceptable_features": ["future-task"],
-    "correct_region_ids": ["future-task", "task-list"],
+    "question_id": "q_8",
+    "prompt": "Click where you would find an upcoming activity.",
     "question_type": "main",
     "screen_variant": "dropdown-open",
-    "order": 5
+    "order": 8,
+    "correct_answers": ["dropdown-value"]
   },
   {
-    "question_id": "q_3_1",
-    "prompt": "Click where you would find the written instruction for the current activity.",
-    "target_feature": "Current instructions section",
-    "acceptable_features": ["instructions-written"],
-    "correct_region_ids": ["instructions-panel", "instructions-written"],
+    "question_id": "q_9",
+    "prompt": "Click where you would choose whether to show the left or right controller.",
     "question_type": "main",
     "screen_variant": "default",
-    "order": 6
+    "order": 9,
+    "correct_answers": ["controller-side-dropdown"]
   },
   {
-    "question_id": "q_3_2",
-    "prompt": "Click the button you would use to listen to the current instruction.",
-    "target_feature": "Listen instruction button",
-    "acceptable_features": ["listen-button"],
-    "correct_region_ids": ["listen-button"],
+    "question_id": "q_10",
+    "prompt": "Click where you would watch the physical movement and controller button(s) for the selected activity.",
     "question_type": "main",
     "screen_variant": "default",
-    "order": 7
+    "order": 10,
+    "correct_answers": ["controller-video-play-button"]
   },
   {
-    "question_id": "q_4_1",
-    "prompt": "Click where you would find the objects related to the current activity.",
-    "target_feature": "Current activity objects section",
-    "acceptable_features": ["objects-panel"],
-    "correct_region_ids": ["objects-panel"],
+    "question_id": "q_11",
+    "prompt": "Click where you would watch how the selected activity is performed in the virtual environment.",
     "question_type": "main",
     "screen_variant": "default",
-    "order": 8
+    "order": 11,
+    "correct_answers": ["in-world-video-play-button"]
   },
   {
-    "question_id": "q_4_2",
-    "prompt": "Click the object button you would use to help the VR user find that object in the virtual environment.",
-    "target_feature": "Object guidance button",
-    "acceptable_features": ["object-guide-button"],
-    "correct_region_ids": ["object-guide-button"],
+    "question_id": "q_12",
+    "prompt": "Click what you would use to draw on the headset user's view.",
     "question_type": "main",
     "screen_variant": "default",
-    "order": 9
+    "order": 12,
+    "correct_answers": ["drawing-button"]
   },
   {
-    "question_id": "q_4_3",
-    "prompt": "Click the object button you would use to highlight that object in the virtual environment.",
-    "target_feature": "Object highlight button",
-    "acceptable_features": ["object-highlight-button"],
-    "correct_region_ids": ["object-highlight-button"],
+    "question_id": "q_13",
+    "prompt": "Click what you would use to remove all drawings from the headset user's view.",
     "question_type": "main",
     "screen_variant": "default",
-    "order": 10
+    "order": 13,
+    "correct_answers": ["drawing-clear-button"]
   },
   {
-    "question_id": "q_5_1",
-    "prompt": "Click where you would choose whether the left or right controller should be shown.",
-    "target_feature": "Controller side selector",
-    "acceptable_features": ["controller-side-dropdown"],
-    "correct_region_ids": ["controller-side-dropdown"],
+    "question_id": "q_14",
+    "prompt": "Click what you would use to point the headset user toward the selected virtual object.",
     "question_type": "main",
     "screen_variant": "default",
-    "order": 11
+    "order": 14,
+    "correct_answers": ["object-button"]
   },
   {
-    "question_id": "q_5_2",
-    "prompt": "Click where you would watch a video showing which button or buttons on the controller to press.",
-    "target_feature": "Controller guidance video",
-    "acceptable_features": ["controller-video"],
-    "correct_region_ids": ["controller-video"],
+    "question_id": "q_15",
+    "prompt": "Click what you would use to remove the directional arrow from the headset user's view.",
     "question_type": "main",
     "screen_variant": "default",
-    "order": 12
+    "order": 15,
+    "correct_answers": ["objects-region-clear-button"]
   },
   {
-    "question_id": "q_5_3",
-    "prompt": "Click the button you would use to send the controller guidance to the VR user.",
-    "target_feature": "Send controller guidance button",
-    "acceptable_features": ["controller-send-button"],
-    "correct_region_ids": ["controller-send-button"],
+    "question_id": "q_16",
+    "prompt": "Click what you would use to send the physical movement and controller guidance to the headset user.",
     "question_type": "main",
     "screen_variant": "default",
-    "order": 13
+    "order": 16,
+    "correct_answers": ["controller-send-button"]
   },
   {
-    "question_id": "q_6_1",
-    "prompt": "Click where you would watch a video showing the current activity.",
-    "target_feature": "Current activity demonstration video",
-    "acceptable_features": ["demo-video"],
-    "correct_region_ids": ["demo-video"],
+    "question_id": "q_17",
+    "prompt": "Click what you would use to remove the physical movement and controller guidance from the headset user's view.",
     "question_type": "main",
     "screen_variant": "default",
-    "order": 14
-  },
-  {
-    "question_id": "q_6_2",
-    "prompt": "Click the button you would use to send the demonstration video to the VR user.",
-    "target_feature": "Send demonstration video button",
-    "acceptable_features": ["demo-send-button"],
-    "correct_region_ids": ["demo-send-button"],
-    "question_type": "main",
-    "screen_variant": "default",
-    "order": 15
-  },
-  {
-    "question_id": "q_7_1",
-    "prompt": "Click the tool you would use to draw directly on the VR user's view.",
-    "target_feature": "Freehand drawing button",
-    "acceptable_features": ["freehand-button"],
-    "correct_region_ids": ["freehand-button"],
-    "question_type": "main",
-    "screen_variant": "default",
-    "order": 16
-  },
-  {
-    "question_id": "q_8_1",
-    "prompt": "Click the button you would use to remove drawings or annotations from the VR user's view.",
-    "target_feature": "Clear annotations button",
-    "acceptable_features": ["clear-button"],
-    "correct_region_ids": ["clear-button"],
-    "question_type": "main",
-    "screen_variant": "default",
-    "order": 17
+    "order": 17,
+    "correct_answers": ["controller-clear-button"]
   }
 ]
