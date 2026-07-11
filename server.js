@@ -240,7 +240,7 @@ function normalizeSession(session) {
       final_answer_selected: response.selected_region_id || '',
       final_answer_selected_base_region_id: response.selected_base_region_id || '',
       final_answer_selected_label: response.selected_region_label || '',
-      correct_answer: (response.correct_region_ids ?? []).join('|'),
+      correct_answer: (response.correct_answers ?? []).join('|'),
       is_correct: response.is_correct ?? '',
       question_started_at: response.question_started_at || '',
       question_ended_at: response.final_click_timestamp || '',

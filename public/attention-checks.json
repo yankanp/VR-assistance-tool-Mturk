@@ -1,58 +1,82 @@
-[
-  {
-    "check_id": "ac_headset_user",
-    "type": "multiple_choice",
-    "prompt": "According to the introduction, who is wearing the virtual reality headset?",
-    "options": [
-      { "value": "helper", "label": "The helper" },
-      { "value": "headset_user", "label": "The headset user" },
-      { "value": "both", "label": "Both people" },
-      { "value": "neither", "label": "Neither person" }
-    ],
-    "correct_answer": "headset_user",
-    "order": 1
-  },
-  {
-    "check_id": "ac_button_help_explanation",
-    "type": "open_text",
-    "prompt": "Imagine the person wearing the headset says, \"which button should I press?\" In one or two sentences, explain how you would use the helper tool to assist them.",
-    "correct_answer": "",
-    "requires_manual_review": true,
-    "order": 2
-  },
-  {
-    "check_id": "ac_repeat_vr_view",
-    "type": "dashboard_click",
-    "question_type": "attention_repetition",
-    "prompt": "Click the area where you would see what the headset user is currently seeing.",
-    "target_feature": "Real-time view of VR user",
-    "acceptable_features": ["Real-time view of VR user"],
-    "correct_region_ids": ["vr-view"],
-    "screen_variant": "default",
-    "order": 3
-  },
-  {
-    "check_id": "ac_clear_imc",
-    "type": "dashboard_click",
-    "question_type": "attention_instructional_manipulation",
-    "prompt": "We want to understand whether first-time users can understand the helper tool. Imagine you are helping the headset user. For this question only, click the Clear button.",
-    "target_feature": "Clear annotations",
-    "acceptable_features": ["Clear annotations"],
-    "correct_region_ids": ["clear-button"],
-    "screen_variant": "default",
-    "order": 4
-  },
-  {
-    "check_id": "ac_last_year",
-    "type": "multiple_choice",
-    "prompt": "What year was last year?",
-    "options": [
-      { "value": "2019", "label": "2019" },
-      { "value": "2025", "label": "2025" },
-      { "value": "2032", "label": "2032" },
-      { "value": "2026", "label": "2026" }
-    ],
-    "correct_answer": "2025",
-    "order": 5
-  }
+﻿[
+    {
+        "check_id":  "ac_headset_user",
+        "type":  "multiple_choice",
+        "prompt":  "According to the introduction, who is wearing the virtual reality headset?",
+        "options":  [
+                        {
+                            "value":  "helper",
+                            "label":  "The helper"
+                        },
+                        {
+                            "value":  "headset_user",
+                            "label":  "The headset user"
+                        },
+                        {
+                            "value":  "both",
+                            "label":  "Both people"
+                        },
+                        {
+                            "value":  "neither",
+                            "label":  "Neither person"
+                        }
+                    ],
+        "correct_answer":  "headset_user",
+        "order":  1
+    },
+    {
+        "check_id":  "ac_button_help_explanation",
+        "type":  "open_text",
+        "prompt":  "Imagine the person wearing the headset says, \"which button should I press?\" In one or two sentences, explain how you would use the helper tool to assist them.",
+        "correct_answer":  "",
+        "requires_manual_review":  true,
+        "order":  2
+    },
+    {
+        "check_id":  "ac_repeat_vr_view",
+        "type":  "dashboard_click",
+        "question_type":  "attention_repetition",
+        "prompt":  "Click the area where you would see what the headset user is currently seeing.",
+        "screen_variant":  "default",
+        "order":  3,
+        "correct_answers":  [
+                                "VR-user-current-view-region"
+                            ]
+    },
+    {
+        "check_id":  "ac_clear_imc",
+        "type":  "dashboard_click",
+        "question_type":  "attention_instructional_manipulation",
+        "prompt":  "We want to understand whether first-time users can understand the helper tool. Imagine you are helping the headset user. For this question only, click the Clear button.",
+        "screen_variant":  "default",
+        "order":  4,
+        "correct_answers":  [
+                                "drawing-clear-button"
+                            ]
+    },
+    {
+        "check_id":  "ac_last_year",
+        "type":  "multiple_choice",
+        "prompt":  "What year was last year?",
+        "options":  [
+                        {
+                            "value":  "2019",
+                            "label":  "2019"
+                        },
+                        {
+                            "value":  "2025",
+                            "label":  "2025"
+                        },
+                        {
+                            "value":  "2032",
+                            "label":  "2032"
+                        },
+                        {
+                            "value":  "2026",
+                            "label":  "2026"
+                        }
+                    ],
+        "correct_answer":  "2025",
+        "order":  5
+    }
 ]
