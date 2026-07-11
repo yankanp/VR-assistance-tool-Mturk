@@ -200,6 +200,37 @@ button:disabled {
     0 0 1.25rem rgba(255, 241, 118, 0.8);
 }
 
+.sim-dashboard.has-selected-region .clickable-region {
+  opacity: 0.38;
+  filter: saturate(0.6) brightness(0.72);
+  pointer-events: auto;
+  transition: opacity 140ms ease, filter 140ms ease, box-shadow 140ms ease;
+}
+
+.sim-dashboard.has-selected-region .clickable-region.selected-region {
+  opacity: 1;
+  filter: none;
+  z-index: 20;
+}
+
+.sim-dashboard.has-selected-region .clickable-region:hover,
+.sim-dashboard.has-selected-region .clickable-region:focus-visible {
+  opacity: 0.82;
+  filter: saturate(0.9) brightness(0.95);
+}
+
+.sim-dashboard.has-selected-region .clickable-region.selected-region:hover,
+.sim-dashboard.has-selected-region .clickable-region.selected-region:focus-visible {
+  opacity: 1;
+  filter: none;
+}
+
+.sim-dashboard.has-selected-region .dimmable-region:not(.contains-selected-region) {
+  opacity: 0.38;
+  filter: saturate(0.6) brightness(0.72);
+  transition: opacity 140ms ease, filter 140ms ease;
+}
+
 .sim-dashboard [aria-label="Task dropdown and progress"],
 .sim-dashboard [aria-label="Current activity objects"] {
   grid-column: 1;

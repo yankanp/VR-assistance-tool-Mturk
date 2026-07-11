@@ -110,6 +110,16 @@ function getAttentionInsertionSlots(mainCount, checkCount, seedValue) {
   return slots.slice(0, checkCount).sort((a, b) => a - b);
 }
 
+function shuffleWithSeed(items, seedValue) {
+  const random = createSeededRandom(seedValue);
+  const shuffled = [...items];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+  return shuffled;
+}
+
 function makeDashboardAttentionQuestion(check) {
   return {
     question_id: check.check_id,
@@ -123,8 +133,10 @@ function makeDashboardAttentionQuestion(check) {
 }
 
 function buildQuestionFlow(questions, attentionChecks, sessionId) {
-  const mainItems = [...questions]
-    .sort((a, b) => a.order - b.order)
+  const mainItems = shuffleWithSeed(
+    [...questions].sort((a, b) => a.order - b.order),
+    `${sessionId || 'no-session'}:main-questions`,
+  )
     .map((question) => ({ type: 'dashboard', id: question.question_id, item: { ...question, is_attention_check: false } }));
   const checkItems = [...attentionChecks]
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
@@ -827,7 +839,11 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
 
   return (
     <div className="tablet-frame">
-    <div ref={dashboardContainerRef} className={`sim-dashboard selected-task-${selectedTaskStatus}`} aria-label="Simulated VR helper dashboard">
+    <div
+      ref={dashboardContainerRef}
+      className={`sim-dashboard selected-task-${selectedTaskStatus} ${selectedRegionId ? 'has-selected-region' : ''}`}
+      aria-label="Simulated VR helper dashboard"
+    >
       <section {...regionProps('dropdown')} aria-label="Task dropdown and progress">
         <div className="task-select">
           <button
@@ -1129,7 +1145,14 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           )}
           <span className="play-symbol">{isDemoVideoPlaying ? 'Ⅱ' : '▶'}</span>
         </div>      </section>
-      <section className="sim-region" aria-label="Annotation tools">
+      <section
+        className={`sim-region dimmable-region ${
+          selectedRegionId === 'drawing-button' || selectedRegionId === 'drawing-clear-button'
+            ? 'contains-selected-region'
+            : ''
+        }`}
+        aria-label="Annotation tools"
+      >
         <h2>{dashboardText.annotationToolsTitle ?? 'Annotation tools'}</h2>
         <div className="annotation-tools-stack">
           <button
