@@ -51,7 +51,9 @@
         "screen_variant":  "default",
         "order":  4,
         "correct_answers":  [
-                                "drawing-clear-button"
+                                "drawing-clear-button",
+                                "objects-region-clear-button",
+                                "controller-clear-button"
                             ]
     },
     {
