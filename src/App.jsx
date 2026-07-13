@@ -572,6 +572,8 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   const [controllerSide, setControllerSide] = useState('left');
   const [isControllerVideoPlaying, setIsControllerVideoPlaying] = useState(false);
   const [isDemoVideoPlaying, setIsDemoVideoPlaying] = useState(false);
+  const [controllerVideoProgress, setControllerVideoProgress] = useState(0);
+  const [demoVideoProgress, setDemoVideoProgress] = useState(0);
   const [sentControllerVideo, setSentControllerVideo] = useState(false);
   const [isFreehandActive, setIsFreehandActive] = useState(false);
   const [isCleared, setIsCleared] = useState(false);
@@ -653,6 +655,8 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     setControllerSide('left');
     setIsControllerVideoPlaying(false);
     setIsDemoVideoPlaying(false);
+    setControllerVideoProgress(0);
+    setDemoVideoProgress(0);
     setSentControllerVideo(false);
     setIsFreehandActive(false);
     setIsCleared(false);
@@ -670,6 +674,8 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     setControllerSide('left');
     setIsControllerVideoPlaying(false);
     setIsDemoVideoPlaying(false);
+    setControllerVideoProgress(0);
+    setDemoVideoProgress(0);
     setSentControllerVideo(false);
     setIsFreehandActive(false);
     setIsCleared(false);
@@ -682,6 +688,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   useEffect(() => {
     setIsControllerVideoPlaying(false);
     setSentControllerVideo(false);
+    setControllerVideoProgress(0);
   }, [selectedObjectKey, controllerSide]);
 
   useEffect(() => {
@@ -790,6 +797,15 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     emitRegionClick('VR-user-current-view-region', event);
   }
 
+  function handleVideoProgress(event, setProgress) {
+    const video = event.currentTarget;
+    if (!video.duration || Number.isNaN(video.duration)) {
+      setProgress(0);
+      return;
+    }
+    setProgress(Math.min(100, Math.max(0, (video.currentTime / video.duration) * 100)));
+  }
+
   function handleFreehandPointerMove(event) {
     if (!isFreehandActive || !isDrawingRef.current) return;
     event.preventDefault();
@@ -844,7 +860,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
       className={`sim-dashboard selected-task-${selectedTaskStatus} ${selectedRegionId ? 'has-selected-region' : ''}`}
       aria-label="Simulated VR helper dashboard"
     >
-      <section {...regionProps('dropdown')} aria-label="Task dropdown and progress">
+      <section className="sim-region dropdown-progress-panel" aria-label="Task dropdown and progress">
         <div className="task-select">
           <button
             type="button"
@@ -865,9 +881,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
         </div>
         {isTaskDropdownOpen && (
           <div
-            className={`task-select-list clickable-region ${
-              selectedRegionId === 'dropdown' ? 'selected-region' : ''
-            }`}
+            className="task-select-list clickable-region"
             data-region-id="dropdown"
             onClick={(event) => {
               event.stopPropagation();
@@ -943,10 +957,9 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
         </div>
         <div className="object-clear-area">
           <button
-            {...actionProps('objects-region-clear-button', 'object-clear-button', !isCurrentTask || !hasObjectAnnotation)}
+            {...actionProps('objects-region-clear-button', 'object-clear-button')}
             onClick={(event) => {
               event.stopPropagation();
-              if (!isCurrentTask || !hasObjectAnnotation) return;
               setVrViewImage(FIXED_VR_VIEW_IMAGE);
               setHasObjectAnnotation(false);
               if (!sentControllerVideo && !isFreehandActive) {
@@ -1011,7 +1024,15 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
         )}
       </section>
 
-      <section {...regionProps('controller-region')} aria-label="Current activity controller guidance">
+      <section
+        data-region-id="controller-region"
+        className="sim-region clickable-region"
+        onClick={(event) => {
+          event.stopPropagation();
+          emitRegionClick('controller-region', event);
+        }}
+        aria-label="Current activity controller guidance"
+      >
         <div className="controller-header">
           <span>{dashboardText.requiredControlsFor ?? 'Required controls for:'}</span>
           <select
@@ -1044,7 +1065,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           </select>
         </div>
         <div className="controller-body">
-          <div className="controller-model">
+          <div className={`controller-model ${selectedRegionId === 'controller-region' ? 'selected-region' : ''}`}>
             <Controller3DViewer
               side={controllerSide}
               modelPath={assetUrl(`models/meta_quest_${controllerSide}_controller.glb`)}
@@ -1055,16 +1076,16 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             )}
           </div>
           <div
-            data-region-id="controller-video-play-button"
-            className={`video-thumb clickable-region ${selectedRegionId === 'controller-video-play-button' ? 'selected-region' : ''}`}
+            data-region-id="physical-world-video-region"
+            className={`video-thumb clickable-region ${selectedRegionId === 'physical-world-video-region' ? 'selected-region' : ''}`}
             onClick={(event) => {
               event.stopPropagation();
               if (!hasControllerVideo) {
-                emitRegionClick('controller-video-play-button', event);
+                emitRegionClick('physical-world-video-region', event);
                 return;
               }
               setIsControllerVideoPlaying((value) => !value);
-              emitRegionClick('controller-video-play-button', event);
+              emitRegionClick('physical-world-video-region', event);
             }}
             style={controllerThumbnail ? { backgroundImage: `linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.55)), url("${assetUrl(controllerThumbnail)}")` } : undefined}
           >
@@ -1077,13 +1098,22 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
                 muted
                 loop
                 playsInline
-                controls={isControllerVideoPlaying}
+                controls={false}
                 autoPlay={isControllerVideoPlaying}
+                onLoadedMetadata={(event) => handleVideoProgress(event, setControllerVideoProgress)}
+                onTimeUpdate={(event) => handleVideoProgress(event, setControllerVideoProgress)}
               />
             ) : (
               <div className="no-video-message">{dashboardText.noActionRequired ?? 'There is no action required for this object'}</div>
             )}
-            {hasControllerVideo && <span className="play-symbol">{isControllerVideoPlaying ? 'Ⅱ' : '▶'}</span>}
+            {hasControllerVideo && (
+              <div className="study-video-controls" aria-hidden="true">
+                <span className="play-symbol">{isControllerVideoPlaying ? 'Ⅱ' : '▶'}</span>
+                <span className="video-progress-track">
+                  <span className="video-progress-fill" style={{ width: `${controllerVideoProgress}%` }} />
+                </span>
+              </div>
+            )}
           </div>
           <div className="controller-action-row">
             <button
@@ -1100,10 +1130,9 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               {dashboardText.send ?? 'Send'}
             </button>
             <button
-              {...actionProps('controller-clear-button', 'controller-clear-video-button', !isCurrentTask || !sentControllerVideo)}
+              {...actionProps('controller-clear-button', 'controller-clear-video-button')}
               onClick={(event) => {
                 event.stopPropagation();
-                if (!isCurrentTask || !sentControllerVideo) return;
                 setSentControllerVideo(false);
                 if (!hasObjectAnnotation && !isFreehandActive) {
                   setHasActiveAnnotation(false);
@@ -1118,15 +1147,18 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
         </div>
       </section>
 
-      <section {...regionProps('demo-panel')} aria-label="Current activity demonstration video">
+      <section
+        {...regionProps('in-world-video-region')}
+        aria-label="Current activity demonstration video"
+      >
         <h2>{dashboardText.demoTitle ?? 'Current activity demo'}</h2>
         <div
-          data-region-id="in-world-video-play-button"
-          className={`demo-thumb clickable-region ${selectedRegionId === 'in-world-video-play-button' ? 'selected-region' : ''}`}
+          data-region-id="in-world-video-region"
+          className="demo-thumb clickable-region"
           onClick={(event) => {
             event.stopPropagation();
             setIsDemoVideoPlaying((value) => !value);
-            emitRegionClick('in-world-video-play-button', event);
+            emitRegionClick('in-world-video-region', event);
           }}
             style={demoThumbnail ? { backgroundImage: `linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.55)), url("${assetUrl(demoThumbnail)}")` } : undefined}
           >
@@ -1139,11 +1171,20 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               muted
               loop
               playsInline
-              controls={isDemoVideoPlaying}
+              controls={false}
               autoPlay={isDemoVideoPlaying}
+              onLoadedMetadata={(event) => handleVideoProgress(event, setDemoVideoProgress)}
+              onTimeUpdate={(event) => handleVideoProgress(event, setDemoVideoProgress)}
             />
           )}
-          <span className="play-symbol">{isDemoVideoPlaying ? 'Ⅱ' : '▶'}</span>
+          {demoVideoUrl && (
+            <div className="study-video-controls" aria-hidden="true">
+              <span className="play-symbol">{isDemoVideoPlaying ? 'Ⅱ' : '▶'}</span>
+              <span className="video-progress-track">
+                <span className="video-progress-fill" style={{ width: `${demoVideoProgress}%` }} />
+              </span>
+            </div>
+          )}
         </div>      </section>
       <section
         className={`sim-region dimmable-region ${
@@ -1170,10 +1211,9 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             <img src={assetUrl('img/button_icons/freehand.png')} alt="" aria-hidden="true" />
           </button>
           <button
-            {...actionProps('drawing-clear-button', `annotation-tool-button clear ${hasActiveAnnotation ? 'clear-enabled' : ''}`, !isCurrentTask || !hasActiveAnnotation)}
+            {...actionProps('drawing-clear-button', `annotation-tool-button clear ${hasActiveAnnotation ? 'clear-enabled' : ''}`)}
             onClick={(event) => {
               event.stopPropagation();
-              if (!isCurrentTask || !hasActiveAnnotation) return;
               setIsFreehandActive(false);
               setSentControllerVideo(false);
               clearFreehandCanvas();
