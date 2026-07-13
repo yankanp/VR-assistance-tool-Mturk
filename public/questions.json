@@ -21,7 +21,7 @@
     "question_type": "main",
     "screen_variant": "default",
     "order": 3,
-    "correct_answers": ["task-progress-region"]
+    "correct_answers": ["task-progress-region", "dropdown"]
   },
   {
     "question_id": "q_4",

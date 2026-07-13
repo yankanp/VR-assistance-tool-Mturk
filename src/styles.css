@@ -929,6 +929,21 @@ button:disabled {
   color: #ffffff;
 }
 
+.tablet-frame .sim-dashboard .sim-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.button-action-icon {
+  width: clamp(1.05rem, 1.45vw, 1.55rem);
+  height: clamp(1.05rem, 1.45vw, 1.55rem);
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  flex: 0 0 auto;
+}
+
 .tablet-frame .sim-dashboard .task-select-option-current {
   color: #101010;
 }

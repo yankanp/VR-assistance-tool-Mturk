@@ -79,9 +79,10 @@
     "noActionRequired": "There is no action required for this object",
     "drawing": "Drawing",
     "freeHand": "Drawing",
-    "clear": "Clear",
-    "send": "Send",
-    "removeVideo": "Clear",
+    "clearDrawing": "Clear drawing",
+    "clearObjects": "Clear arrow",
+    "send": "Send video",
+    "removeVideo": "Clear video",
     "vrViewLabel": "VR user's current view",
     "annotationToolsTitle": "Drawing tools"
   },

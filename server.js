@@ -97,6 +97,23 @@ async function findExistingCompletionCode(sessionId) {
   return '';
 }
 
+async function findExistingSessionFilename(sessionId) {
+  if (!sessionId || !existsSync(dataDir)) return '';
+  const files = (await readdir(dataDir)).filter((file) => file.endsWith('.json'));
+  for (const file of files) {
+    try {
+      const raw = await readFile(path.join(dataDir, file), 'utf8');
+      const saved = JSON.parse(raw);
+      if (saved.session_id === sessionId) {
+        return file;
+      }
+    } catch {
+      // Ignore malformed session files so one bad file does not block saving.
+    }
+  }
+  return '';
+}
+
 function readRequestBody(request, limitBytes = 5 * 1024 * 1024) {
   return new Promise((resolve, reject) => {
     let body = '';
@@ -148,8 +165,9 @@ async function saveSession(request, response) {
 
     const sessionId = sanitizeFilePart(payload.session_id);
     const workerId = sanitizeFilePart(payloadToSave.workerId || payloadToSave.participant_id || payloadToSave.participant_params?.workerId || payloadToSave.participant_params?.participant_id);
+    const existingFilename = await findExistingSessionFilename(payload.session_id);
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `${timestamp}_${workerId}_${sessionId}.json`;
+    const filename = existingFilename || `${timestamp}_${workerId}_${sessionId}.json`;
 
     await mkdir(dataDir, { recursive: true });
     await writeFile(path.join(dataDir, filename), JSON.stringify(payloadToSave, null, 2), 'utf8');

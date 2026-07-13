@@ -359,14 +359,20 @@ function buildMetricsPayload(session, config) {
   }
 
   const completedAt = session.ended_at || timing.actual_study_ended_at || '';
+  const completionSubmittedAt = session.completion_submitted_at || timing.completion_submitted_at || '';
+  const completionStartedAt = timing.completion_started_at || completedAt;
+  const completionClicks = [
+    ...(completedAt ? [{ timestamp: completedAt, element_clicked: 'completion_qualtrics_code_generated' }] : []),
+    ...(completionSubmittedAt ? [{ timestamp: completionSubmittedAt, element_clicked: 'completion_code_submit_button' }] : []),
+  ];
   rows.push(makeRow({
     screen_name: 'Completion / Qualtrics Code',
     question_asked: 'Participant reached completion screen and received/submitted completion code',
-    final_answer: session.completion_code || '',
-    all_clicked_elements: clicksJson(completedAt ? [{ timestamp: completedAt, element_clicked: 'completion_qualtrics_code_generated' }] : []),
-    click_count: completedAt ? 1 : 0,
-    time_spent_ms: '',
-    _screen_started_at: completedAt,
+    final_answer: session.completion_entered_code || session.completion_code || '',
+    all_clicked_elements: clicksJson(completionClicks),
+    click_count: completionClicks.length,
+    time_spent_ms: timing.completion_duration_ms || durationMs(completionStartedAt, completionSubmittedAt),
+    _screen_started_at: completionStartedAt,
   }));
 
   rows.sort((a, b) => {
@@ -968,7 +974,8 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               emitRegionClick('objects-region-clear-button', event);
             }}
           >
-            {dashboardText.clear ?? 'Clear'}
+            <img className="button-action-icon" src={assetUrl('img/button_icons/clear.png')} alt="" aria-hidden="true" />
+            <span>{dashboardText.clearObjects ?? 'Clear'}</span>
           </button>
         </div>
       </section>
@@ -1127,7 +1134,8 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
                 emitRegionClick('controller-send-button', event);
               }}
             >
-              {dashboardText.send ?? 'Send'}
+              <img className="button-action-icon" src={assetUrl('img/button_icons/send.png')} alt="" aria-hidden="true" />
+              <span>{dashboardText.send ?? 'Send'}</span>
             </button>
             <button
               {...actionProps('controller-clear-button', 'controller-clear-video-button')}
@@ -1141,7 +1149,8 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
                 emitRegionClick('controller-clear-button', event);
               }}
             >
-              {dashboardText.clear ?? 'Clear'}
+              <img className="button-action-icon" src={assetUrl('img/button_icons/clear.png')} alt="" aria-hidden="true" />
+              <span>{dashboardText.removeVideo ?? 'Clear video'}</span>
             </button>
           </div>
         </div>
@@ -1207,8 +1216,8 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               emitRegionClick('drawing-button', event);
             }}
           >
+                        <img src={assetUrl('img/button_icons/freehand.png')} alt="" aria-hidden="true" />
             <span>{isFreehandActive ? (dashboardText.drawing ?? 'Drawing') : (dashboardText.freeHand ?? 'Free hand')}</span>
-            <img src={assetUrl('img/button_icons/freehand.png')} alt="" aria-hidden="true" />
           </button>
           <button
             {...actionProps('drawing-clear-button', `annotation-tool-button clear ${hasActiveAnnotation ? 'clear-enabled' : ''}`)}
@@ -1224,8 +1233,8 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               emitRegionClick('drawing-clear-button', event);
             }}
           >
-            <span>{dashboardText.clear ?? 'Clear'}</span>
-            <img src={assetUrl('img/button_icons/clear.png')} alt="" aria-hidden="true" />
+                       <img src={assetUrl('img/button_icons/clear.png')} alt="" aria-hidden="true" />
+ <span>{dashboardText.clearDrawing ?? 'Clear'}</span>
           </button>
         </div>
       </section>
@@ -1361,6 +1370,7 @@ function CompletionPage({
   metricsSaveStatus,
   metricsSaveError,
   onRetrySave,
+  onSubmitCompletionCode,
   debugMode = false,
 }) {
   const [enteredCode, setEnteredCode] = useState('');
@@ -1372,13 +1382,19 @@ function CompletionPage({
     && Boolean(normalizedCompletionCode)
     && Boolean(normalizedEnteredCode);
 
-  function handleSubmitHit(event) {
+  async function handleSubmitHit(event) {
+    event.preventDefault();
     if (!canSubmitHit || normalizedEnteredCode !== normalizedCompletionCode) {
-      event.preventDefault();
       setCodeError(uiText?.completion?.codeMismatch ?? 'The code does not match. Please copy the code exactly from Qualtrics.');
       return;
     }
     setCodeError('');
+    try {
+      await onSubmitCompletionCode?.(enteredCode);
+      HTMLFormElement.prototype.submit.call(event.currentTarget);
+    } catch (error) {
+      setCodeError(uiText?.completion?.saveFailed ?? 'Responses could not be saved. Please retry before continuing.');
+    }
   }
 
   return (
@@ -1863,6 +1879,39 @@ export default function App() {
     setBackendQualtricsUrl('');
   }
 
+  async function saveCompletionSubmit(enteredCode) {
+    if (!session || !config) return;
+    const submittedAt = getIsoTimestamp();
+    const completionStartedAt = session.timing?.completion_started_at || session.ended_at || submittedAt;
+    const updatedSession = {
+      ...session,
+      completion_entered_code: enteredCode,
+      completion_submitted_at: submittedAt,
+      timing: {
+        ...session.timing,
+        completion_started_at: completionStartedAt,
+        completion_submitted_at: submittedAt,
+        completion_duration_ms: durationMs(completionStartedAt, submittedAt),
+      },
+      events: [
+        ...(session.events ?? []),
+        {
+          type: 'completion_code_submitted',
+          timestamp: submittedAt,
+          element_clicked: 'completion_code_submit_button',
+          entered_code: enteredCode,
+        },
+      ],
+    };
+    const updatedPayload = buildMetricsPayload(updatedSession, {
+      ...config,
+      completionCodePrefix: config?.completionCodePrefix ?? 'VRHELP',
+    });
+    updatedPayload.completion_code = backendCompletionCode || session.completion_code || updatedPayload.completion_code;
+    await saveSessionMetrics(updatedPayload, config?.metricsApiBaseUrl);
+    setSession(updatedSession);
+  }
+
   useEffect(() => {
     if (!sessionPayload) return;
     if (sessionPayload.completion_status === 'in_progress') return;
@@ -1970,6 +2019,7 @@ export default function App() {
         metricsSaveStatus={metricsSaveStatus}
         metricsSaveError={metricsSaveError}
         onRetrySave={retrySaveMetrics}
+        onSubmitCompletionCode={saveCompletionSubmit}
         debugMode={Boolean(config?.debugMode)}
       />
     );
