@@ -9,7 +9,7 @@
   },
   {
     "question_id": "q_2",
-    "prompt": "Which region of the screen shows the selected activity?",
+    "prompt": "Which region of the screen describes the selected activity?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 2,
@@ -25,7 +25,7 @@
   },
   {
     "question_id": "q_4",
-    "prompt": "Which region of the screen shows all the virtual object(s) for the selected activity?",
+    "prompt": "Which region of the screen shows all the virtual item(s) needed for the selected activity?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 4,
@@ -33,7 +33,7 @@
   },
   {
     "question_id": "q_5",
-    "prompt": "Which region of the screen shows which controller button(s) the headset user should press for the selected activity?",
+    "prompt": "Which region of the screen shows which controller button(s) to press for the selected activity?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 5,
@@ -46,14 +46,6 @@
     "screen_variant": "dropdown-open",
     "order": 6,
     "correct_answers": ["dropdown"]
-  },
-  {
-    "question_id": "q_7",
-    "prompt": "Which region of the screen lets you see a completed activity?",
-    "question_type": "main",
-    "screen_variant": "dropdown-open",
-    "order": 7,
-    "correct_answers": ["dropdown","dropdown-value"]
   },
   {
     "question_id": "q_8",
@@ -73,7 +65,7 @@
   },
   {
     "question_id": "q_10",
-    "prompt": "Which region of the screen lets you watch the controller buttons video for the selected activity?",
+    "prompt": "Which region of the screen lets you play a clip of how to move your hands and controller button(s) press for the selected activity?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 10,
@@ -81,7 +73,7 @@
   },
   {
     "question_id": "q_11",
-    "prompt": "Which region of the screen lets you watch how the selected activity is performed in the virtual world?",
+    "prompt": "Which region of the screen lets you play a clip showing how the activity is performed in the virtual world?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 11,
@@ -89,7 +81,7 @@
   },
   {
     "question_id": "q_12",
-    "prompt": "Which part of the screen lets you draw on the headset user's view?",
+    "prompt": "Which region of the screen lets you draw on the headset user's view?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 12,
@@ -97,7 +89,7 @@
   },
   {
     "question_id": "q_13",
-    "prompt": "Which part of the screen lets you remove all drawings from the headset user's view?",
+    "prompt": "Which region of the screen lets you remove all drawings from the headset user's view?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 13,
@@ -105,7 +97,7 @@
   },
   {
     "question_id": "q_14",
-    "prompt": "Which part of the screen lets you point the headset user toward the selected virtual object?",
+    "prompt": "Which region of the screen places an arrow pointing at a virtual item?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 14,
@@ -113,7 +105,7 @@
   },
   {
     "question_id": "q_15",
-    "prompt": "Which part of the screen lets you remove the guidance that points the headset user toward the selected virtual object?",
+    "prompt": "Which region of the screen removes a placed arrow from the headset user’s view?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 15,
@@ -121,7 +113,7 @@
   },
   {
     "question_id": "q_16",
-    "prompt": "Which part of the screen lets you send the controller buttons video to the headset user?",
+    "prompt": "Which region of the screen lets you send the hand movements and controller button(s) video to the headset user?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 16,
@@ -129,7 +121,7 @@
   },
   {
     "question_id": "q_17",
-    "prompt": "Which part of the screen lets you remove the controller buttons video from the headset user's view?",
+    "prompt": "Which region of the screen lets you remove the hand movement and controller button(s) video from the headset user's view?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 17,
