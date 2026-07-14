@@ -246,6 +246,40 @@ function getClientInfo() {
   };
 }
 
+function rectSnapshot(rect) {
+  if (!rect) return null;
+  return {
+    left: Math.round(rect.left),
+    top: Math.round(rect.top),
+    width: Math.round(rect.width),
+    height: Math.round(rect.height),
+    right: Math.round(rect.right),
+    bottom: Math.round(rect.bottom),
+  };
+}
+
+function createClickLayoutSnapshot(event, dashboardElement = null) {
+  const nativeEvent = event?.nativeEvent ?? event;
+  const clientX = event?.clientX ?? nativeEvent?.clientX;
+  const clientY = event?.clientY ?? nativeEvent?.clientY;
+  const targetElement = event?.currentTarget instanceof Element
+    ? event.currentTarget
+    : nativeEvent?.currentTarget instanceof Element
+      ? nativeEvent.currentTarget
+      : null;
+  const targetRect = targetElement?.getBoundingClientRect?.();
+  const dashboardRect = dashboardElement?.getBoundingClientRect?.();
+
+  return {
+    viewport_width: typeof window !== 'undefined' ? window.innerWidth : '',
+    viewport_height: typeof window !== 'undefined' ? window.innerHeight : '',
+    client_x: typeof clientX === 'number' ? Math.round(clientX) : '',
+    client_y: typeof clientY === 'number' ? Math.round(clientY) : '',
+    target_rect: rectSnapshot(targetRect),
+    dashboard_rect: rectSnapshot(dashboardRect),
+  };
+}
+
 function buildMetricsPayload(session, config) {
   const participantParams = session.participant_params ?? {};
   const clientInfo = getClientInfo();
@@ -280,6 +314,12 @@ function buildMetricsPayload(session, config) {
     timestamp: click.timestamp || '',
     x: click.x ?? click.offset_x ?? '',
     y: click.y ?? click.offset_y ?? '',
+    client_x: click.client_x ?? '',
+    client_y: click.client_y ?? '',
+    viewport_width: click.viewport_width ?? '',
+    viewport_height: click.viewport_height ?? '',
+    target_rect: click.target_rect ?? null,
+    dashboard_rect: click.dashboard_rect ?? null,
   })));
   const findEvent = (type) => (session.events ?? []).find((event) => event.type === type);
 
@@ -849,6 +889,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   function emitRegionClick(regionId, event, details = {}) {
     let x = '';
     let y = '';
+    const layoutSnapshot = createClickLayoutSnapshot(event, dashboardContainerRef.current);
     const clientX = event?.clientX ?? event?.nativeEvent?.clientX;
     const clientY = event?.clientY ?? event?.nativeEvent?.clientY;
     if (dashboardContainerRef.current && typeof clientX === 'number' && typeof clientY === 'number') {
@@ -856,7 +897,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
       x = Math.round(clientX - rect.left);
       y = Math.round(clientY - rect.top);
     }
-    onRegionClick(regionId, event, { ...details, x, y });
+    onRegionClick(regionId, event, { ...details, ...layoutSnapshot, x, y });
   }
 
   return (
@@ -1687,6 +1728,12 @@ export default function App() {
       timestamp,
       x: details.x ?? '',
       y: details.y ?? '',
+      client_x: details.client_x ?? '',
+      client_y: details.client_y ?? '',
+      viewport_width: details.viewport_width ?? '',
+      viewport_height: details.viewport_height ?? '',
+      target_rect: details.target_rect ?? null,
+      dashboard_rect: details.dashboard_rect ?? null,
     };
     currentQuestionClicksRef.current = [...currentQuestionClicksRef.current, clickRecord];
     setCurrentQuestionClicks(currentQuestionClicksRef.current);
@@ -1724,6 +1771,7 @@ export default function App() {
   function handleMainNext(event) {
     const question = currentFlowItem.item;
     const answeredAt = getIsoTimestamp();
+    const layoutSnapshot = createClickLayoutSnapshot(event);
     const nextClick = {
       region_id: 'question_next_button',
       base_region_id: 'question_next_button',
@@ -1731,6 +1779,7 @@ export default function App() {
       timestamp: answeredAt,
       x: Math.round(event?.nativeEvent?.offsetX ?? 0),
       y: Math.round(event?.nativeEvent?.offsetY ?? 0),
+      ...layoutSnapshot,
     };
     const finalQuestionClicks = [...currentQuestionClicksRef.current, nextClick];
     currentQuestionClicksRef.current = finalQuestionClicks;

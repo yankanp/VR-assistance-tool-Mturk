@@ -416,51 +416,215 @@ function flattenSessionRows(rawSession) {
   });
 }
 
-function buildExcelXml(rows) {
-  const columns = [
-    'session_id',
-    'participant_id',
-    'workerId',
-    'assignmentId',
-    'hitId',
-    'screen_name',
-    'question_asked',
-    'final_answer',
-    'all_clicked_elements',
-    'click_count',
-    'is_correct',
-    'time_spent_ms',
-    'browser',
-    'screen_width',
-    'screen_height',
-    'completion_code',
-  ];
+const metricColumns = [
+  'session_id',
+  'participant_id',
+  'workerId',
+  'assignmentId',
+  'hitId',
+  'screen_name',
+  'question_asked',
+  'final_answer',
+  'all_clicked_elements',
+  'click_count',
+  'is_correct',
+  'time_spent_ms',
+  'browser',
+  'screen_width',
+  'screen_height',
+  'completion_code',
+];
 
-  const header = columns
-    .map((column) => `<Cell><Data ss:Type="String">${xmlEscape(column)}</Data></Cell>`)
+const numericMetricColumns = new Set([
+  'click_count',
+  'time_spent_ms',
+  'screen_width',
+  'screen_height',
+]);
+
+function columnName(index) {
+  let name = '';
+  let current = index + 1;
+  while (current > 0) {
+    const remainder = (current - 1) % 26;
+    name = String.fromCharCode(65 + remainder) + name;
+    current = Math.floor((current - 1) / 26);
+  }
+  return name;
+}
+
+function xlsxCell(column, value, rowIndex, columnIndex) {
+  const ref = `${columnName(columnIndex)}${rowIndex}`;
+  if (numericMetricColumns.has(column)) {
+    const number = Number(value);
+    if (Number.isFinite(number)) {
+      return `<c r="${ref}"><v>${number}</v></c>`;
+    }
+  }
+
+  return `<c r="${ref}" t="inlineStr"><is><t>${xmlEscape(value)}</t></is></c>`;
+}
+
+function buildWorksheetXml(rows) {
+  const headerCells = metricColumns
+    .map((column, columnIndex) => xlsxCell(column, column, 1, columnIndex))
     .join('');
-  const body = rows
-    .map((row) => {
-      const cells = columns
-        .map((column) => `<Cell><Data ss:Type="String">${xmlEscape(row[column])}</Data></Cell>`)
+  const bodyRows = rows
+    .map((row, rowIndex) => {
+      const excelRowIndex = rowIndex + 2;
+      const cells = metricColumns
+        .map((column, columnIndex) => xlsxCell(column, row[column], excelRowIndex, columnIndex))
         .join('');
-      return `<Row>${cells}</Row>`;
+      return `<row r="${excelRowIndex}">${cells}</row>`;
     })
     .join('');
+  const lastCell = `${columnName(metricColumns.length - 1)}${rows.length + 1}`;
 
-  return `<?xml version="1.0"?>
-<?mso-application progid="Excel.Sheet"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:o="urn:schemas-microsoft-com:office:office"
- xmlns:x="urn:schemas-microsoft-com:office:excel"
- xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
-  <Worksheet ss:Name="MTurk Metrics">
-    <Table>
-      <Row>${header}</Row>
-      ${body}
-    </Table>
-  </Worksheet>
-</Workbook>`;
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <dimension ref="A1:${lastCell}"/>
+  <sheetViews><sheetView workbookViewId="0"/></sheetViews>
+  <sheetFormatPr defaultRowHeight="15"/>
+  <sheetData>
+    <row r="1">${headerCells}</row>
+    ${bodyRows}
+  </sheetData>
+</worksheet>`;
+}
+
+function crc32(buffer) {
+  let crc = 0xffffffff;
+  for (const byte of buffer) {
+    crc ^= byte;
+    for (let bit = 0; bit < 8; bit += 1) {
+      crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0);
+    }
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+function dosDateTime(date = new Date()) {
+  const time = (
+    (date.getHours() << 11)
+    | (date.getMinutes() << 5)
+    | Math.floor(date.getSeconds() / 2)
+  );
+  const day = (
+    ((date.getFullYear() - 1980) << 9)
+    | ((date.getMonth() + 1) << 5)
+    | date.getDate()
+  );
+  return { time, day };
+}
+
+function zipFileEntries(files) {
+  const chunks = [];
+  const centralDirectory = [];
+  let offset = 0;
+  const { time, day } = dosDateTime();
+
+  for (const file of files) {
+    const name = Buffer.from(file.name, 'utf8');
+    const content = Buffer.isBuffer(file.content) ? file.content : Buffer.from(file.content, 'utf8');
+    const crc = crc32(content);
+
+    const localHeader = Buffer.alloc(30 + name.length);
+    localHeader.writeUInt32LE(0x04034b50, 0);
+    localHeader.writeUInt16LE(20, 4);
+    localHeader.writeUInt16LE(0x0800, 6);
+    localHeader.writeUInt16LE(0, 8);
+    localHeader.writeUInt16LE(time, 10);
+    localHeader.writeUInt16LE(day, 12);
+    localHeader.writeUInt32LE(crc, 14);
+    localHeader.writeUInt32LE(content.length, 18);
+    localHeader.writeUInt32LE(content.length, 22);
+    localHeader.writeUInt16LE(name.length, 26);
+    localHeader.writeUInt16LE(0, 28);
+    name.copy(localHeader, 30);
+
+    chunks.push(localHeader, content);
+
+    const centralHeader = Buffer.alloc(46 + name.length);
+    centralHeader.writeUInt32LE(0x02014b50, 0);
+    centralHeader.writeUInt16LE(20, 4);
+    centralHeader.writeUInt16LE(20, 6);
+    centralHeader.writeUInt16LE(0x0800, 8);
+    centralHeader.writeUInt16LE(0, 10);
+    centralHeader.writeUInt16LE(time, 12);
+    centralHeader.writeUInt16LE(day, 14);
+    centralHeader.writeUInt32LE(crc, 16);
+    centralHeader.writeUInt32LE(content.length, 20);
+    centralHeader.writeUInt32LE(content.length, 24);
+    centralHeader.writeUInt16LE(name.length, 28);
+    centralHeader.writeUInt16LE(0, 30);
+    centralHeader.writeUInt16LE(0, 32);
+    centralHeader.writeUInt16LE(0, 34);
+    centralHeader.writeUInt16LE(0, 36);
+    centralHeader.writeUInt32LE(0, 38);
+    centralHeader.writeUInt32LE(offset, 42);
+    name.copy(centralHeader, 46);
+    centralDirectory.push(centralHeader);
+
+    offset += localHeader.length + content.length;
+  }
+
+  const centralDirectoryStart = offset;
+  const centralDirectoryBuffer = Buffer.concat(centralDirectory);
+  const endRecord = Buffer.alloc(22);
+  endRecord.writeUInt32LE(0x06054b50, 0);
+  endRecord.writeUInt16LE(0, 4);
+  endRecord.writeUInt16LE(0, 6);
+  endRecord.writeUInt16LE(files.length, 8);
+  endRecord.writeUInt16LE(files.length, 10);
+  endRecord.writeUInt32LE(centralDirectoryBuffer.length, 12);
+  endRecord.writeUInt32LE(centralDirectoryStart, 16);
+  endRecord.writeUInt16LE(0, 20);
+
+  return Buffer.concat([...chunks, centralDirectoryBuffer, endRecord]);
+}
+
+function buildXlsxWorkbook(rows) {
+  return zipFileEntries([
+    {
+      name: '[Content_Types].xml',
+      content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+  <Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+</Types>`,
+    },
+    {
+      name: '_rels/.rels',
+      content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>`,
+    },
+    {
+      name: 'xl/workbook.xml',
+      content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <sheets>
+    <sheet name="MTurk Metrics" sheetId="1" r:id="rId1"/>
+  </sheets>
+</workbook>`,
+    },
+    {
+      name: 'xl/_rels/workbook.xml.rels',
+      content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
+</Relationships>`,
+    },
+    {
+      name: 'xl/worksheets/sheet1.xml',
+      content: buildWorksheetXml(rows),
+    },
+  ]);
 }
 async function readSavedSessions() {
   await mkdir(dataDir, { recursive: true });
@@ -547,11 +711,11 @@ async function exportMetrics(response) {
   const saved = await readSavedSessions();
   const sessions = saved.map(({ session }) => session);
   const rows = sessions.flatMap(flattenSessionRows);
-  const workbook = buildExcelXml(rows);
+  const workbook = buildXlsxWorkbook(rows);
 
   response.writeHead(200, {
-    'Content-Type': 'application/vnd.ms-excel; charset=utf-8',
-    'Content-Disposition': 'attachment; filename="mturk_metrics.xls"',
+    'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'Content-Disposition': 'attachment; filename="mturk_metrics.xlsx"',
     'Access-Control-Allow-Origin': allowedOrigin,
   });
   response.end(workbook);
