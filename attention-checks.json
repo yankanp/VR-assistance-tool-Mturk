@@ -25,20 +25,12 @@
         "order":  1
     },
     {
-        "check_id":  "ac_button_help_explanation",
-        "type":  "open_text",
-        "prompt":  "Imagine the person wearing the headset says, \"which button should I press?\" In one or two sentences, explain how you would use the helper tool to assist them.",
-        "correct_answer":  "",
-        "requires_manual_review":  true,
-        "order":  2
-    },
-    {
         "check_id":  "ac_repeat_vr_view",
         "type":  "dashboard_click",
         "question_type":  "attention_repetition",
         "prompt":  "Click the area where you would see what the headset user is currently seeing.",
         "screen_variant":  "default",
-        "order":  3,
+        "order":  2,
         "correct_answers":  [
                                 "VR-user-current-view-region"
                             ]
@@ -49,7 +41,7 @@
         "question_type":  "attention_instructional_manipulation",
         "prompt":  "We want to understand whether first-time users can understand the helper tool. Imagine you are helping the headset user. For this question only, click the Clear button.",
         "screen_variant":  "default",
-        "order":  4,
+        "order":  3,
         "correct_answers":  [
                                 "drawing-clear-button",
                                 "objects-region-clear-button",
@@ -79,6 +71,6 @@
                         }
                     ],
         "correct_answer":  "2025",
-        "order":  5
+        "order":  4
     }
 ]

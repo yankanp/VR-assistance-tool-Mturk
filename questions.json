@@ -73,7 +73,7 @@
   },
   {
     "question_id": "q_10",
-    "prompt": "Which region of the screen lets you watch the physical movement and controller button(s) for the selected activity?",
+    "prompt": "Which region of the screen lets you watch the controller buttons video for the selected activity?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 10,
@@ -113,7 +113,7 @@
   },
   {
     "question_id": "q_15",
-    "prompt": "Which part of the screen lets you remove the directional arrow from the headset user's view?",
+    "prompt": "Which part of the screen lets you remove the guidance that points the headset user toward the selected virtual object?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 15,
@@ -121,7 +121,7 @@
   },
   {
     "question_id": "q_16",
-    "prompt": "Which part of the screen lets you send the physical movement and controller button(s) to the headset user?",
+    "prompt": "Which part of the screen lets you send the controller buttons video to the headset user?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 16,
@@ -129,7 +129,7 @@
   },
   {
     "question_id": "q_17",
-    "prompt": "Which part of the screen lets you remove the physical movement and controller button(s) from the headset user's view?",
+    "prompt": "Which part of the screen lets you remove the controller buttons video from the headset user's view?",
     "question_type": "main",
     "screen_variant": "default",
     "order": 17,
