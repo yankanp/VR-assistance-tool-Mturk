@@ -39,13 +39,11 @@
         "check_id":  "ac_clear_imc",
         "type":  "dashboard_click",
         "question_type":  "attention_instructional_manipulation",
-        "prompt":  "We want to understand whether first-time users can understand the helper tool. Imagine you are helping the headset user. For this question only, click the Clear button.",
+        "prompt":  "We want to understand whether first-time users can understand the helper tool. Imagine you are helping the headset user. For this question only, click the Clear drawing button.",
         "screen_variant":  "default",
         "order":  3,
         "correct_answers":  [
-                                "drawing-clear-button",
-                                "objects-region-clear-button",
-                                "controller-clear-button"
+                                "drawing-clear-button"
                             ]
     },
     {
