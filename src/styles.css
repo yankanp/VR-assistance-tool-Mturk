@@ -7,6 +7,8 @@
   --accent: #ff9800;
   --button-bg: #4e9bcb;
   --button-bg-hover: #5aa9d8;
+  --remove-button-bg: #9A45C4;
+  --remove-button-bg-hover: #C57AEB;
   --selection: #fff176;
   --selection-dark: #2a2200;
   font-family: Garamond, "EB Garamond", "Times New Roman", serif;
@@ -33,6 +35,27 @@ button,
 input,
 select {
   font: inherit;
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1em;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings:
+    "FILL" 1,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 48;
 }
 
 button,
@@ -231,21 +254,16 @@ button:disabled {
   transition: opacity 140ms ease, filter 140ms ease;
 }
 
-.sim-dashboard [aria-label="Task dropdown and progress"],
 .sim-dashboard [aria-label="Current activity objects"] {
   grid-column: 1;
 }
 
-.sim-dashboard [aria-label="Task dropdown and progress"] {
-  grid-row: 1 / span 1;
-  align-self: start;
-  display: grid;
-  gap: 0.5rem;
-  padding: 0.65rem;
+.sim-dashboard [aria-label="Task dropdown"] {
+  grid-area: dropdown;
+  position: relative;
   overflow: visible;
-  z-index: 4;
+  z-index: 12;
 }
-
 
 .sim-dashboard [aria-label="Current activity objects"] {
   grid-row: 2;
@@ -253,8 +271,7 @@ button:disabled {
 }
 
 .sim-select,
-.task-select-trigger,
-.task-progress-line {
+.task-select-trigger {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -295,22 +312,6 @@ button:disabled {
   line-height: 1;
 }
 
-.task-progress-line {
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  min-height: 3.4rem;
-  padding: 0.85rem 0.85rem;
-  cursor: pointer;
-}
-
-.task-progress-line.selected-region {
-  outline-width: 0.28rem;
-  outline-offset: 0.12rem;
-  box-shadow:
-    0 0 0 0.22rem rgba(255, 236, 87, 0.72),
-    0 0 1rem rgba(255, 236, 87, 0.45);
-}
-
-.sim-task-list,
 .task-select-list {
   position: absolute;
   left: 0.65rem;
@@ -414,15 +415,76 @@ button:disabled {
   font-size: clamp(1.35rem, 1.65vw, 1.75rem);
 }
 
+.section-title-with-info {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  max-width: 100%;
+  line-height: 1.08;
+}
+
+.section-info-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+.section-info-button {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(1.45rem, 1.65vw, 1.85rem);
+  height: clamp(1.45rem, 1.65vw, 1.85rem);
+  min-width: clamp(1.45rem, 1.65vw, 1.85rem);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.section-info-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.section-info-button:hover,
+.section-info-button[aria-expanded="true"] {
+  background: transparent;
+  filter: brightness(1.18);
+}
+
+.section-tooltip {
+  position: absolute;
+  right: 0;
+  left: auto;
+  top: calc(100% + 0.35rem);
+  z-index: 220;
+  width: min(18rem, 44vw);
+  max-width: calc(100vw - 2rem);
+  transform: none;
+  padding: 0.55rem 0.7rem;
+  border: 0.1rem solid rgba(255, 255, 255, 0.78);
+  border-radius: 0.45rem;
+  background: rgba(12, 16, 24, 0.96);
+  box-shadow: 0 0.55rem 1.4rem rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  font-size: clamp(0.85rem, 1vw, 1rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: left;
+  text-shadow: none;
+}
+
 .sim-region p {
   margin: 0 0 0.7rem;
   font-size: clamp(1.05rem, 1.25vw, 1.25rem);
   line-height: 1.35;
-}
-
-.instruction-copy {
-  padding: 0.5rem;
-  border-radius: 0.4rem;
 }
 
 .sim-button {
@@ -467,45 +529,6 @@ button:disabled {
     #5d3624;
 }
 
-.highlighted-bell {
-  position: absolute;
-  left: 47%;
-  top: 39%;
-  padding: 0.45rem 0.7rem;
-  border: 0.16rem solid #fff176;
-  border-radius: 50%;
-  background: #4b2b19;
-  color: #fff176;
-  font-weight: 700;
-}
-
-.view-label {
-  position: absolute;
-  left: 1rem;
-  top: 1rem;
-  padding: 0.35rem 0.55rem;
-  border-radius: 0.35rem;
-  background: rgba(0, 0, 0, 0.45);
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.floating-tool {
-  position: absolute;
-  left: calc(25.4% + 0.5rem);
-  z-index: 5;
-  min-width: 8.5rem;
-}
-
-.floating-tool.freehand {
-  bottom: 9.2rem;
-}
-
-.floating-tool.clear {
-  bottom: 5.8rem;
-  background: var(--button-bg);
-}
-
 .sim-dashboard [aria-label="Current activity controller guidance"] {
   grid-area: controller;
   display: grid;
@@ -522,26 +545,36 @@ button:disabled {
   font-weight: 700;
 }
 
-.controller-header select {
+.controller-header select,
+.controller-side-toggle {
   min-width: 0;
-  height: 2.1rem;
+  height: .1rem;
   border: 1px solid var(--selected-task-color, var(--accent));
   border-radius: 0.45rem;
   background: var(--panel-bg-soft);
   color: #ffffff;
 }
 
-.controller-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(10rem, 1fr);
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: 0.45rem;
-  min-height: 0;
-  padding-top: 0.45rem;
+.controller-header select {
+  width: 100%;
+}
+
+
+
+
+.controller-side-toggle-option.selected {
+  background: var(--selected-task-color, var(--accent));
+  color: var(--selected-task-contrast, #101010);
+  box-shadow:
+    inset 0 0 0 0.08rem rgba(255, 255, 255, 0.35),
+    0 0 0.5rem rgba(255, 152, 0, 0.35);
+}
+
+.controller-side-toggle-option:not(.selected):hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .controller-model {
-  grid-row: 1 / span 2;
   position: relative;
   min-height: 9rem;
   border-radius: 0.55rem;
@@ -593,8 +626,9 @@ button:disabled {
   inset: 0;
   z-index: 8;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  place-items: center;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-items: start;
+  justify-items: end;
   padding: 0.45rem;
   pointer-events: none;
 }
@@ -602,8 +636,11 @@ button:disabled {
 .play-symbol {
   display: inline-grid;
   place-items: center;
-  width: 3.4rem;
-  height: 3.4rem;
+  grid-row: 1;
+  justify-self: end;
+  align-self: start;
+  width: clamp(2.6rem, 3.1vw, 3.25rem);
+  height: clamp(2.6rem, 3.1vw, 3.25rem);
   border: 0.18rem solid rgba(255, 255, 255, 0.95);
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.58);
@@ -617,10 +654,12 @@ button:disabled {
 .video-progress-track {
   position: relative;
   display: block;
+  grid-row: 3;
+  justify-self: stretch;
   width: 100%;
   height: 0.55rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.28);
   overflow: hidden;
 }
 
@@ -629,7 +668,7 @@ button:disabled {
   inset: 0 auto 0 0;
   width: 0;
   border-radius: inherit;
-  background: #ff3b30;
+  background: rgba(255, 59, 48, 0.55);
 }
 
 .controller-send-button,
@@ -835,16 +874,17 @@ button:disabled {
 
   .sim-dashboard {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto auto;
     grid-template-areas:
+      "dropdown"
       "left"
       "annotation"
       "vr"
       "controller"
+      "physical"
       "demo";
   }
 
-  .sim-dashboard [aria-label="Task dropdown and progress"],
   .sim-dashboard [aria-label="Current activity objects"] {
     grid-column: auto;
     grid-row: auto;
@@ -855,10 +895,6 @@ button:disabled {
     min-height: 22rem;
   }
 
-  .floating-tool {
-    position: static;
-    min-height: 3rem;
-  }
 }
 
 /* MTurk tablet mock: mirrors the real helper assistance tool layout. */
@@ -894,24 +930,56 @@ button:disabled {
     inset 0 0 0 0.08rem rgba(255, 255, 255, 0.12);
 }
 
+/* control the grid sizes here */
 .tablet-frame .sim-dashboard {
   --selected-task-color: #ff9800;
   --selected-task-contrast: #101010;
   --left-panel-width: 18.5%;
-  --panel-gap: 0.35rem;
+  /* Bottom row widths. Adjust these three values to resize the physical/video,
+     controller, and demo panels; the contents below scale with the panel width. */
+  --physical-panel-width: 30%;
+  --controller-panel-width: 25%;
+  --demo-panel-width: 25%;
+  --panel-gap: 0.5rem;
+  --tool-ui-font-size: clamp(1.18rem, 1.32vw, 1.42rem);
+  --tool-button-height: clamp(3.7rem, 5.35vh, 4.55rem);
+  --tool-button-font-size: var(--tool-ui-font-size);
+  --tool-button-icon-size: clamp(1.45rem, 1.75vw, 1.95rem);
   color: #ffffff;
   position: relative;
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: minmax(13rem, var(--left-panel-width)) minmax(0, 56.5%) minmax(15rem, 25%);
-  grid-template-rows: minmax(0, 68%) minmax(0, 32%);
+  /* physical action video, 3d model and in-worl video section sizes */
+  grid-template-columns:
+    minmax(13rem, var(--left-panel-width))
+    minmax(0, var(--physical-panel-width))
+    minmax(0, var(--controller-panel-width))
+    minmax(12rem, var(--demo-panel-width));
+    /* dropdown height, screencast image height and last 3 panels height */
+  grid-template-rows: minmax(0, 8%) minmax(0, 60%) minmax(0, 32%);
   grid-template-areas:
-    "left vr vr"
-    "left controller demo";
+    "left dropdown dropdown dropdown"
+    "left vr vr vr"
+    ". physical controller demo";
   gap: var(--panel-gap);
   min-height: 0;
   background: #050505;
+}
+
+.tablet-frame .sim-dashboard::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 20%;
+  bottom: 66%;
+  width: calc(var(--left-panel-width) - 0.12rem);
+  border: 0.14rem solid var(--selected-task-color);
+  border-radius: 0.7rem;
+  border-color:rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  z-index: 3;
 }
 
 .tablet-frame .sim-dashboard button,
@@ -929,16 +997,42 @@ button:disabled {
   color: #ffffff;
 }
 
-.tablet-frame .sim-dashboard .sim-button {
+.tablet-frame .sim-dashboard .controller-send-button,
+.tablet-frame .sim-dashboard .controller-clear-video-button {
+  min-height: var(--tool-button-height);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
+  padding: 0.45rem 0.55rem;
+  font-size: var(--tool-button-font-size);
+  font-weight: 800;
+  line-height: 1.08;
+  white-space: normal;
+}
+
+.tablet-frame .sim-dashboard .controller-send-button img,
+.tablet-frame .sim-dashboard .controller-clear-video-button img {
+  width: var(--tool-button-icon-size);
+  height: var(--tool-button-icon-size);
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.tablet-frame .sim-dashboard .sim-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: var(--tool-button-height);
+  padding: 0.5rem 0.8rem;
+  font-size: var(--tool-button-font-size);
+  font-weight: 800;
 }
 
 .button-action-icon {
-  width: clamp(1.05rem, 1.45vw, 1.55rem);
-  height: clamp(1.05rem, 1.45vw, 1.55rem);
+  width: var(--tool-button-icon-size, clamp(1.05rem, 1.45vw, 1.55rem));
+  height: var(--tool-button-icon-size, clamp(1.05rem, 1.45vw, 1.55rem));
   object-fit: contain;
   filter: brightness(0) invert(1);
   flex: 0 0 auto;
@@ -946,10 +1040,6 @@ button:disabled {
 
 .tablet-frame .sim-dashboard .task-select-option-current {
   color: #101010;
-}
-
-.tablet-frame .sim-dashboard .clear-in-vr {
-  color: #111111;
 }
 
 .tablet-frame .sim-dashboard.selected-task-current {
@@ -974,33 +1064,80 @@ button:disabled {
   padding: 0.75rem;
 }
 
-.tablet-frame .sim-dashboard [aria-label="Task dropdown and progress"] {
-  position: absolute;
-  grid-column: 1 !important;
-  grid-row: 1 / 3 !important;
-  left: 0;
-  top: 0;
-  width: calc(var(--left-panel-width) - 0.12rem);
-  height: 18%;
+.tablet-frame .sim-dashboard [aria-label="Task dropdown"] {
+  grid-area: dropdown;
+  position: relative;
+  display: block;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  min-width: 0;
   min-height: 0;
-  padding: 0.65rem;
-  z-index: 6;
+  height: 100%;
   overflow: visible;
 }
 
+.tablet-frame .sim-dashboard [aria-label="Task dropdown"] .task-select {
+  position: absolute;
+  left: 42%;
+  top: 0;
+  width: min(75%, 72rem);
+  height: 100%;
+  transform: translateX(-56%);
+  z-index: 12;
+}
+
+.tablet-frame .sim-dashboard [aria-label="Task dropdown"] .task-select-trigger {
+  min-height: 0;
+  height: 100%;
+  padding: 0 0.65rem;
+  border-color: var(--selected-task-color);
+  font-size: var(--tool-ui-font-size);
+  line-height: 1.08;
+  column-gap: 0.55rem;
+  background: #3f4350;
+}
+
+.tablet-frame .sim-dashboard [aria-label="Task dropdown"] .task-status-icon {
+  width: clamp(1.15rem, 1.45vw, 1.55rem);
+  height: clamp(1.15rem, 1.45vw, 1.55rem);
+  flex: 0 0 auto;
+}
+
+.tablet-frame .sim-dashboard [aria-label="Task dropdown"] .task-select-chevron {
+  display: grid;
+  place-items: center;
+  min-width: clamp(1.5rem, 1.8vw, 2rem);
+  height: 100%;
+  border-radius: 0.35rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: clamp(1.35rem, 1.75vw, 1.95rem);
+  font-weight: 900;
+}
+
+.tablet-frame .sim-dashboard [aria-label="Task dropdown"] .task-select-list {
+  left: 50%;
+  right: auto;
+  top: calc(100% + 0.35rem);
+  width: min(100%, 46rem);
+  max-height: 28rem;
+  transform: translateX(-50%);
+}
 
 .tablet-frame .sim-dashboard [aria-label="Current activity objects"] {
   position: absolute;
   grid-column: 1 !important;
-  grid-row: 1 / 3 !important;
+  /* grid-row: 1 / 3 !important; */
   left: 0;
-  top: calc(43% + (var(--panel-gap) * 2));
+  top: calc(28% + var(--panel-gap));
+  bottom: 0;
   width: calc(var(--left-panel-width) - 0.12rem);
-  height: calc(57% - (var(--panel-gap) * 2));
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 0.45rem;
-  overflow: hidden;
+  overflow: visible;
   z-index: 4;
 }
 
@@ -1010,7 +1147,7 @@ button:disabled {
   color: #ffffff;
   min-height: 4.65rem;
   padding: 0.7rem 0.8rem;
-  font-size: clamp(0.95rem, 1.35vw, 1.25rem);
+  font-size: var(--tool-ui-font-size);
   line-height: 1.15;
 }
 
@@ -1023,37 +1160,21 @@ button:disabled {
   border-color: var(--selected-task-color);
 }
 
-.tablet-frame .task-progress-line {
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  min-height: 3.1rem;
-  padding: 0.45rem 0.6rem;
-  border: 1px solid #70798d;
-  border-radius: 0.45rem;
-  background: var(--panel-bg-soft);
-  font-size: clamp(0.95rem, 1.2vw, 1.2rem);
-}
-
-.tablet-frame .task-progress-line .task-status-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-.tablet-frame .sim-task-list {
-  left: 0.65rem;
-  right: 0.65rem;
-  top: 4.95rem;
-  max-height: 29rem;
-  overflow-y: auto;
+.tablet-frame .task-select-option {
+  font-size: var(--tool-ui-font-size);
 }
 
 .tablet-frame .sim-region h2 {
+  display: flex;
+  align-items: center;
   padding-bottom: 0.45rem;
   border-bottom: 0.08rem solid rgba(255, 255, 255, 0.55);
-  font-size: clamp(1.05rem, 1.65vw, 1.55rem);
+  font-size: var(--tool-ui-font-size);
+  line-height: 1.08;
 }
 
 .tablet-frame .sim-region p {
-  font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+  font-size: var(--tool-ui-font-size);
   line-height: 1.32;
 }
 
@@ -1064,7 +1185,7 @@ button:disabled {
   align-content: start;
   gap: 0.45rem;
   min-height: 0;
-  max-height: none;
+  max-height: 100%;
   overflow-y: auto;
   padding-right: 0.15rem;
 }
@@ -1077,35 +1198,49 @@ button:disabled {
 
 .object-clear-button {
   width: 100%;
-  min-height: 3.1rem;
+  min-height: var(--tool-button-height);
   border-radius: 0.5rem;
-  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  font-size: var(--tool-button-font-size);
   font-weight: 800;
+  background: var(--remove-button-bg);
+  border-color: var(--remove-button-bg);
+}
+
+.object-clear-button:hover {
+  background: var(--remove-button-bg-hover);
+  border-color: var(--remove-button-bg-hover);
 }
 
 .tablet-frame .object-button {
   display: grid;
-  grid-template-columns: 3.3rem minmax(0, 1fr);
+  grid-template-columns: clamp(3rem, 3.35vw, 3.65rem) minmax(0, 1fr);
   gap: 0.6rem;
   align-items: center;
   width: 100%;
-  min-height: 4.5rem;
+  min-height: var(--tool-button-height);
   padding: 0.45rem 0.65rem;
+  overflow: hidden;
   text-align: left;
-  font-size: clamp(0.95rem, 1.25vw, 1.2rem);
+  font-size: var(--tool-button-font-size);
+  font-weight: 800;
+  line-height: 1.08;
 }
 
 .object-icon-wrap {
   display: grid;
   place-items: center;
-  width: 3rem;
-  height: 3rem;
+  width: clamp(2.35rem, 2.65vw, 3rem);
+  height: clamp(2.35rem, 2.65vw, 3rem);
+  justify-self: start;
+  align-self: center;
+  overflow: hidden;
 }
 
 .object-icon-wrap img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: left center;
 }
 
 .tablet-frame .sim-dashboard [aria-label="Real-time VR user view"] {
@@ -1139,6 +1274,69 @@ button:disabled {
   display: none;
 }
 
+.screencast-volume-control {
+  position: absolute;
+  right: 0.45rem;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  width: min(21rem, 24%);
+  height: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.screencast-volume-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  padding: 0 0.75rem;
+  font-size: var(--tool-ui-font-size);
+  font-weight: 800;
+  line-height: 1.05;
+  white-space: normal;
+  border-color: #397da8;
+  background: var(--button-bg);
+}
+
+.screencast-volume-button:hover {
+  background: var(--button-bg-hover);
+}
+
+.screencast-volume-button .button-action-icon {
+  width: var(--tool-button-icon-size);
+  height: var(--tool-button-icon-size);
+}
+
+.screencast-volume-popover {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  z-index: 35;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 8.5rem;
+  padding: 0.55rem 0.35rem;
+  border: 0.1rem solid rgba(255, 255, 255, 0.72);
+  border-radius: 0.55rem;
+  background: rgba(16, 22, 34, 0.92);
+  box-shadow: 0 0.5rem 1.35rem rgba(0, 0, 0, 0.38);
+}
+
+.screencast-volume-slider {
+  width: 7rem;
+  min-width: 7rem;
+  accent-color: var(--button-bg);
+  cursor: pointer;
+  transform: rotate(-90deg);
+}
+
 .freehand-canvas {
   position: absolute;
   inset: 0;
@@ -1154,42 +1352,6 @@ button:disabled {
   cursor: crosshair;
 }
 
-.vr-task-banner {
-  position: absolute;
-  left: 50%;
-  top: 1.2rem;
-  z-index: 5;
-  max-width: min(78%, 42rem);
-  transform: translateX(-50%);
-  padding: 0.55rem 1.35rem;
-  border: 0.12rem solid rgba(255, 255, 255, 0.82);
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, rgba(16, 22, 34, 0.9), rgba(16, 22, 34, 0.72));
-  box-shadow:
-    0 0.55rem 1.6rem rgba(0, 0, 0, 0.36),
-    inset 0 0 0 0.05rem rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-  font-size: clamp(1.25rem, 2vw, 2.15rem);
-  font-weight: 900;
-  line-height: 1.12;
-  text-align: center;
-  text-shadow: 0 0.12rem 0.25rem rgba(0, 0, 0, 0.7);
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-.vr-task-banner.selected-region {
-  border-color: #fff26a;
-  background:
-    linear-gradient(180deg, rgba(255, 236, 89, 0.98), rgba(255, 200, 35, 0.9));
-  color: #171100;
-  text-shadow: none;
-  box-shadow:
-    0 0 0 0.24rem rgba(255, 242, 106, 0.5),
-    0 0.7rem 1.8rem rgba(0, 0, 0, 0.42);
-}
-
 .harpoon-silhouette {
   position: absolute;
   left: 32%;
@@ -1201,18 +1363,6 @@ button:disabled {
   box-shadow:
     9rem -2.6rem 0 -1.15rem #180d0b,
     -8rem 3.2rem 0 -1.4rem #180d0b;
-}
-
-.clear-in-vr {
-  position: absolute;
-  right: 2.2rem;
-  top: 1.4rem;
-  padding: 0.35rem 0.9rem;
-  border: 0.12rem solid #a68100;
-  background: #f5d51f;
-  color: #111111;
-  font-size: clamp(0.75rem, 1vw, 0.95rem);
-  font-weight: 900;
 }
 
 .vr-sent-video {
@@ -1263,40 +1413,40 @@ button:disabled {
   grid-column: 1 !important;
   grid-row: 1 / 3 !important;
   left: 0;
-  top: calc(18% + var(--panel-gap));
+  top: 0;
   width: calc(var(--left-panel-width) - 0.12rem);
-  height: 25%;
+  height: 28%;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 0.5rem;
   padding: 0.7rem;
   z-index: 5;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .annotation-tools-stack {
   display: grid;
   grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 0.55rem;
+  gap: 0.85rem;
   min-height: 0;
 }
 
 .annotation-tool-button {
   width: 100%;
-  min-height: 0;
+  min-height: var(--tool-button-height);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.65rem;
   padding: 0.55rem 0.75rem;
   border-radius: 0.55rem;
-  font-size: clamp(1.15rem, 1.45vw, 1.65rem);
+  font-size: var(--tool-button-font-size);
   font-weight: 800;
 }
 
 .annotation-tool-button img {
-  width: clamp(1.75rem, 2.3vw, 2.65rem);
-  height: clamp(1.75rem, 2.3vw, 2.65rem);
+  width: var(--tool-button-icon-size);
+  height: var(--tool-button-icon-size);
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
@@ -1311,6 +1461,16 @@ button:disabled {
   filter: none;
 }
 
+.annotation-tool-button.clear {
+  background: var(--remove-button-bg);
+  border-color: var(--remove-button-bg);
+}
+
+.annotation-tool-button.clear:hover {
+  background: var(--remove-button-bg-hover);
+  border-color: var(--remove-button-bg-hover);
+}
+
 .tablet-frame .disabled-control {
   cursor: not-allowed;
   opacity: 0.46;
@@ -1319,20 +1479,139 @@ button:disabled {
 
 .tablet-frame .sim-dashboard [aria-label="Current activity controller guidance"] {
   grid-area: controller;
+  position: relative;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
+  gap: 0.45rem;
+  overflow: hidden;
+}
+
+.tablet-frame .sim-dashboard [aria-label="Current activity controller guidance"]::before {
+  content: none;
 }
 
 .tablet-frame .controller-header {
-  grid-template-columns: auto minmax(0, 1fr) minmax(0, 0.85fr);
-  font-size: clamp(0.95rem, 1.25vw, 1.2rem);
+  display: grid;
+  grid-template-columns: max-content minmax(5.8rem, 9.2rem) auto;
+  grid-template-rows: auto;
+  align-items: center;
+  font-size: clamp(0.9rem, 1vw, 1.08rem);
+  gap: 0.28rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 0.08rem solid rgba(255, 255, 255, 0.55);
 }
 
-.tablet-frame .controller-body {
-  grid-template-columns: minmax(0, 0.78fr) minmax(18rem, 1.32fr);
-  grid-template-rows: minmax(0, 1fr) auto;
+.controller-title-text {
+  min-width: max-content;
+  font-weight: 800;
+  line-height: 1.08;
+  white-space: nowrap;
+}
+
+.tablet-frame .controller-header select,
+.physical-action-header select {
+  min-height: 2.25rem;
+  padding: 0.12rem 0.32rem;
+  font-size: clamp(0.86rem, 0.95vw, 1rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.tablet-frame .controller-header select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.controller-info-wrap .section-tooltip {
+  right: 0;
+  left: auto;
+  transform: none;
+}
+
+.controller-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(1.9rem, 2.35vw, 2.55rem);
+  gap: 0.1rem;
+  min-width: 0;
+  min-height: 0;
+}
+
+
+
+.tablet-frame .controller-body .controller-side-toggle {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto;
+  place-items: center;
+  align-content: center;
+  gap: clamp(0.18rem, 0.45vh, 0.38rem);
+  height: auto;
+  min-height: 0;
+  padding: 0.1rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.tablet-frame .controller-body .controller-side-toggle.selected-region,
+.tablet-frame .controller-body .controller-side-toggle:hover,
+.tablet-frame .controller-body .controller-side-toggle:focus-visible {
+  outline: 0;
+  box-shadow: none;
+}
+
+.controller-side-switch {
+  position: relative;
+  width: clamp(1.75rem, 2.15vw, 2.28rem);
+  height: clamp(0.82rem, 1.05vw, 1.12rem);
+  border: 0;
+  border-radius: 999px;
+  background: var(--button-bg);
+  box-shadow:
+    inset 0 0 0 0.08rem rgba(255, 255, 255, 0.32),
+    0 0.12rem 0.35rem rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.controller-side-switch-knob {
+  position: absolute;
+  top: 50%;
+  left: 0.18rem;
+  width: clamp(0.48rem, 0.6vw, 0.65rem);
+  height: clamp(0.48rem, 0.6vw, 0.65rem);
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0.08rem 0.22rem rgba(0, 0, 0, 0.35);
+  transform: translateY(-50%);
+  transition: transform 160ms ease;
+}
+
+.controller-side-switch.right .controller-side-switch-knob {
+  transform: translate(calc(clamp(1.75rem, 2.15vw, 2.28rem) - clamp(0.48rem, 0.6vw, 0.65rem) - 0.36rem), -50%);
+}
+
+.controller-side-current {
+  display: grid;
+  place-items: center;
+  width: clamp(1.65rem, 2.15vw, 2.25rem);
+  height: clamp(1.65rem, 2.15vw, 2.25rem);
+  border-radius: 50%;
+  background: var(--button-bg);
+  color: #ffffff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.98rem, 1.42vw, 1.5rem);
+  font-weight: 800;
+  line-height: 1;
+  box-shadow:
+    inset 0 0 0 0.12rem rgba(255, 255, 255, 0.24),
+    0 0.18rem 0.45rem rgba(0, 0, 0, 0.35);
+  flex: 0 0 auto;
 }
 
 .controller-action-row {
@@ -1343,14 +1622,151 @@ button:disabled {
 
 .controller-clear-video-button {
   width: 100%;
-  background: var(--button-bg);
-  border-color: #397da8;
+  background: var(--remove-button-bg);
+  border-color: var(--remove-button-bg);
+}
+
+.controller-clear-video-button:hover {
+  background: var(--remove-button-bg-hover);
+  border-color: var(--remove-button-bg-hover);
 }
 
 .tablet-frame .controller-model {
   min-height: 0;
   background: transparent;
   overflow: hidden;
+}
+
+.physical-action-section .video-thumb {
+  min-height: 0;
+}
+
+.physical-action-section {
+  grid-area: physical;
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.5rem;
+  min-width: 0;
+  min-height: 0;
+  overflow: visible;
+  container-type: inline-size;
+}
+
+.physical-action-section::after {
+  content: "";
+  position: absolute;
+  right: calc(-1 * var(--panel-gap)  - 0.18rem);
+  top: 0;
+  bottom: 0;
+  width: 0.36rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0.28rem rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  z-index: 30;
+}
+
+.physical-action-header {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(5.5rem, 1fr) auto;
+  align-items: center;
+  gap: 0.35rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 0.08rem solid rgba(255, 255, 255, 0.55);
+  font-size: clamp(1rem, 1.08vw, 1.2rem);
+  min-width: 0;
+}
+
+.physical-action-title-text {
+  min-width: 0;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.physical-action-header select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--selected-task-color, var(--accent));
+  border-radius: 0.45rem;
+  background: var(--panel-bg-soft);
+  color: #ffffff;
+}
+
+.physical-action-info-wrap .section-tooltip {
+  right: 0;
+  left: auto;
+  transform: none;
+}
+
+.physical-action-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(0, 1fr) clamp(3.45rem, 6.1vh, 4.75rem);
+  gap: 0.35rem;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.physical-action-body .controller-action-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: 1fr;
+  gap: 0.35rem;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.physical-action-body .controller-send-button,
+.physical-action-body .controller-clear-video-button {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0.24rem 0.32rem;
+  font-size: clamp(0.8rem, 0.9vw, 1rem);
+  line-height: 1.02;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+.physical-action-body .controller-send-button img,
+.physical-action-body .controller-clear-video-button img {
+  width: clamp(0.95rem, 1.15vw, 1.3rem);
+  height: clamp(0.95rem, 1.15vw, 1.3rem);
+}
+
+@container (max-width: 22rem) {
+  .physical-action-header {
+    grid-template-columns: minmax(0, 1fr) minmax(4.5rem, 1fr) auto;
+    gap: 0.25rem;
+    font-size: clamp(0.82rem, 4.6cqw, 1rem);
+  }
+
+  .physical-action-header select {
+    font-size: clamp(0.8rem, 4.3cqw, 0.98rem);
+    padding-inline: 0.25rem;
+  }
+
+  .physical-action-body {
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .physical-action-body .controller-action-row {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, minmax(2.2rem, 1fr));
+  }
+
+  .physical-action-body .controller-send-button,
+  .physical-action-body .controller-clear-video-button {
+    min-height: 2.2rem;
+    font-size: clamp(0.76rem, 4.2cqw, 0.95rem);
+  }
 }
 
 .controller-callout-icon {
@@ -1384,7 +1800,7 @@ button:disabled {
   padding: 0.35rem 0.55rem;
   border-radius: 0.4rem;
   background: rgba(0, 0, 0, 0.5);
-  font-size: 1.15rem;
+  font-size: var(--tool-ui-font-size);
 }
 
 .tablet-frame .controller-3d-viewer {
@@ -1393,7 +1809,7 @@ button:disabled {
 }
 
 .tablet-frame .controller-callout span {
-  font-size: clamp(0.9rem, 1vw, 1.15rem);
+  font-size: var(--tool-ui-font-size);
 }
 
 .tablet-frame .controller-callout img {
@@ -1418,6 +1834,7 @@ button:disabled {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 0.5rem;
+  overflow: hidden;
 }
 
 .tablet-frame .demo-thumb {
@@ -1558,10 +1975,6 @@ button:disabled {
 
 
 
-.tablet-frame .object-button-list {
-  max-height: none;
-}
-
 .no-video-message {
   z-index: 1;
   display: grid;
@@ -1572,7 +1985,7 @@ button:disabled {
   background: rgba(0, 0, 0, 0.42);
   color: #ffffff;
   text-align: center;
-  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  font-size: var(--tool-ui-font-size, clamp(1rem, 1.25vw, 1.25rem));
   font-weight: 700;
   line-height: 1.25;
 }
@@ -1719,4 +2132,8 @@ button:disabled {
 
 .tablet-frame .sim-dashboard [aria-label="Current activity objects"] p {
   margin: 0;
+}
+
+.tablet-frame .sim-dashboard [aria-label="Current activity controller guidance"] {
+  margin-left: 0.4rem;
 }

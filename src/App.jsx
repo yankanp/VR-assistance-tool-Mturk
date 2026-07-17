@@ -4,8 +4,6 @@ import './controllers/Controller3DViewer.css';
 
 const STORAGE_KEY = 'vr-helper-mturk-study-session';
 const CONSENT_VERSION = '2026-07-06';
-const FALLBACK_AUDIO_PATH = 'audio/task-16.mp3';
-const AVAILABLE_AUDIO_TASKS = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16]);
 const FIXED_VR_VIEW_IMAGE = 'img/VR_user_current_view_screenshots/task-18-no-annotation.png';
 const CURRENT_TASK_ORDER = 18;
 
@@ -565,13 +563,6 @@ function readableRegionId(prefix, label, fallback = '') {
   return `${prefix}-${String(label || fallback).trim() || 'unknown'}`;
 }
 
-function getInstructionLines(task) {
-  return String(task?.writtenInstructions ?? '')
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-}
-
 function getButtonsForObject(object, controllerSide) {
   const buttons = object?.controllerHints?.[controllerSide]?.needsToPress ?? [];
   return Array.isArray(buttons) ? buttons.filter(Boolean) : [];
@@ -583,12 +574,6 @@ function getButtonLabel(buttons) {
     .map((button) => String(button).replace(/_/g, ' '))
     .map((button) => button.charAt(0).toUpperCase() + button.slice(1))
     .join(' + ');
-}
-
-function getStudyAudioPath(task) {
-  const taskNumber = getTaskNumber(task);
-  if (task?.sendAudioInstructionMp3Path) return task.sendAudioInstructionMp3Path;
-  return AVAILABLE_AUDIO_TASKS.has(taskNumber) ? `audio/task-${taskNumber}.mp3` : FALLBACK_AUDIO_PATH;
 }
 
 function getRegionFeedbackLabel(regionId, uiText) {
@@ -622,11 +607,13 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   const [demoVideoProgress, setDemoVideoProgress] = useState(0);
   const [sentControllerVideo, setSentControllerVideo] = useState(false);
   const [isFreehandActive, setIsFreehandActive] = useState(false);
-  const [isCleared, setIsCleared] = useState(false);
   const [hasActiveAnnotation, setHasActiveAnnotation] = useState(false);
   const [hasObjectAnnotation, setHasObjectAnnotation] = useState(false);
   const [vrViewImage, setVrViewImage] = useState(FIXED_VR_VIEW_IMAGE);
   const [isTaskDropdownOpen, setIsTaskDropdownOpen] = useState(false);
+  const [screencastVolume, setScreencastVolume] = useState(70);
+  const [isVolumeOpen, setIsVolumeOpen] = useState(false);
+  const [openTooltipId, setOpenTooltipId] = useState('');
   const controllerVideoRef = useRef(null);
   const demoVideoRef = useRef(null);
   const dashboardContainerRef = useRef(null);
@@ -638,7 +625,6 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     ?? currentTask?.objects?.[0];
   const currentTaskNumber = getTaskNumber(currentTask);
   const runtimeCurrentTaskNumber = getTaskNumber(initialTask);
-  const totalTasks = tasks.length;
   const selectedControllerButtons = getButtonsForObject(selectedObject, controllerSide);
   const controllerButtonLabel = getButtonLabel(selectedControllerButtons);
   const demoThumbnail = currentTask?.demoVideoInworld?.thumbnail;
@@ -659,11 +645,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     current: 'dropdown-value',
     future: 'dropdown-value',
   };
-  const taskStatusLabel = dashboardText.statusLabels ?? {
-    completed: 'Completed task',
-    current: 'Current task',
-    future: 'Future task',
-  };
+  const sectionTooltips = dashboardText.tooltips ?? {};
   const isCurrentTask = selectedTaskStatus === 'current';
   const sentVideoThumbnail = sentControllerVideo ? controllerThumbnail : '';
   const sentVideoUrl = sentControllerVideo ? controllerVideoUrl : '';
@@ -705,7 +687,6 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     setDemoVideoProgress(0);
     setSentControllerVideo(false);
     setIsFreehandActive(false);
-    setIsCleared(false);
     setHasActiveAnnotation(false);
     setHasObjectAnnotation(false);
     setIsTaskDropdownOpen(false);
@@ -724,7 +705,6 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     setDemoVideoProgress(0);
     setSentControllerVideo(false);
     setIsFreehandActive(false);
-    setIsCleared(false);
     setHasActiveAnnotation(false);
     setHasObjectAnnotation(false);
     setVrViewImage(FIXED_VR_VIEW_IMAGE);
@@ -736,6 +716,16 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     setSentControllerVideo(false);
     setControllerVideoProgress(0);
   }, [selectedObjectKey, controllerSide]);
+
+  useEffect(() => {
+    if (!openTooltipId) return undefined;
+    const closeTooltip = (event) => {
+      if (event.target?.closest?.('.section-info-wrap')) return;
+      setOpenTooltipId('');
+    };
+    document.addEventListener('pointerdown', closeTooltip, true);
+    return () => document.removeEventListener('pointerdown', closeTooltip, true);
+  }, [openTooltipId]);
 
   useEffect(() => {
     const video = controllerVideoRef.current;
@@ -768,9 +758,12 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     });
   }
 
-  function handleControllerSideSelect(event) {
-    const selectedOptionLabel = event.target.selectedOptions?.[0]?.textContent?.trim() || event.target.value;
-    setControllerSide(event.target.value);
+  function handleControllerSideSelect(event, nextSide) {
+    const selectedSide = nextSide || event.target.value;
+    const selectedOptionLabel = selectedSide === 'right'
+      ? (dashboardText.rightController ?? 'Right controller')
+      : (dashboardText.leftController ?? 'Left controller');
+    setControllerSide(selectedSide);
     emitRegionClick(readableRegionId('controller-side-dropdown', selectedOptionLabel), event, {
       baseRegionId: 'controller-side-dropdown',
       regionLabel: `controller side dropdown: ${selectedOptionLabel}`,
@@ -783,7 +776,6 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     setVrViewImage(getObjectViewImage(index));
     setHasObjectAnnotation(true);
     setHasActiveAnnotation(true);
-    setIsCleared(false);
     emitRegionClick(readableRegionId('object-button', object?.label, object?.id || index), event, {
       baseRegionId: 'object-button',
       regionLabel: object?.label || object?.id || 'object button',
@@ -900,14 +892,51 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     onRegionClick(regionId, event, { ...details, ...layoutSnapshot, x, y });
   }
 
+  function SectionTitle({ children, tooltipId, as: Tag = 'h2' }) {
+    const tooltip = sectionTooltips?.[tooltipId];
+    return (
+      <Tag className="section-title-with-info">
+        <span>{children}</span>
+        {tooltip && (
+          <span className="section-info-wrap">
+            <button
+              type="button"
+              className="section-info-button"
+              aria-label={`More information about ${children}`}
+              aria-expanded={openTooltipId === tooltipId}
+              onClick={(event) => {
+                event.stopPropagation();
+                setOpenTooltipId((value) => value === tooltipId ? '' : tooltipId);
+              }}
+            >
+              <img className="section-info-icon" src={assetUrl('img/button_icons/info.png')} alt="" aria-hidden="true" />
+            </button>
+            {openTooltipId === tooltipId && (
+              <span className="section-tooltip" role="tooltip">
+                {tooltip}
+              </span>
+            )}
+          </span>
+        )}
+      </Tag>
+    );
+  }
+
+  const taskStatusIconPath = {
+    completed: 'img/button_icons/completed.png',
+    current: 'img/button_icons/current.png',
+    future: 'img/button_icons/future.png',
+  };
+
   return (
     <div className="tablet-frame">
     <div
       ref={dashboardContainerRef}
       className={`sim-dashboard selected-task-${selectedTaskStatus} ${selectedRegionId ? 'has-selected-region' : ''}`}
       aria-label="Simulated VR helper dashboard"
+      onClick={() => setOpenTooltipId('')}
     >
-      <section className="sim-region dropdown-progress-panel" aria-label="Task dropdown and progress">
+      <section className="sim-region task-dropdown-panel" aria-label="Task dropdown">
         <div className="task-select">
           <button
             type="button"
@@ -922,7 +951,12 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             <span className="task-select-trigger-text">
               {currentTaskNumber}. {currentTask?.title}
             </span>
-            <span className={`task-status-icon task-status-icon-${selectedTaskStatus}`} aria-hidden="true" />
+            <img
+              className={`task-status-icon task-status-icon-${selectedTaskStatus}`}
+              src={assetUrl(taskStatusIconPath[selectedTaskStatus] ?? taskStatusIconPath.future)}
+              alt=""
+              aria-hidden="true"
+            />
             <span className="task-select-chevron" aria-hidden="true">v</span>
           </button>
         </div>
@@ -954,7 +988,12 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
                     });
                   }}
                 >
-                  <span className={`task-status-icon task-status-icon-${rowStatus}`} aria-hidden="true" />
+                  <img
+                    className={`task-status-icon task-status-icon-${rowStatus}`}
+                    src={assetUrl(taskStatusIconPath[rowStatus] ?? taskStatusIconPath.future)}
+                    alt=""
+                    aria-hidden="true"
+                  />
                   <span className="task-select-option-text">
                   {getTaskNumber(task)}. {task.title}
                   </span>
@@ -963,23 +1002,46 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             })}
           </div>
         )}
-        <div
-          data-region-id="task-progress-region"
-          className={`task-progress-line clickable-region ${selectedRegionId === 'task-progress-region' ? 'selected-region' : ''}`}
-          onClick={(event) => {
-            event.stopPropagation();
-            emitRegionClick('task-progress-region', event);
-          }}
-        >
-          <span className={`task-status-icon task-status-icon-${selectedTaskStatus}`} aria-hidden="true" />
-          <span>{taskStatusLabel[selectedTaskStatus]}</span>
-          <strong>{currentTaskNumber}/{totalTasks}</strong>
+        <div className="screencast-volume-control">
+          <button
+            type="button"
+            className="screencast-volume-button clickable-region"
+            data-region-id="screencast-volume-control"
+            aria-expanded={isVolumeOpen}
+            onClick={(event) => {
+              event.stopPropagation();
+              setIsVolumeOpen((value) => !value);
+              emitRegionClick('screencast-volume-control', event);
+            }}
+          >
+            <img className="button-action-icon" src={assetUrl('img/button_icons/listen.png')} alt="" aria-hidden="true" />
+            <span>Adjust your volume</span>
+          </button>
+          {isVolumeOpen && (
+            <div className="screencast-volume-popover">
+              <input
+                aria-label="Manage your own volume"
+                className="screencast-volume-slider clickable-region"
+                data-region-id="screencast-volume-control"
+                type="range"
+                min="0"
+                max="100"
+                value={screencastVolume}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  emitRegionClick('screencast-volume-control', event);
+                }}
+                onChange={(event) => {
+                  setScreencastVolume(Number(event.target.value));
+                }}
+              />
+            </div>
+          )}
         </div>
       </section>
 
       <section {...regionProps('objects-region')} aria-label="Current activity objects">
-        <h2>{dashboardText.objectsTitle ?? 'Current activity objects'}</h2>
-        <p>{dashboardText.objectsHint ?? 'Tap to highlight and point'}</p>
+        <SectionTitle tooltipId="objects">{dashboardText.objectsTitle ?? 'Current activity objects'}&nbsp;</SectionTitle>
         <div className="object-button-list">
           {(currentTask?.objects ?? []).map((object, index) => {
             const regionId = readableRegionId('object-button', object?.label, object?.id || index);
@@ -1030,16 +1092,6 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
         <div className="vr-horizon" />
         <div className="ship-deck" />
         <div className="harpoon-silhouette" />
-        <div
-          className={`vr-task-banner clickable-region ${selectedRegionId === 'task-description-region' ? 'selected-region' : ''}`}
-          data-region-id="task-description-region"
-          onClick={(event) => {
-            event.stopPropagation();
-            emitRegionClick('task-description-region', event);
-          }}
-        >
-          {currentTaskNumber}. {currentTask?.title}
-        </div>
         <canvas
           ref={freehandCanvasRef}
           className={`freehand-canvas ${isFreehandActive ? 'drawing-enabled' : ''}`}
@@ -1071,58 +1123,33 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           </div>
         )}
       </section>
-
-      <section
-        data-region-id="controller-region"
-        className="sim-region clickable-region"
-        onClick={(event) => {
-          event.stopPropagation();
-          emitRegionClick('controller-region', event);
-        }}
-        aria-label="Current activity controller guidance"
-      >
-        <div className="controller-header">
-          <span>{dashboardText.requiredControlsFor ?? 'Required controls for:'}</span>
-          <select
-            data-region-id="controller-object-selector"
-              className="clickable-region"
-              onClick={(event) => {
-                event.stopPropagation();
-              }}
-              onChange={handleObjectSelect}
-              value={getObjectKey(selectedObject, 0)}
-              aria-label="Object selector"
-            >
-              {(currentTask?.objects ?? []).map((object, index) => (
-              <option key={getObjectKey(object, index)} value={getObjectKey(object, index)}>{object.label}</option>
-            ))}
-          </select>
-          <select
-            data-region-id="controller-side-dropdown"
-              className={`clickable-region ${selectedRegionId === 'controller-side-dropdown' ? 'selected-region' : ''}`}
-              onClick={(event) => {
-                event.stopPropagation();
-                emitRegionClick('controller-side-dropdown', event);
-              }}
-              onChange={handleControllerSideSelect}
-              value={controllerSide}
-              aria-label="Controller side selector"
-            >
-            <option value="left">{dashboardText.leftController ?? 'Left controller'}</option>
-            <option value="right">{dashboardText.rightController ?? 'Right controller'}</option>
-          </select>
+      <section className="sim-region physical-action-section" aria-label="Physical action video">
+        <div className="physical-action-header">
+          <span className="physical-action-title-text">{dashboardText.physicalActionTitle ?? 'Physical action video'}</span>
+        
+          {sectionTooltips?.physicalAction && (
+            <span className="section-info-wrap physical-action-info-wrap">
+              <button
+                type="button"
+                className="section-info-button"
+                aria-label={`More information about ${dashboardText.physicalActionTitle ?? 'Physical action video'}`}
+                aria-expanded={openTooltipId === 'physicalAction'}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setOpenTooltipId((value) => value === 'physicalAction' ? '' : 'physicalAction');
+                }}
+              >
+                <img className="section-info-icon" src={assetUrl('img/button_icons/info.png')} alt="" aria-hidden="true" />
+              </button>
+              {openTooltipId === 'physicalAction' && (
+                <span className="section-tooltip" role="tooltip">
+                  {sectionTooltips.physicalAction}
+                </span>
+              )}
+            </span>
+          )}
         </div>
-        <div className="controller-body">
-          <div className={`controller-model ${selectedRegionId === 'controller-region' ? 'selected-region' : ''}`}>
-            <Controller3DViewer
-              side={controllerSide}
-              modelPath={assetUrl(`models/meta_quest_${controllerSide}_controller.glb`)}
-              requiredButtons={selectedControllerButtons}
-            />
-            {!selectedControllerButtons.length && (
-              <span className="controller-button trigger">{controllerButtonLabel}</span>
-            )}
-          </div>
+        <div className="physical-action-body">
           <div
             data-region-id="physical-world-video-region"
             className={`video-thumb clickable-region ${selectedRegionId === 'physical-world-video-region' ? 'selected-region' : ''}`}
@@ -1171,7 +1198,6 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
                 if (!isCurrentTask || !hasControllerVideo) return;
                 setSentControllerVideo(true);
                 setHasActiveAnnotation(true);
-                setIsCleared(false);
                 emitRegionClick('controller-send-button', event);
               }}
             >
@@ -1186,7 +1212,6 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
                 if (!hasObjectAnnotation && !isFreehandActive) {
                   setHasActiveAnnotation(false);
                 }
-                setIsCleared(true);
                 emitRegionClick('controller-clear-button', event);
               }}
             >
@@ -1196,12 +1221,100 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           </div>
         </div>
       </section>
+      <section
+        data-region-id="controller-region"
+        className="sim-region clickable-region"
+        onClick={(event) => {
+          event.stopPropagation();
+          emitRegionClick('controller-region', event);
+        }}
+        aria-label="Current activity controller guidance"
+      >
+        <div className="controller-header">
+          <span className="controller-title-text">{dashboardText.requiredControlsFor ?? 'Required controls for:'}</span>
+          <select
+            data-region-id="controller-object-selector"
+              className="clickable-region"
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+              onChange={handleObjectSelect}
+              value={getObjectKey(selectedObject, 0)}
+              aria-label="Object selector"
+            >
+              {(currentTask?.objects ?? []).map((object, index) => (
+              <option key={getObjectKey(object, index)} value={getObjectKey(object, index)}>{object.label}</option>
+            ))}
+          </select>
+          {sectionTooltips?.controller && (
+            <span className="section-info-wrap controller-info-wrap">
+              <button
+                type="button"
+                className="section-info-button"
+                aria-label={`More information about ${dashboardText.requiredControlsFor ?? 'Required controls for:'}`}
+                aria-expanded={openTooltipId === 'controller'}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setOpenTooltipId((value) => value === 'controller' ? '' : 'controller');
+                }}
+              >
+                <img className="section-info-icon" src={assetUrl('img/button_icons/info.png')} alt="" aria-hidden="true" />
+              </button>
+              {openTooltipId === 'controller' && (
+                <span className="section-tooltip" role="tooltip">
+                  {sectionTooltips.controller}
+                </span>
+              )}
+            </span>
+          )}
+        </div>
+        <div className="controller-body">
+          <div className={`controller-model ${selectedRegionId === 'controller-region' ? 'selected-region' : ''}`}>
+            <Controller3DViewer
+              side={controllerSide}
+              modelPath={assetUrl(`models/meta_quest_${controllerSide}_controller.glb`)}
+              requiredButtons={selectedControllerButtons}
+            />
+            {!selectedControllerButtons.length && (
+              <span className="controller-button trigger">{controllerButtonLabel}</span>
+            )}
+          </div>
+          <div
+            data-region-id="controller-side-dropdown"
+            className={`controller-side-toggle clickable-region ${selectedRegionId === 'controller-side-dropdown' ? 'selected-region' : ''}`}
+            role="group"
+            aria-label="Controller side selector"
+            onClick={(event) => {
+              event.stopPropagation();
+              emitRegionClick('controller-side-dropdown', event);
+            }}
+          >
+            <button
+              type="button"
+              className={`controller-side-switch ${controllerSide === 'right' ? 'right' : 'left'}`}
+              aria-label={`Showing ${controllerSide === 'right' ? 'right' : 'left'} controller`}
+              aria-pressed={controllerSide === 'right'}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleControllerSideSelect(event, controllerSide === 'right' ? 'left' : 'right');
+              }}
+            >
+              <span className="controller-side-switch-knob" aria-hidden="true" />
+            </button>
+            <div className="controller-side-current" aria-hidden="true">
+              {controllerSide === 'right' ? 'R' : 'L'}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
 
       <section
         {...regionProps('in-world-video-region')}
         aria-label="Current activity demonstration video"
       >
-        <h2>{dashboardText.demoTitle ?? 'Current activity demo'}</h2>
+        <SectionTitle tooltipId="demo">{dashboardText.demoTitle ?? 'Current activity demo'}</SectionTitle>
         <div
           data-region-id="in-world-video-region"
           className="demo-thumb clickable-region"
@@ -1244,7 +1357,6 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
         }`}
         aria-label="Annotation tools"
       >
-        <h2>{dashboardText.annotationToolsTitle ?? 'Annotation tools'}</h2>
         <div className="annotation-tools-stack">
           <button
             {...actionProps('drawing-button', `annotation-tool-button freehand ${isFreehandActive ? 'tool-active' : ''}`, !isCurrentTask)}
@@ -1253,12 +1365,11 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               if (!isCurrentTask) return;
               setIsFreehandActive((value) => !value);
               setHasActiveAnnotation(true);
-              setIsCleared(false);
               emitRegionClick('drawing-button', event);
             }}
           >
                         <img src={assetUrl('img/button_icons/freehand.png')} alt="" aria-hidden="true" />
-            <span>{isFreehandActive ? (dashboardText.drawing ?? 'Drawing') : (dashboardText.freeHand ?? 'Free hand')}</span>
+            <span>{dashboardText.drawing ?? 'Drawing'}</span>
           </button>
           <button
             {...actionProps('drawing-clear-button', `annotation-tool-button clear ${hasActiveAnnotation ? 'clear-enabled' : ''}`)}
@@ -1270,7 +1381,6 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               setVrViewImage(FIXED_VR_VIEW_IMAGE);
               setHasObjectAnnotation(false);
               setHasActiveAnnotation(false);
-              setIsCleared(true);
               emitRegionClick('drawing-clear-button', event);
             }}
           >

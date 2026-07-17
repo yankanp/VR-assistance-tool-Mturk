@@ -70,21 +70,25 @@
       "current": "Current task",
       "future": "Future task"
     },
-    "objectsTitle": "Current objects",
-    "objectsHint": "Tap each button both to point to that object and highlight it in the scene",
+    "objectsTitle": "Show objects to user",
     "requiredControlsFor": "Button(s) to press for:",
     "leftController": "Left controller view",
     "rightController": "Right controller view",
     "demoTitle": "Current activity demo",
     "noActionRequired": "There is no action required for this object",
-    "drawing": "Drawing",
-    "freeHand": "Drawing",
-    "clearDrawing": "Clear drawing",
-    "clearObjects": "Clear arrow",
-    "send": "Send video",
-    "removeVideo": "Clear video",
+    "drawing": "Draw in virtual world",
+    "clearDrawing": "Erase drawing",
+    "clearObjects": "Remove highlight",
+    "send": "Show user this video",
+    "removeVideo": "Remove video for user",
+    "physicalActionTitle":"Button(s) and how to move hands",
     "vrViewLabel": "VR user's current view",
-    "annotationToolsTitle": "Drawing tools"
+    "tooltips": {
+      "objects": "Use these buttons to point the user toward a virtual object and highlight it in the virtual world.",
+      "controller": "This section shows which controller button the user should press.",
+      "physicalAction": "This video shows the hand movement and controller button(s) that can be sent to the user.",
+      "demo": "This video shows how the selected activity is performed in the virtual world."
+    }
   },
   "regionLabels": {
     "VR-user-current-view-region": "VR user's current view",
