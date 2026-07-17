@@ -1,7 +1,7 @@
 {
   "studyName": "VR Helper Assistance Dashboard Usability Study",
   "qualtricsRedirectUrl": "https://uri.co1.qualtrics.com/jfe/form/SV_6kY4lKaetR6QLzg",
-  "metricsApiBaseUrl": "https://34-236-158-136.sslip.io",
+  "metricsApiBaseUrl": "https://54-163-67-77.sslip.io",
   "completionCodePrefix": "VRHELP",
   "requireMturkParams": true,
   "autoRedirectToQualtrics": false,
