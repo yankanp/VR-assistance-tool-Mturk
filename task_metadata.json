@@ -3,17 +3,15 @@
   "tasks": [
     {
       "id": "start_the_app",
-      "title": "Press the play icon",
+      "title": "Press the play button to start the app",
       "order": 0,
       "runtimeTracking": {
         "type": "ui_button"
       },
-      "writtenInstructions": "Point the controller at the play icon and press the trigger button to start the application",
-      "sendAudioInstructionMp3Path": "audio/task-0.mp3",
       "objects": [
         {
           "id": "Debug Menu Opener",
-          "label": "Play icon",
+          "label": "Play button",
           "icon": "img/object_icons/task_0_object_1.png",
           "controllerHints": {
             "needsToPressCondition": "one_button_either_controller",
@@ -49,8 +47,6 @@
       "id": "ring_ship_bell",
       "title": "Ring the ship bell",
       "order": 1,
-      "writtenInstructions": "Strike the ship bell by hitting the clapper inside the bell",
-      "sendAudioInstructionMp3Path": "audio/task-1.mp3",
       "objects": [
         {
           "id": "SM_Bell",
@@ -88,14 +84,12 @@
     },
     {
       "id": "teleport_cabin_to_dock",
-      "title": "Move from the cabin to the ship deck",
+      "title": "Teleport from the cabin to the ship deck",
       "order": 2,
-      "writtenInstructions": "Move to the first teleport marker in front of you.\nMove to the second teleport marker in front of you.\nMove to the third teleport marker in front of you to reach the ship deck.",
-      "sendAudioInstructionMp3Path": "audio/task-2.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B2_Start",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/teleportation.png",
           "controllerHints": {
             "needsToPressCondition": "one_button_either_controller",
@@ -121,7 +115,7 @@
         },
         {
           "id": "Teleport Hotspot Towards B2_S3",
-          "label": "Teleport marker - 2",
+          "label": "Teleport marker 2",
           "icon": "img/object_icons/teleportation.png",
           "controllerHints": {
             "needsToPressCondition": "one_button_either_controller",
@@ -147,7 +141,7 @@
         },
         {
           "id": "Teleport Hotspot B2_S3",
-          "label": "Teleport marker - 3",
+          "label": "Teleport marker 3",
           "icon": "img/object_icons/teleportation.png",
           "controllerHints": {
             "needsToPressCondition": "one_button_either_controller",
@@ -183,10 +177,8 @@
     },
     {
       "id": "teleport_dock_to_ramp",
-      "title": "Teleport to the dock",
+      "title": "Teleport to the loading dock",
       "order": 3,
-      "writtenInstructions": "Move to the teleport marker in front of you to go from the ship deck to the loading area",
-      "sendAudioInstructionMp3Path": "audio/task-3.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B2_S4",
@@ -224,10 +216,8 @@
     },
     {
       "id": "roll_cargo_barrels",
-      "title": "Move the cargo barrels",
+      "title": "Roll the cargo barrels",
       "order": 4,
-      "writtenInstructions": "Push or roll each cargo barrel toward the sail loading area when it comes close to you",
-      "sendAudioInstructionMp3Path": "audio/task-4.mp3",
       "objects": [
         {
           "id": "BarrelRollingSetup001",
@@ -320,14 +310,12 @@
     },
     {
       "id": "teleport_to_boarding_ramp_base",
-      "title": "Move to the boarding ramp",
+      "title": "Teleport to the ramp",
       "order": 5,
-      "writtenInstructions": "Move to the teleport marker to move to the base of the boarding ramp to reach the mooring rope",
-      "sendAudioInstructionMp3Path": "audio/task-5.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot Towards B2_S5",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/teleportation.png",
           "controllerHints": {
             "needsToPressCondition": "one_button_either_controller",
@@ -353,7 +341,7 @@
         },
         {
           "id": "Teleport Hotspot B2_S5",
-          "label": "Teleport marker - 2",
+          "label": "Teleport marker 2",
           "icon": "img/object_icons/teleportation.png",
           "controllerHints": {
             "needsToPressCondition": "one_button_either_controller",
@@ -390,8 +378,6 @@
       "id": "untie_mooring_rope",
       "title": "Untie the ship from the dock",
       "order": 6,
-      "writtenInstructions": "Release the mooring rope from the dock cleat ",
-      "sendAudioInstructionMp3Path": "audio/task-6.mp3",
       "objects": [
         {
           "id": "Top",
@@ -431,12 +417,10 @@
       "id": "teleport_onto_ship_deck",
       "title": "Board the ship deck",
       "order": 7,
-      "writtenInstructions": "Move to the two teleport markers, one at a time, to move from the ramp onto the ship deck",
-      "sendAudioInstructionMp3Path": "audio/task-7.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B2_S6",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat2",
           "objectPath": "Beat2_IslandAndJetty_VisibilitySet/Beat 2_Docks/SM_ShipGangplank/Teleport Hotspot Towards B2_S7/FX_Teleport_Pin",
@@ -462,7 +446,7 @@
         },
         {
           "id": "Teleport Hotspot B2_S7",
-          "label": "Teleport marker - 2",
+          "label": "Teleport marker 2",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat2",
           "objectPath": "Boat/Narrative/Beat 2/Beat2Teleports/Teleport Hotspot B2_S7/FX_Teleport_Pin",
@@ -488,7 +472,7 @@
         },
         {
           "id": "Teleport Hotspot B2_S8",
-          "label": "Teleport marker - 3",
+          "label": "Teleport marker 3",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat2",
           "objectPath": "Boat/Narrative/Beat 2/Beat2Teleports/Teleport Hotspot B2_S8/FX_Teleport_Pin",
@@ -524,10 +508,8 @@
     },
     {
       "id": "teleport_to_helm_area",
-      "title": "Move to the helm",
+      "title": "Teleport to the helm/front of the ship",
       "order": 8,
-      "writtenInstructions": "Move to the teleport marker in front of you to go to the helm area",
-      "sendAudioInstructionMp3Path": "audio/task-8.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B2_S9",
@@ -567,8 +549,6 @@
       "id": "raise_mainsail",
       "title": "Raise the mainsail",
       "order": 9,
-      "writtenInstructions": "Grab the mainsail rope and pull until the sail is fully raised",
-      "sendAudioInstructionMp3Path": "audio/task-9.mp3",
       "objects": [
         {
           "id": "VerletRope",
@@ -608,8 +588,6 @@
       "id": "secure_mainsail_rope",
       "title": "Secure the mainsail rope",
       "order": 10,
-      "writtenInstructions": "Wrap the raised sail rope around the cleat to hold the mainsail in place",
-      "sendAudioInstructionMp3Path": "audio/task-10.mp3",
       "objects": [
         {
           "id": "PROXY_CleatMesh",
@@ -649,8 +627,6 @@
       "id": "steer_helm_wheel",
       "title": "Steer the ship",
       "order": 11,
-      "writtenInstructions": "Move to the teleport marker in front of you to go to the helm area, then rotate the helm wheel to steer the ship",
-      "sendAudioInstructionMp3Path": "audio/task-11.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B2_S11",
@@ -680,7 +656,7 @@
         },
         {
           "id": "Handle",
-          "label": "Helm wheel",
+          "label": "Ship's wheel",
           "icon": "img/object_icons/task_11_object_2.png",
           "controllerHints": {
             "needsToPressCondition": "no_button_required",
@@ -712,10 +688,8 @@
     },
     {
       "id": "teleport_back_to_helm_area_scene3and4",
-      "title": "Return to the helm",
+      "title": "Teleport back to the helm/front of the ship",
       "order": 12,
-      "writtenInstructions": "Move to the three teleport markers, one at a time, to go from the ship deck to the helm area",
-      "sendAudioInstructionMp3Path": "audio/task-12.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B3_S1",
@@ -806,10 +780,8 @@
     },
     {
       "id": "teleport_to_sail_crank_scene3and4",
-      "title": "Move to the sail crank",
+      "title": "Teleport to the sail crank",
       "order": 13,
-      "writtenInstructions": "Move to the teleport marker in front of you to reach the sail crank",
-      "sendAudioInstructionMp3Path": "audio/task-13.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B3_S3",
@@ -847,10 +819,8 @@
     },
     {
       "id": "turn_sail_crank_scene3and4",
-      "title": "Turn the sail crank",
+      "title": "Rotate the sail crank",
       "order": 14,
-      "writtenInstructions": "Grab the sail crank and turn it to move the sail into position",
-      "sendAudioInstructionMp3Path": "audio/task-14.mp3",
       "objects": [
         {
           "id": "Interactable Crank",
@@ -888,10 +858,8 @@
     },
     {
       "id": "teleport_to_harpoon_path_scene3and4",
-      "title": "Move toward the harpoon",
+      "title": "Teleport near the harpoon",
       "order": 15,
-      "writtenInstructions": "Move to the teleport marker in front of you to head toward the harpoon area",
-      "sendAudioInstructionMp3Path": "audio/task-15.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot Towards B3_S5",
@@ -956,10 +924,8 @@
     },
     {
       "id": "teleport_to_harpoon_deck_scene3and4",
-      "title": "Move along the deck",
+      "title": "Teleport along the deck",
       "order": 16,
-      "writtenInstructions": "Move to the next teleport marker to get closer to the harpoon",
-      "sendAudioInstructionMp3Path": "audio/task-16.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B3_S6",
@@ -1025,10 +991,8 @@
     },
     {
       "id": "teleport_to_harpoon_deck_1_scene3and4",
-      "title": "Move along the deck",
+      "title": "Teleport near the harpoon",
       "order": 17,
-      "writtenInstructions": "Move to the next teleport marker to get closer to the harpoon",
-      "sendAudioInstructionMp3Path": "audio/task-17.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B3_S8",
@@ -1066,10 +1030,8 @@
     },
     {
       "id": "operate_harpoon_scene3and4",
-      "title": "Operate the harpoon",
+      "title": "Use the harpoon to gather the cargo boxes",
       "order": 18,
-      "writtenInstructions": "Move to the teleport marker beside the harpoon controls",
-      "sendAudioInstructionMp3Path": "audio/task-18.mp3",
       "objects": [
         {
           "id": "lever",
@@ -1173,7 +1135,7 @@
         },
         {
           "id": "box_1",
-          "label": "Supply box 1",
+          "label": "Cargo box 1",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 3/Sequence 8/HarpoonTargets/HarpoonTargetBox",
@@ -1192,7 +1154,7 @@
         },
         {
           "id": "box_2",
-          "label": "Supply box 2",
+          "label": "Cargo box 2",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 3/Sequence 8/HarpoonTargets/HarpoonTargetBox (1)",
@@ -1211,7 +1173,7 @@
         },
         {
           "id": "box_3",
-          "label": "Supply box 3",
+          "label": "Cargo box 3",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 3/Sequence 8/HarpoonTargets/HarpoonTargetBox (2)",
@@ -1243,10 +1205,8 @@
     },
     {
       "id": "teleport_back_to_helm_scene3and4",
-      "title": "Teleport back to the helm area",
+      "title": "Teleport back to the helm/front of the ship",
       "order": 19,
-      "writtenInstructions": "Use the teleporter to return to the helm area",
-      "sendAudioInstructionMp3Path": "audio/task-19.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B4_S2",
@@ -1284,14 +1244,12 @@
     },
     {
       "id": "grab_spy_glass_scene3and4",
-      "title": "Grab the spy glass",
+      "title": "Pick up the Telescope",
       "order": 20,
-      "writtenInstructions": "Grab the spy glass from the designated location",
-      "sendAudioInstructionMp3Path": "audio/task-20.mp3",
       "objects": [
         {
           "id": "spy_glass",
-          "label": "Spy glass",
+          "label": "Telescope",
           "icon": "img/object_icons/task_20_object_1.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/SpyglassBarrel/Spyglass&Anchor/Telescope/End/SM_Telescope",
@@ -1325,14 +1283,12 @@
     },
     {
       "id": "teleport_back_to_helm_wheel_scene3and4",
-      "title": "Teleport back to the helm wheel",
+      "title": "Teleport back to the helm/front of the ship",
       "order": 21,
-      "writtenInstructions": "Use the teleporter to return to the helm wheel",
-      "sendAudioInstructionMp3Path": "audio/task-21.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B4_S3",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/task_21_object_1.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot B4_S3/FX_Teleport_Pin",
@@ -1366,14 +1322,12 @@
     },
     {
       "id": "teleport_to_helm_scene3and4",
-      "title": "Teleport back to the helm wheel",
+      "title": "Teleport back to the deck",
       "order": 22,
-      "writtenInstructions": "Use the teleporter to return to the helm wheel",
-      "sendAudioInstructionMp3Path": "audio/task-21.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot Towards B4_S4 1",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/task_21_object_1.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S4 1/FX_Teleport_Pin",
@@ -1399,7 +1353,7 @@
         },
         {
           "id": "Teleport Hotspot Towards B4_S4 2",
-          "label": "Teleport marker - 2",
+          "label": "Teleport marker 2",
           "icon": "img/object_icons/task_21_object_1.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S4 2/FX_Teleport_Pin",
@@ -1425,7 +1379,7 @@
         },
         {
           "id": "Teleport Hotspot B4_S4",
-          "label": "Teleport marker - 3",
+          "label": "Teleport marker 3",
           "icon": "img/object_icons/task_21_object_1.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot B4_S4/FX_Teleport_Pin",
@@ -1462,8 +1416,6 @@
       "id": "secure_cargo_scene3and4",
       "title": "Secure the cargo",
       "order": 23,
-      "writtenInstructions": "Use the rope to secure the cargo in place",
-      "sendAudioInstructionMp3Path": "audio/task-23.mp3",
       "objects": [
         {
           "id": "Barrel-PROXY_CleatMesh",
@@ -1501,14 +1453,12 @@
     },
     {
       "id": "teleport_back_to_deck_scene3and4",
-      "title": "Teleport back to the deck",
+      "title": "Teleport back to the helm/front of the ship",
       "order": 24,
-      "writtenInstructions": "Use the teleporter to return to the deck",
-      "sendAudioInstructionMp3Path": "audio/task-24.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot S4_S5_2",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/task_24_object_1.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot S4_S5_2/FX_Teleport_Pin",
@@ -1544,12 +1494,10 @@
       "id": "teleport_back_to_cabin_scene3and4",
       "title": "Teleport back to the cabin",
       "order": 25,
-      "writtenInstructions": "Use the teleporter to return to the cabin",
-      "sendAudioInstructionMp3Path": "audio/task-25.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot Towards B4_S7 2",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/task_25_object_1.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S7 2/FX_Teleport_Pin",
@@ -1575,7 +1523,7 @@
         },
         {
           "id": "Teleport Hotspot Towards B4_S7 3",
-          "label": "Teleport marker - 2",
+          "label": "Teleport marker 2",
           "icon": "img/object_icons/task_25_object_1.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S7 3/FX_Teleport_Pin",
@@ -1601,7 +1549,7 @@
         },
         {
           "id": "Proxy Teleport Hotspot Towards B4_S7 4",
-          "label": "Teleport marker - 3",
+          "label": "Teleport marker 3",
           "icon": "img/object_icons/task_25_object_1.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Proxy Teleport Hotspot Towards B4_S7 4/FX_Teleport_Pin",
@@ -1640,14 +1588,12 @@
     },
     {
       "id": "teleport_to_helm_area_scene_5",
-      "title": "Teleport to the helm area",
+      "title": "Teleport to the helm/front of the ship area",
       "order": 26,
-      "writtenInstructions": "Use the teleporter to return to the helm area",
-      "sendAudioInstructionMp3Path": "audio/task-26.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B5_Towards_S2",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/task_26_object_1.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_Towards_S2/FX_Teleport_Pin",
@@ -1673,7 +1619,7 @@
         },
         {
           "id": "Teleport Hotspot B5_Towards_S2_02",
-          "label": "Teleport marker - 2",
+          "label": "Teleport marker 2",
           "icon": "img/object_icons/task_26_object_1.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_Towards_S2_02/FX_Teleport_Pin",
@@ -1699,7 +1645,7 @@
         },
         {
           "id": "Teleport Hotspot B5_S2",
-          "label": "Teleport marker - 3",
+          "label": "Teleport marker 3",
           "icon": "img/object_icons/task_26_object_1.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_S2/FX_Teleport_Pin",
@@ -1734,14 +1680,12 @@
     },
     {
       "id": "teleport_to_lifebuoy_area_scene_5",
-      "title": "Teleport and throw the lifebuoy",
+      "title": "Teleport to the life preserver area and and throw the preserver",
       "order": 27,
-      "writtenInstructions": "Use the teleporter to return to the lifebuoy area and throw the lifebuoy to the target",
-      "sendAudioInstructionMp3Path": "audio/task-27.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B5_S3",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/task_27_object_1.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_S3/FX_Teleport_Pin",
@@ -1804,12 +1748,10 @@
       "id": "teleport_to_harpoon_deck_scene_5",
       "title": "Teleport to the harpoon deck",
       "order": 28,
-      "writtenInstructions": "Use the teleporter to return to the harpoon deck",
-      "sendAudioInstructionMp3Path": "audio/task-28.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B5_Towards_S4_01",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/task_28_object_1.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_Towards_S4_01/FX_Teleport_Pin",
@@ -1835,7 +1777,7 @@
         },
         {
           "id": "Proxy Teleport Hotspot B5_S4",
-          "label": "Teleport marker - 2",
+          "label": "Teleport marker 2",
           "icon": "img/object_icons/task_28_object_1.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Proxy Teleport Hotspot B5_S4/FX_Teleport_Pin",
@@ -1870,14 +1812,12 @@
     },
     {
       "id": "teleport_to_harpoon_scene_5",
-      "title": "Teleport to the harpoon",
+      "title": "Teleport near the harpoon",
       "order": 29,
-      "writtenInstructions": "Use the teleporter to return to the harpoon",
-      "sendAudioInstructionMp3Path": "audio/task-29.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B5_S5",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/task_29_object_1.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_S5/FX_Teleport_Pin",
@@ -1911,10 +1851,8 @@
     },
     {
       "id": "attack_squid_with_harpoon_scene_5",
-      "title": "Attack the squid with the harpoon",
+      "title": "Use the harpoon to attack the squid",
       "order": 30,
-      "writtenInstructions": "Use the harpoon controls to aim and fire at the squid",
-      "sendAudioInstructionMp3Path": "audio/task-30.mp3",
       "objects": [
         {
           "id": "lever",
@@ -2091,14 +2029,12 @@
     },
     {
       "id": "teleport_to_lifebuoy_area_scene_6",
-      "title": "Teleport to the lifebuoy area",
+      "title": "Teleport to the life preserver area",
       "order": 31,
-      "writtenInstructions": "Use the teleporter to return to the lifebuoy area",
-      "sendAudioInstructionMp3Path": "audio/task-31.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot B5_END",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_END/FX_Teleport_Pin",
@@ -2134,12 +2070,10 @@
       "id": "teleport_to_harpoon_area_scene_6",
       "title": "Teleport to the harpoon area",
       "order": 32,
-      "writtenInstructions": "Use the teleporter to return to the harpoon area",
-      "sendAudioInstructionMp3Path": "audio/task-32.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot Towards B6_S2",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat6",
           "objectPath": "Narrative/Beat 6/Teleport Hotspot Towards B6_S2/FX_Teleport_Pin",
@@ -2165,7 +2099,7 @@
         },
         {
           "id": "Teleport Hotspot Towards B6_S2_1",
-          "label": "Teleport marker - 2",
+          "label": "Teleport marker 2",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat6",
           "objectPath": "Narrative/Beat 6/Teleport Hotspot Towards B6_S2_1/FX_Teleport_Pin",
@@ -2191,7 +2125,7 @@
         },
         {
           "id": "Teleport Hotspot Towards B6_S2_2",
-          "label": "Teleport marker - 3",
+          "label": "Teleport marker 3",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat6",
           "objectPath": "Narrative/Beat 6/Teleport Hotspot Towards B6_S2_2/FX_Teleport_Pin",
@@ -2217,7 +2151,7 @@
         },
         {
           "id": "Teleport Hotspot B6_S2",
-          "label": "Teleport marker - 4",
+          "label": "Teleport marker 4",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat6",
           "objectPath": "Narrative/Beat 6/Teleport Hotspot B6_S2/FX_Teleport_Pin",
@@ -2252,17 +2186,15 @@
     },
     {
       "id": "rotate_crank_scene_6",
-      "title": "Rotate the crank",
+      "title": "Rotate the crank and teleport into the exploration pod",
       "order": 33,
-      "writtenInstructions": "Rotate the crank to bring the exploration pod",
-      "sendAudioInstructionMp3Path": "audio/task-33.mp3",
       "objects": [
         {
-          "id": "Teleport Hotspot Beat 6 - Crank",
-          "label": "Teleport marker - 1",
+          "id": "Teleport Hotspot Beat 6r Crank",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat6",
-          "objectPath": "Narrative/Beat 6/Teleport Hotspot Beat 6 - Crank/FX_Teleport_Pin",
+          "objectPath": "Narrative/Beat 6/Teleport Hotspot Beat 6r Crank/FX_Teleport_Pin",
           "controllerHints": {
             "needsToPressCondition": "one_button_either_controller",
             "left": {
@@ -2310,11 +2242,11 @@
           }
         },
         {
-          "id": "Teleport Hotspot Beat 6 - Diving bell",
-          "label": "Teleport marker - 2",
+          "id": "Teleport Hotspot Beat 6r Diving bell",
+          "label": "Teleport marker 2",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat6",
-          "objectPath": "Narrative/Beat 6/Teleport Hotspot Beat 6 - Diving bell/FX_Teleport_Pin",
+          "objectPath": "Narrative/Beat 6/Teleport Hotspot Beat 6r Diving bell/FX_Teleport_Pin",
           "controllerHints": {
             "needsToPressCondition": "one_button_either_controller",
             "left": {
@@ -2350,10 +2282,8 @@
     },
     {
       "id": "close_hatch_scene_7",
-      "title": "Close the hatch",
+      "title": "Close the hatch of the exploration pod",
       "order": 34,
-      "writtenInstructions": "Close the hatch to secure the exploration pod",
-      "sendAudioInstructionMp3Path": "audio/task-34.mp3",
       "objects": [
         {
           "id": "DivingBellPulley",
@@ -2391,10 +2321,8 @@
     },
     {
       "id": "thumbs_up_scene_7",
-      "title": "Give a thumbs up",
+      "title": "Give Dr.Bessie a thumbs up",
       "order": 35,
-      "writtenInstructions": "Give a thumbs up to acknowledge the task",
-      "sendAudioInstructionMp3Path": "audio/task-35.mp3",
       "objects": [
         {
           "id": "ThumbsupImage",
@@ -2436,8 +2364,6 @@
       "id": "lever_scene_7",
       "title": "Pull the lever",
       "order": 36,
-      "writtenInstructions": "Pull the lever to descend",
-      "sendAudioInstructionMp3Path": "audio/task-36.mp3",
       "objects": [
         {
           "id": "DivingBellPulley",
@@ -2476,10 +2402,8 @@
     },
     {
       "id": "open_hatch_scene_7",
-      "title": "Open the hatch",
+      "title": "Open the door of the exploration pod",
       "order": 37,
-      "writtenInstructions": "Open the hatch",
-      "sendAudioInstructionMp3Path": "audio/task-37.mp3",
       "objects": [
         {
           "id": "Door",
@@ -2515,12 +2439,10 @@
       "id": "Teleport_to_treasure_scene_7",
       "title": "Teleport and grab the treasure",
       "order": 38,
-      "writtenInstructions": "Teleport to the treasure and grab the treasure",
-      "sendAudioInstructionMp3Path": "audio/task-38.mp3",
       "objects": [
         {
           "id": "Teleport Hotspot S6_SeaBed",
-          "label": "Teleport marker - 1",
+          "label": "Teleport marker 1",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat7",
           "objectPath": "Beat 7/B7GameObjects/Teleport Hotspot S6_SeaBed/FX_Teleport_Pin",
@@ -2546,7 +2468,7 @@
         },
         {
           "id": "Teleport Hotspot S6_Orb",
-          "label": "Teleport marker - 2",
+          "label": "Teleport marker 2",
           "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat7",
           "objectPath": "Beat 7/B7GameObjects/Teleport Hotspot S6_Orb/FX_Teleport_Pin",
