@@ -303,6 +303,17 @@ function createClickLayoutSnapshot(event, dashboardElement = null) {
   };
 }
 
+function createScreenClickRecord(elementName, event, extra = {}) {
+  return {
+    element_clicked: elementName,
+    timestamp: getIsoTimestamp(),
+    x: Math.round(event?.nativeEvent?.offsetX ?? 0),
+    y: Math.round(event?.nativeEvent?.offsetY ?? 0),
+    ...createClickLayoutSnapshot(event),
+    ...extra,
+  };
+}
+
 function buildMetricsPayload(session, config) {
   const participantParams = session.participant_params ?? {};
   const clientInfo = getClientInfo();
@@ -353,14 +364,7 @@ function buildMetricsPayload(session, config) {
   const consentEvent = findEvent('consent_declined') || findEvent('consent_accepted');
   const consentStartedAt = timing.informed_consent_started_at || session.started_at || '';
   const consentEndedAt = timing.informed_consent_ended_at || consentEvent?.timestamp || '';
-  const consentClicks = consentEvent
-    ? [{
-      timestamp: consentEvent.timestamp,
-      element_clicked: consentEvent.type === 'consent_declined'
-        ? 'informed_consent_decline_button'
-        : 'informed_consent_accept_button',
-    }]
-    : [];
+  const consentClicks = consentEvent ? [consentEvent] : [];
   rows.push(makeRow({
     screen_name: 'Informed Consent',
     question_asked: 'Consent form shown',
@@ -374,12 +378,7 @@ function buildMetricsPayload(session, config) {
   if (timing.introduction_started_at || timing.introduction_ended_at) {
     const introEvent = findEvent('introduction_continued');
     const introClicks = (session.events ?? [])
-      .filter((event) => event.type === 'introduction_click')
-      .map((event) => ({
-        timestamp: event.timestamp,
-        element_clicked: event.element_clicked,
-        slide_index: event.slide_index,
-      }));
+      .filter((event) => event.type === 'introduction_click');
     if (!introClicks.length && introEvent) {
       introClicks.push({ timestamp: introEvent.timestamp, element_clicked: 'study_introduction_start_questions_button' });
     }
@@ -432,9 +431,14 @@ function buildMetricsPayload(session, config) {
   const completedAt = session.ended_at || timing.actual_study_ended_at || '';
   const completionSubmittedAt = session.completion_submitted_at || timing.completion_submitted_at || '';
   const completionStartedAt = timing.completion_started_at || completedAt;
+  const completionScreenClicks = (session.events ?? [])
+    .filter((event) => event.type === 'completion_click');
   const completionClicks = [
     ...(completedAt ? [{ timestamp: completedAt, element_clicked: 'completion_qualtrics_code_generated' }] : []),
-    ...(completionSubmittedAt ? [{ timestamp: completionSubmittedAt, element_clicked: 'completion_code_submit_button' }] : []),
+    ...completionScreenClicks,
+    ...(completionSubmittedAt && !completionScreenClicks.some((click) => click.element_clicked === 'completion_code_submit_button')
+      ? [{ timestamp: completionSubmittedAt, element_clicked: 'completion_code_submit_button' }]
+      : []),
   ];
   rows.push(makeRow({
     screen_name: 'Completion / Qualtrics Code',
@@ -520,26 +524,26 @@ function IntroPage({ onNext, onInteraction, uiText }) {
   const currentSlide = slides[slideIndex];
   const isLastSlide = slideIndex >= totalSlides - 1;
 
-  function recordIntroClick(elementName) {
+  function recordIntroClick(elementName, event) {
     onInteraction?.({
       type: 'introduction_click',
-      element_clicked: elementName,
+      ...createScreenClickRecord(elementName, event),
       slide_index: slideIndex,
     });
   }
 
-  function goBack() {
-    recordIntroClick('study_introduction_back_button');
+  function goBack(event) {
+    recordIntroClick('study_introduction_back_button', event);
     setSlideIndex((index) => Math.max(index - 1, 0));
   }
 
-  function goNext() {
+  function goNext(event) {
     if (isLastSlide) {
-      recordIntroClick('study_introduction_start_questions_button');
+      recordIntroClick('study_introduction_start_questions_button', event);
       onNext();
       return;
     }
-    recordIntroClick('study_introduction_next_button');
+    recordIntroClick('study_introduction_next_button', event);
     setSlideIndex((index) => Math.min(index + 1, totalSlides - 1));
   }
 
@@ -1461,12 +1465,7 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
   const canSubmit = String(answer).trim().length > 0;
 
   function recordInlineClick(elementName, event) {
-    const click = {
-      element_clicked: elementName,
-      timestamp: getIsoTimestamp(),
-      x: Math.round(event?.nativeEvent?.offsetX ?? 0),
-      y: Math.round(event?.nativeEvent?.offsetY ?? 0),
-    };
+    const click = createScreenClickRecord(elementName, event);
     clicksRef.current = [...clicksRef.current, click];
     setClicks(clicksRef.current);
   }
@@ -1585,6 +1584,7 @@ function CompletionPage({
   metricsSaveError,
   onRetrySave,
   onSubmitCompletionCode,
+  onInteraction,
   debugMode = false,
 }) {
   const [enteredCode, setEnteredCode] = useState('');
@@ -1598,13 +1598,18 @@ function CompletionPage({
 
   async function handleSubmitHit(event) {
     event.preventDefault();
+    const submitClick = createScreenClickRecord('completion_code_submit_button', event);
+    onInteraction?.({
+      type: 'completion_click',
+      ...submitClick,
+    });
     if (!canSubmitHit || normalizedEnteredCode !== normalizedCompletionCode) {
       setCodeError(uiText?.completion?.codeMismatch ?? 'The code does not match. Please copy the code exactly from Qualtrics.');
       return;
     }
     setCodeError('');
     try {
-      await onSubmitCompletionCode?.(enteredCode);
+      await onSubmitCompletionCode?.(enteredCode, submitClick);
       HTMLFormElement.prototype.submit.call(event.currentTarget);
     } catch (error) {
       setCodeError(uiText?.completion?.saveFailed ?? 'Responses could not be saved. Please retry before continuing.');
@@ -1627,13 +1632,30 @@ function CompletionPage({
           {metricsSaveStatus === 'failed' && (
             <>
               <p className="save-error">{uiText?.completion?.saveFailed ?? 'Responses could not be saved. Please retry before continuing.'}</p>
-              <button className="primary-action" type="button" onClick={onRetrySave}>
+              <button className="primary-action" type="button" onClick={(event) => {
+                onInteraction?.({
+                  type: 'completion_click',
+                  ...createScreenClickRecord('completion_retry_save_button', event),
+                });
+                onRetrySave();
+              }}>
                 {uiText?.completion?.retrySaving ?? 'Retry saving responses'}
               </button>
             </>
           )}
           {metricsSaveStatus === 'saved' && qualtricsUrl && (
-            <a className="primary-action link-action" href={qualtricsUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              className="primary-action link-action"
+              href={qualtricsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(event) => {
+                onInteraction?.({
+                  type: 'completion_click',
+                  ...createScreenClickRecord('completion_open_exit_survey_link', event),
+                });
+              }}
+            >
               {uiText?.completion?.openSurvey ?? 'Open exit survey'}
             </a>
           )}
@@ -1655,6 +1677,12 @@ function CompletionPage({
               <input
                 value={enteredCode}
                 onChange={(event) => {
+                  if (!enteredCode) {
+                    onInteraction?.({
+                      type: 'completion_click',
+                      ...createScreenClickRecord('completion_code_input', event),
+                    });
+                  }
                   setEnteredCode(event.target.value);
                   setCodeError('');
                 }}
@@ -1823,14 +1851,15 @@ export default function App() {
     };
   }
 
-  function acceptConsent() {
+  function acceptConsent(event) {
     const now = getIsoTimestamp();
+    const click = createScreenClickRecord('informed_consent_accept_button', event, { timestamp: now });
     const baseSession = createBaseSession();
     setSession({
       ...baseSession,
       events: [
         ...baseSession.events,
-        { type: 'consent_accepted', timestamp: now },
+        { type: 'consent_accepted', ...click },
       ],
       timing: {
         ...baseSession.timing,
@@ -1842,14 +1871,22 @@ export default function App() {
     setPhase('intro');
   }
 
-  function declineConsent() {
+  function declineConsent(event) {
+    const now = getIsoTimestamp();
+    const click = createScreenClickRecord('informed_consent_decline_button', event, { timestamp: now });
+    const baseSession = createBaseSession('consent_declined');
     setSession({
-      ...createBaseSession('consent_declined'),
+      ...baseSession,
       attention_passed: false,
       events: [
-        { type: 'session_started', timestamp: getIsoTimestamp(), participant_params: getUrlParams() },
-        { type: 'consent_declined', timestamp: getIsoTimestamp() },
+        ...baseSession.events,
+        { type: 'consent_declined', ...click },
       ],
+      timing: {
+        ...baseSession.timing,
+        informed_consent_started_at: phaseStartedAtRef.current || baseSession.started_at,
+        informed_consent_ended_at: now,
+      },
     });
     setPhase('ended');
   }
@@ -2109,10 +2146,15 @@ export default function App() {
     setBackendQualtricsUrl('');
   }
 
-  async function saveCompletionSubmit(enteredCode) {
+  async function saveCompletionSubmit(enteredCode, submitClick = null) {
     if (!session || !config) return;
     const submittedAt = getIsoTimestamp();
     const completionStartedAt = session.timing?.completion_started_at || session.ended_at || submittedAt;
+    const existingEvents = session.events ?? [];
+    const hasSubmitClick = existingEvents.some((event) => (
+      event.type === 'completion_click'
+      && event.element_clicked === 'completion_code_submit_button'
+    ));
     const updatedSession = {
       ...session,
       completion_entered_code: enteredCode,
@@ -2124,7 +2166,14 @@ export default function App() {
         completion_duration_ms: durationMs(completionStartedAt, submittedAt),
       },
       events: [
-        ...(session.events ?? []),
+        ...existingEvents,
+        ...(submitClick && !hasSubmitClick
+          ? [{
+              type: 'completion_click',
+              ...submitClick,
+              timestamp: submitClick.timestamp || submittedAt,
+            }]
+          : []),
         {
           type: 'completion_code_submitted',
           timestamp: submittedAt,
@@ -2250,6 +2299,7 @@ export default function App() {
         metricsSaveError={metricsSaveError}
         onRetrySave={retrySaveMetrics}
         onSubmitCompletionCode={saveCompletionSubmit}
+        onInteraction={recordEvent}
         debugMode={Boolean(config?.debugMode)}
       />
     );
