@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "purpose": "Reference list for data-region-id values captured in MTurk study click events and layout_snapshot records.",
+  "notes": [
+    "Every click event records the clicked element plus the current layout_snapshot.",
+    "layout_snapshot includes visible elements with data-region-id, their bounding rectangles, and viewport-relative coordinates.",
+    "Dynamic region IDs use the patterns shown below, with the visible task/object/option/tooltip value substituted at runtime."
+  ],
+  "screens": {
+    "consent": [
+      { "region_id": "consent-screen", "description": "Full informed consent screen." },
+      { "region_id": "consent-card", "description": "Consent content card." },
+      { "region_id": "consent-title", "description": "Consent page title." },
+      { "region_id": "consent-text", "description": "Full informed consent text." },
+      { "region_id": "consent-actions", "description": "Container for consent decision buttons." },
+      { "region_id": "informed_consent_accept_button", "description": "Button to accept consent and continue." },
+      { "region_id": "informed_consent_decline_button", "description": "Button to decline consent and end the study." }
+    ],
+    "introduction": [
+      { "region_id": "study-introduction-screen", "description": "Full study introduction screen." },
+      { "region_id": "study-introduction-card", "description": "Introduction slide card." },
+      { "region_id": "study-introduction-header", "description": "Introduction title and slide count area." },
+      { "region_id": "study-introduction-title", "description": "Introduction page title." },
+      { "region_id": "study-introduction-slide-counter", "description": "Current slide number and total slides." },
+      { "region_id": "study-introduction-slide", "description": "Displayed introduction slide image." },
+      { "region_id": "study-introduction-text", "description": "Fallback introduction text area when an image is not available." },
+      { "region_id": "study-introduction-actions", "description": "Introduction navigation button area." },
+      { "region_id": "study_introduction_back_button", "description": "Back button for introduction slides." },
+      { "region_id": "study_introduction_next_button", "description": "Next button for introduction slides." },
+      { "region_id": "study_introduction_start_questions_button", "description": "Button on the final introduction slide to start questions." }
+    ],
+    "attention_check": [
+      { "region_id": "attention-check-screen", "description": "Full attention check screen." },
+      { "region_id": "attention-check-question-panel", "description": "Attention check prompt and navigation area." },
+      { "region_id": "attention-check-progress", "description": "Question progress text for the attention check." },
+      { "region_id": "attention-check-prompt", "description": "Attention check prompt text." },
+      { "region_id": "attention-check-open-text-instruction", "description": "Instruction text for open-ended attention checks." },
+      { "region_id": "attention_check_next_button", "description": "Next button for an attention check." },
+      { "region_id": "attention-check-answer-panel", "description": "Answer area for the attention check." },
+      { "region_id": "attention-check-choice-list", "description": "Multiple-choice answer list." },
+      { "region_id": "attention_check_option_<option label>", "description": "Individual multiple-choice option button." },
+      { "region_id": "attention-check-text-answer-wrap", "description": "Open-ended answer label/wrapper." },
+      { "region_id": "attention_check_text_answer", "description": "Open-ended text answer field." }
+    ],
+    "main_study_question": [
+      { "region_id": "question-screen", "description": "Full main question screen. This is represented by the study-interaction-page layout." },
+      { "region_id": "question-panel", "description": "Question text and Next button panel." },
+      { "region_id": "question-text-area", "description": "Question text block containing progress, scenario, prompt, and selected-answer feedback." },
+      { "region_id": "question-progress", "description": "Question number and total question count." },
+      { "region_id": "question-scenario-text", "description": "Scenario text shown above the prompt when applicable." },
+      { "region_id": "question-prompt", "description": "Main prompt asking the participant where to click." },
+      { "region_id": "question-selection-feedback", "description": "Feedback text describing the participant's current selected region." },
+      { "region_id": "tablet-stage", "description": "Outer area containing the simulated tablet/helper dashboard." },
+      { "region_id": "question_next_button", "description": "Next button after choosing an answer." }
+    ],
+    "helper_dashboard": [
+      { "region_id": "dropdown", "description": "Selected activity dropdown." },
+      { "region_id": "dropdown-value-<activity title>", "description": "Individual dropdown option for a selected, completed, current, or future activity." },
+      { "region_id": "screencast-volume-control", "description": "Volume control for the simulated VR user's current view." },
+      { "region_id": "VR-user-current-view-region", "description": "Region showing what the headset user is currently seeing." },
+      { "region_id": "vr-sent-video", "description": "Video overlay shown inside the simulated VR user's current view after a send-video action." },
+      { "region_id": "drawing-button", "description": "Draw in virtual world button." },
+      { "region_id": "drawing-clear-button", "description": "Erase drawing button." },
+      { "region_id": "object-button-<object name>", "description": "Individual object button used to point to or highlight a virtual object." },
+      { "region_id": "objects-region-clear-button", "description": "Remove highlight / clear object annotation button." },
+      { "region_id": "physical-world-video-region", "description": "Physical action and controller movement video player region." },
+      { "region_id": "controller-send-button", "description": "Button that sends the physical movement/controller guidance video to the headset user." },
+      { "region_id": "controller-clear-button", "description": "Button that removes the sent physical movement/controller guidance video." },
+      { "region_id": "controller-region", "description": "3D controller model area showing the relevant controller button." },
+      { "region_id": "controller-object-selector", "description": "Dropdown selecting which task object the controller guidance describes." },
+      { "region_id": "controller-side-dropdown", "description": "Left/right controller selection control." },
+      { "region_id": "in-world-video-region", "description": "Video showing how the selected activity is performed in the virtual world." },
+      { "region_id": "tooltip-button-<tooltip id>", "description": "Info tooltip button for a dashboard section." },
+      { "region_id": "tooltip-<tooltip id>", "description": "Visible tooltip text for a dashboard section." },
+      { "region_id": "dashboard-empty-area", "description": "A click inside the dashboard that did not hit a more specific tracked element." }
+    ],
+    "completion": [
+      { "region_id": "completion-screen", "description": "Full completion / exit survey screen." },
+      { "region_id": "completion-card", "description": "Completion content card." },
+      { "region_id": "completion-title", "description": "Completion screen title." },
+      { "region_id": "completion-debug-banner", "description": "Debug-mode notice shown when debug mode is enabled." },
+      { "region_id": "completion-save-instruction", "description": "Instruction explaining that responses must be saved before HIT submission." },
+      { "region_id": "completion-keep-open-instruction", "description": "Instruction telling workers to keep the MTurk page open." },
+      { "region_id": "completion-actions", "description": "Completion action area." },
+      { "region_id": "completion_saving_button", "description": "Disabled saving status button." },
+      { "region_id": "completion_retry_save_button", "description": "Button to retry saving responses." },
+      { "region_id": "completion_open_exit_survey_link", "description": "Link/button to open the Qualtrics exit survey." },
+      { "region_id": "completion_qualtrics_missing_button", "description": "Disabled status button when Qualtrics URL is missing." },
+      { "region_id": "completion-code-form", "description": "MTurk completion code form." },
+      { "region_id": "completion-code-input-wrap", "description": "Completion code input label/wrapper." },
+      { "region_id": "completion_code_input", "description": "Input where the worker enters the Qualtrics completion code." },
+      { "region_id": "completion_code_submit_button", "description": "Button that submits the MTurk HIT after code validation." },
+      { "region_id": "completion-error-message", "description": "Displayed completion-code or submit URL error." },
+      { "region_id": "completion-save-error-detail", "description": "Detailed backend save error message." }
+    ],
+    "terminal_access_states": [
+      { "region_id": "thank-you-screen", "description": "Full thank-you/declined-consent screen." },
+      { "region_id": "thank-you-card", "description": "Thank-you content card." },
+      { "region_id": "thank-you-title", "description": "Thank-you title." },
+      { "region_id": "thank-you-body", "description": "Thank-you body text." },
+      { "region_id": "mturk-required-screen", "description": "Full screen shown when MTurk parameters are required but missing." },
+      { "region_id": "mturk-required-card", "description": "MTurk-required message card." },
+      { "region_id": "mturk-required-title", "description": "MTurk-required title." },
+      { "region_id": "mturk-required-body", "description": "MTurk-required body text." },
+      { "region_id": "mturk-preview-screen", "description": "Full screen shown when worker is previewing the HIT before accepting." },
+      { "region_id": "mturk-preview-card", "description": "MTurk-preview message card." },
+      { "region_id": "mturk-preview-title", "description": "MTurk-preview title." },
+      { "region_id": "mturk-preview-body", "description": "MTurk-preview body text." }
+    ]
+  }
+}

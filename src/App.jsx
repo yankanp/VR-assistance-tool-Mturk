@@ -390,11 +390,8 @@ function buildMetricsPayload(session, config) {
     time_spent_ms: '',
     ...values,
   });
-  const clicksJson = (clicks = []) => JSON.stringify((clicks ?? []).map((click) => ({
-    element_clicked: click.element_clicked || click.region_id || click.target_id || '',
-    region_id: click.region_id || click.target_id || '',
-    base_region_id: click.base_region_id || click.region_id || click.target_id || '',
-    region_label: click.region_label || '',
+  const clicksJson = (clicks = []) => JSON.stringify((clicks ?? []).map((click, index) => ({
+    click_index: index + 1,
     timestamp: click.timestamp || '',
     client_x: click.client_x ?? '',
     client_y: click.client_y ?? '',
@@ -546,17 +543,17 @@ function renderTextBlocks(blocks = []) {
 function LandingPage({ onAccept, onDecline, uiText }) {
   const text = uiText?.consent ?? {};
   return (
-    <main className="page-shell">
-      <section className="study-card consent-card">
-        <h1>{text.title ?? 'Informed Consent'}</h1>
-        <div className="consent-box consent-full-text">
+    <main className="page-shell" data-region-id="consent-screen">
+      <section className="study-card consent-card" data-region-id="consent-card" aria-label="Informed consent form">
+        <h1 data-region-id="consent-title">{text.title ?? 'Informed Consent'}</h1>
+        <div className="consent-box consent-full-text" data-region-id="consent-text">
           {renderTextBlocks(text.blocks)}
         </div>
-        <div className="consent-actions">
-          <button className="primary-action" type="button" onClick={onAccept}>
+        <div className="consent-actions" data-region-id="consent-actions">
+          <button className="primary-action" type="button" data-region-id="informed_consent_accept_button" onClick={onAccept}>
             {text.acceptButton ?? 'I consent and want to continue'}
           </button>
-          <button className="secondary-action" type="button" onClick={onDecline}>
+          <button className="secondary-action" type="button" data-region-id="informed_consent_decline_button" onClick={onDecline}>
             {text.declineButton ?? 'I do not consent'}
           </button>
         </div>
@@ -596,19 +593,19 @@ function IntroPage({ onNext, onInteraction, uiText }) {
   }
 
   return (
-    <main className="page-shell">
-      <section className="study-card intro-card intro-slide-card">
-        <div className="intro-slide-header">
+    <main className="page-shell" data-region-id="study-introduction-screen">
+      <section className="study-card intro-card intro-slide-card" data-region-id="study-introduction-card" aria-label="Study introduction">
+        <div className="intro-slide-header" data-region-id="study-introduction-header">
           <div>
-            <h1>{text.title ?? 'Study Introduction'}</h1>
+            <h1 data-region-id="study-introduction-title">{text.title ?? 'Study Introduction'}</h1>
           </div>
           {totalSlides > 0 && (
-            <p className="intro-slide-counter">{slideIndex + 1} / {totalSlides}</p>
+            <p className="intro-slide-counter" data-region-id="study-introduction-slide-counter">{slideIndex + 1} / {totalSlides}</p>
           )}
         </div>
 
         {currentSlide ? (
-          <div className="intro-slide-frame">
+          <div className="intro-slide-frame" data-region-id="study-introduction-slide">
             <img
               src={assetUrl(currentSlide)}
               alt={`${text.slideAltPrefix ?? 'Introduction slide'} ${slideIndex + 1}`}
@@ -616,16 +613,16 @@ function IntroPage({ onNext, onInteraction, uiText }) {
             />
           </div>
         ) : (
-          <div className="intro-slide-fallback">
+          <div className="intro-slide-fallback" data-region-id="study-introduction-text">
             {(text.paragraphs ?? []).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           </div>
         )}
 
-        <div className="intro-slide-actions">
-          <button className="secondary-action" type="button" onClick={goBack} disabled={slideIndex === 0}>
+        <div className="intro-slide-actions" data-region-id="study-introduction-actions">
+          <button className="secondary-action" type="button" data-region-id="study_introduction_back_button" onClick={goBack} disabled={slideIndex === 0}>
             {text.backButton ?? 'Back'}
           </button>
-          <button className="primary-action" type="button" onClick={goNext}>
+          <button className="primary-action" type="button" data-region-id={isLastSlide ? 'study_introduction_start_questions_button' : 'study_introduction_next_button'} onClick={goNext}>
             {isLastSlide ? (text.startButton ?? 'Start study questions') : (text.nextButton ?? 'Next')}
           </button>
         </div>
@@ -1550,18 +1547,18 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
   }
 
   return (
-    <main className="study-interaction-page attention-inline-page">
-      <header className="question-bar attention-inline-card">
+    <main className="study-interaction-page attention-inline-page" data-region-id="attention-check-screen">
+      <header className="question-bar attention-inline-card" data-region-id="attention-check-question-panel">
         <div>
-          <p className="eyebrow">{formatTextTemplate(uiText?.question?.progressTemplate ?? 'Question {current} of {total}', { current: questionIndex + 1, total: totalQuestions })}</p>
-          <h1>{check.prompt}</h1>
+          <p className="eyebrow" data-region-id="attention-check-progress">{formatTextTemplate(uiText?.question?.progressTemplate ?? 'Question {current} of {total}', { current: questionIndex + 1, total: totalQuestions })}</p>
+          <h1 data-region-id="attention-check-prompt">{check.prompt}</h1>
           {check.type === 'open_text' && (
-            <p className="selection-feedback">
+            <p className="selection-feedback" data-region-id="attention-check-open-text-instruction">
 {uiText?.inlineAttention?.openTextHelp ?? 'Answer in one or two sentences. This response helps us check whether the instruction was understood.'}
             </p>
           )}
         </div>
-        <button className="next-button" type="button" disabled={!canSubmit} onClick={(event) => {
+        <button className="next-button" type="button" data-region-id="attention_check_next_button" disabled={!canSubmit} onClick={(event) => {
           recordInlineClick('attention_check_next_button', event);
           const finalClicks = clicksRef.current;
           onSubmit(answer, selectedOption ? getOptionLabel(selectedOption) : answer, finalClicks);
@@ -1569,9 +1566,9 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
           {uiText?.question?.nextButton ?? 'Next'}
         </button>
       </header>
-      <section className="study-card inline-check-panel">
+      <section className="study-card inline-check-panel" data-region-id="attention-check-answer-panel">
         {check.type === 'multiple_choice' ? (
-          <div className="choice-grid">
+          <div className="choice-grid" data-region-id="attention-check-choice-list">
             {(check.options ?? []).map((option) => {
               const optionValue = getOptionValue(option);
               const optionLabel = getOptionLabel(option);
@@ -1580,6 +1577,7 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
                   key={optionValue}
                   className={'choice-button ' + (answer === optionValue ? 'selected' : '')}
                   type="button"
+                  data-region-id={`attention_check_option_${optionLabel}`}
                   onClick={(event) => {
                     recordInlineClick(`attention_check_option_${optionLabel}`, event);
                     setAnswer(optionValue);
@@ -1591,9 +1589,10 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
             })}
           </div>
         ) : (
-          <label className="text-answer open-text-answer">
+          <label className="text-answer open-text-answer" data-region-id="attention-check-text-answer-wrap">
             <span>{uiText?.inlineAttention?.answerLabel ?? 'Your answer'}</span>
             <textarea
+              data-region-id="attention_check_text_answer"
               value={answer}
               onChange={(event) => {
                 if (!answer) {
@@ -1615,15 +1614,15 @@ function MainQuestionPage({ question, questionIndex, totalQuestions, selectedReg
   const selectedLabel = selectedRegionId ? getRegionFeedbackLabel(selectedRegionId, uiText) : '';
 
   return (
-    <main className="study-interaction-page">
-      <header className="question-bar">
-        <div>
-          <p className="eyebrow">{formatTextTemplate(uiText?.question?.progressTemplate ?? 'Question {current} of {total}', { current: questionIndex + 1, total: totalQuestions })}</p>
+    <main className="study-interaction-page" data-region-id="question-screen">
+      <header className="question-bar" data-region-id="question-panel">
+        <div data-region-id="question-text-area">
+          <p className="eyebrow" data-region-id="question-progress">{formatTextTemplate(uiText?.question?.progressTemplate ?? 'Question {current} of {total}', { current: questionIndex + 1, total: totalQuestions })}</p>
           {question.scenario_text ? (
-            <p className="scenario-context">{question.scenario_text}</p>
+            <p className="scenario-context" data-region-id="question-scenario-text">{question.scenario_text}</p>
           ) : null}
-          <h1>{question.prompt}</h1>
-          <p className={`selection-feedback ${selectedRegionId ? 'has-selection' : ''}`}>
+          <h1 data-region-id="question-prompt">{question.prompt}</h1>
+          <p className={`selection-feedback ${selectedRegionId ? 'has-selection' : ''}`} data-region-id="question-selection-feedback">
             {selectedRegionId ? (
               <>
 {formatTextTemplate(uiText?.question?.selectedTemplate ?? 'You have selected {label}, highlighted in yellow.', { label: selectedLabel })}
@@ -1633,11 +1632,11 @@ function MainQuestionPage({ question, questionIndex, totalQuestions, selectedReg
             )}
           </p>
         </div>
-        <button className="next-button" type="button" disabled={!selectedRegionId} onClick={onNext}>
+        <button className="next-button" type="button" data-region-id="question_next_button" disabled={!selectedRegionId} onClick={onNext}>
           {uiText?.question?.nextButton ?? 'Next'}
         </button>
       </header>
-      <div className="tablet-stage">
+      <div className="tablet-stage" data-region-id="tablet-stage">
         <SimulatedDashboard
           selectedRegionId={selectedRegionId}
           onRegionClick={onRegionClick}
@@ -1696,28 +1695,28 @@ function CompletionPage({
   }
 
   return (
-    <main className="page-shell">
-      <section className="study-card completion-card">
-        <h1>{uiText?.completion?.title ?? 'Please continue to the exit survey.'}</h1>
-        {debugMode && <p className="debug-mode-banner">Debug mode is enabled. MTurk code validation is bypassed.</p>}
-        <p>{uiText?.completion?.saveBeforeSubmit ?? 'Your study responses must be saved before you can submit this HIT.'}</p>
-        {!debugMode && <p>{uiText?.completion?.keepOpen ?? 'Keep this MTurk page open. The exit survey opens in a new tab.'}</p>}
-        <div className="completion-actions">
+    <main className="page-shell" data-region-id="completion-screen">
+      <section className="study-card completion-card" data-region-id="completion-card">
+        <h1 data-region-id="completion-title">{uiText?.completion?.title ?? 'Please continue to the exit survey.'}</h1>
+        {debugMode && <p className="debug-mode-banner" data-region-id="completion-debug-banner">Debug mode is enabled. MTurk code validation is bypassed.</p>}
+        <p data-region-id="completion-save-instruction">{uiText?.completion?.saveBeforeSubmit ?? 'Your study responses must be saved before you can submit this HIT.'}</p>
+        {!debugMode && <p data-region-id="completion-keep-open-instruction">{uiText?.completion?.keepOpen ?? 'Keep this MTurk page open. The exit survey opens in a new tab.'}</p>}
+        <div className="completion-actions" data-region-id="completion-actions">
           {(metricsSaveStatus === 'idle' || metricsSaveStatus === 'saving') && (
-            <button className="primary-action" type="button" disabled>
+            <button className="primary-action" type="button" data-region-id="completion_saving_button" disabled>
               {uiText?.completion?.saving ?? 'Saving responses...'}
             </button>
           )}
           {metricsSaveStatus === 'failed' && (
             <>
-              <p className="save-error">{uiText?.completion?.saveFailed ?? 'Responses could not be saved. Please retry before continuing.'}</p>
+              <p className="save-error" data-region-id="completion-error-message">{uiText?.completion?.saveFailed ?? 'Responses could not be saved. Please retry before continuing.'}</p>
               <button className="primary-action" type="button" onClick={(event) => {
                 onInteraction?.({
                   type: 'completion_click',
                   ...createScreenClickRecord('completion_retry_save_button', event),
                 });
                 onRetrySave();
-              }}>
+              }} data-region-id="completion_retry_save_button">
                 {uiText?.completion?.retrySaving ?? 'Retry saving responses'}
               </button>
             </>
@@ -1734,26 +1733,28 @@ function CompletionPage({
                   ...createScreenClickRecord('completion_open_exit_survey_link', event),
                 });
               }}
+              data-region-id="completion_open_exit_survey_link"
             >
               {uiText?.completion?.openSurvey ?? 'Open exit survey'}
             </a>
           )}
           {metricsSaveStatus === 'saved' && !qualtricsUrl && (
-            <button className="primary-action" type="button" disabled>
+            <button className="primary-action" type="button" data-region-id="completion_qualtrics_missing_button" disabled>
               {uiText?.completion?.qualtricsMissing ?? 'Qualtrics URL not configured'}
             </button>
           )}
         </div>
         {metricsSaveStatus === 'saved' && !debugMode && (
-          <form className="mturk-submit-form" method="post" action={externalSubmitUrl} onSubmit={handleSubmitHit}>
+          <form className="mturk-submit-form" method="post" action={externalSubmitUrl} onSubmit={handleSubmitHit} data-region-id="completion-code-form">
             <input type="hidden" name="assignmentId" value={participantParams?.assignmentId || ''} />
             <input type="hidden" name="completion_code" value={completionCode || ''} />
             <input type="hidden" name="session_id" value={sessionId || ''} />
             <input type="hidden" name="study_worker_id" value={participantParams?.workerId || ''} />
             <input type="hidden" name="study_hit_id" value={participantParams?.hitId || ''} />
-            <label className="completion-code-entry">
+            <label className="completion-code-entry" data-region-id="completion-code-input-wrap">
               <span>{uiText?.completion?.codeLabel ?? 'Completion code from Qualtrics'}</span>
               <input
+                data-region-id="completion_code_input"
                 value={enteredCode}
                 onChange={(event) => {
                   if (!enteredCode) {
@@ -1769,16 +1770,16 @@ function CompletionPage({
                 autoComplete="off"
               />
             </label>
-            <button className="primary-action" type="submit" disabled={!canSubmitHit}>
+            <button className="primary-action" type="submit" data-region-id="completion_code_submit_button" disabled={!canSubmitHit}>
               {uiText?.completion?.submitHit ?? 'Submit HIT'}
             </button>
             {!externalSubmitUrl && (
-              <p className="save-error">{uiText?.completion?.missingSubmitUrl ?? 'MTurk submit URL is missing. Please open this study from the MTurk HIT page.'}</p>
+              <p className="save-error" data-region-id="completion-error-message">{uiText?.completion?.missingSubmitUrl ?? 'MTurk submit URL is missing. Please open this study from the MTurk HIT page.'}</p>
             )}
-            {codeError && <p className="save-error">{codeError}</p>}
+            {codeError && <p className="save-error" data-region-id="completion-error-message">{codeError}</p>}
           </form>
         )}
-        {metricsSaveError && <p className="save-error-detail">{metricsSaveError}</p>}
+        {metricsSaveError && <p className="save-error-detail" data-region-id="completion-save-error-detail">{metricsSaveError}</p>}
       </section>
     </main>
   );
@@ -1786,10 +1787,10 @@ function CompletionPage({
 
 function ThankYouPage({ uiText }) {
   return (
-    <main className="page-shell">
-      <section className="study-card completion-card">
-        <h1>{uiText?.thankYou?.title ?? 'Thank you for your time.'}</h1>
-        <p>{uiText?.thankYou?.body ?? 'The study has ended. You may close this page.'}</p>
+    <main className="page-shell" data-region-id="thank-you-screen">
+      <section className="study-card completion-card" data-region-id="thank-you-card">
+        <h1 data-region-id="thank-you-title">{uiText?.thankYou?.title ?? 'Thank you for your time.'}</h1>
+        <p data-region-id="thank-you-body">{uiText?.thankYou?.body ?? 'The study has ended. You may close this page.'}</p>
       </section>
     </main>
   );
@@ -1797,10 +1798,10 @@ function ThankYouPage({ uiText }) {
 
 function MturkRequiredPage({ uiText }) {
   return (
-    <main className="page-shell">
-      <section className="study-card completion-card">
-        <h1>{uiText?.access?.mturkRequiredTitle ?? 'Please open this study from the MTurk HIT page.'}</h1>
-        <p>{uiText?.access?.mturkRequiredBody ?? 'This study requires a valid MTurk worker ID, assignment ID, and HIT ID. Please return to MTurk and use the survey link shown inside the HIT.'}</p>
+    <main className="page-shell" data-region-id="mturk-required-screen">
+      <section className="study-card completion-card" data-region-id="mturk-required-card">
+        <h1 data-region-id="mturk-required-title">{uiText?.access?.mturkRequiredTitle ?? 'Please open this study from the MTurk HIT page.'}</h1>
+        <p data-region-id="mturk-required-body">{uiText?.access?.mturkRequiredBody ?? 'This study requires a valid MTurk worker ID, assignment ID, and HIT ID. Please return to MTurk and use the survey link shown inside the HIT.'}</p>
       </section>
     </main>
   );
@@ -1808,10 +1809,10 @@ function MturkRequiredPage({ uiText }) {
 
 function MturkPreviewPage({ uiText }) {
   return (
-    <main className="page-shell">
-      <section className="study-card completion-card">
-        <h1>{uiText?.access?.mturkPreviewTitle ?? 'Please accept the HIT before starting the study.'}</h1>
-        <p>{uiText?.access?.mturkPreviewBody ?? 'You are currently previewing this HIT. After you accept it on MTurk, this study will open with your assignment information and you can begin.'}</p>
+    <main className="page-shell" data-region-id="mturk-preview-screen">
+      <section className="study-card completion-card" data-region-id="mturk-preview-card">
+        <h1 data-region-id="mturk-preview-title">{uiText?.access?.mturkPreviewTitle ?? 'Please accept the HIT before starting the study.'}</h1>
+        <p data-region-id="mturk-preview-body">{uiText?.access?.mturkPreviewBody ?? 'You are currently previewing this HIT. After you accept it on MTurk, this study will open with your assignment information and you can begin.'}</p>
       </section>
     </main>
   );
