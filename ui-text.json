@@ -14,13 +14,15 @@
     "title": "Study Introduction",
     "startButton": "Start study questions",
     "slides": [
-      "img/introduction/1.PNG",
-      "img/introduction/2.PNG",
-      "img/introduction/3.PNG",
+      "img/introduction/1.png",
+      "img/introduction/2.png",
+      "img/introduction/3.png",
       "img/introduction/4.png",
-      "img/introduction/5.PNG",
-      "img/introduction/6.PNG",
-      "img/introduction/7.PNG"
+      "img/introduction/5.png",
+      "img/introduction/6.png",
+      "img/introduction/7.png",
+      "img/introduction/8.png",
+      "img/introduction/9.png"
     ],
     "backButton": "Back",
     "nextButton": "Next",
