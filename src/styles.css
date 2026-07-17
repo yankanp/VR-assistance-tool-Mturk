@@ -961,9 +961,12 @@ button:disabled {
   --demo-panel-width: 25%;
   --panel-gap: 0.5rem;
   --tool-ui-font-size: clamp(1.18rem, 1.32vw, 1.42rem);
-  --tool-button-height: clamp(3.7rem, 5.35vh, 4.55rem);
-  --tool-button-font-size: var(--tool-ui-font-size);
+  --tool-button-height: clamp(2.75rem, 4.7vh, 4.15rem);
+  --tool-button-font-size: clamp(0.92rem, min(1.16vw, 2.5vh), 1.32rem);
+  --compact-button-font-size: clamp(0.72rem, min(0.82vw, 1.85vh), 0.96rem);
+  --small-button-font-size: clamp(0.64rem, min(0.74vw, 1.55vh), 0.86rem);
   --tool-button-icon-size: clamp(1.45rem, 1.75vw, 1.95rem);
+  --annotation-tools-height: clamp(7.2rem, 26%, 10.4rem);
   color: #ffffff;
   position: relative;
   width: 100%;
@@ -976,7 +979,7 @@ button:disabled {
     minmax(0, var(--controller-panel-width))
     minmax(12rem, var(--demo-panel-width));
     /* dropdown height, screencast image height and last 3 panels height */
-  grid-template-rows: minmax(0, 8%) minmax(0, 60%) minmax(0, 32%);
+  grid-template-rows: minmax(0, 8%) minmax(0, 57%) minmax(12rem, 35%);
   grid-template-areas:
     "left dropdown dropdown dropdown"
     "left vr vr vr"
@@ -1150,7 +1153,7 @@ button:disabled {
   grid-column: 1 !important;
   /* grid-row: 1 / 3 !important; */
   left: 0;
-  top: calc(28% + var(--panel-gap));
+  top: calc(var(--annotation-tools-height) + var(--panel-gap));
   bottom: 0;
   width: calc(var(--left-panel-width) - 0.12rem);
   display: grid;
@@ -1219,7 +1222,7 @@ button:disabled {
   width: 100%;
   min-height: var(--tool-button-height);
   border-radius: 0.5rem;
-  font-size: var(--tool-button-font-size);
+  font-size: var(--compact-button-font-size);
   font-weight: 800;
   background: var(--remove-button-bg);
   border-color: var(--remove-button-bg);
@@ -1240,7 +1243,7 @@ button:disabled {
   padding: 0.45rem 0.65rem;
   overflow: hidden;
   text-align: left;
-  font-size: var(--tool-button-font-size);
+  font-size: var(--compact-button-font-size);
   font-weight: 800;
   line-height: 1.08;
 }
@@ -1434,11 +1437,11 @@ button:disabled {
   left: 0;
   top: 0;
   width: calc(var(--left-panel-width) - 0.12rem);
-  height: 28%;
+  height: var(--annotation-tools-height);
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: 0.5rem;
-  padding: 0.7rem;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
+  padding: 0.55rem;
   z-index: 5;
   overflow: visible;
 }
@@ -1446,21 +1449,23 @@ button:disabled {
 .annotation-tools-stack {
   display: grid;
   grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 0.85rem;
+  gap: 0.42rem;
   min-height: 0;
 }
 
 .annotation-tool-button {
   width: 100%;
-  min-height: var(--tool-button-height);
+  min-height: 0;
+  height: 100%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.65rem;
-  padding: 0.55rem 0.75rem;
+  padding: 0.25rem 0.55rem;
   border-radius: 0.55rem;
-  font-size: var(--tool-button-font-size);
+  font-size: var(--compact-button-font-size);
   font-weight: 800;
+  line-height: 1.05;
 }
 
 .annotation-tool-button img {
@@ -1552,10 +1557,11 @@ button:disabled {
 
 .controller-body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(1.9rem, 2.35vw, 2.55rem);
-  gap: 0.1rem;
+  grid-template-columns: minmax(0, 1fr) clamp(2.25rem, 2.8vw, 3rem);
+  gap: 0.22rem;
   min-width: 0;
   min-height: 0;
+  overflow: hidden;
 }
 
 
@@ -1575,6 +1581,7 @@ button:disabled {
   background: transparent;
   box-shadow: none;
   overflow: visible;
+  justify-self: stretch;
 }
 
 .tablet-frame .controller-body .controller-side-toggle.selected-region,
@@ -1586,8 +1593,8 @@ button:disabled {
 
 .controller-side-switch {
   position: relative;
-  width: clamp(1.75rem, 2.15vw, 2.28rem);
-  height: clamp(0.82rem, 1.05vw, 1.12rem);
+  width: clamp(1.95rem, 2.35vw, 2.55rem);
+  height: clamp(0.95rem, 1.12vw, 1.22rem);
   border: 0;
   border-radius: 999px;
   background: var(--button-bg);
@@ -1618,8 +1625,8 @@ button:disabled {
 .controller-side-current {
   display: grid;
   place-items: center;
-  width: clamp(1.65rem, 2.15vw, 2.25rem);
-  height: clamp(1.65rem, 2.15vw, 2.25rem);
+  width: clamp(1.9rem, 2.35vw, 2.55rem);
+  height: clamp(1.9rem, 2.35vw, 2.55rem);
   border-radius: 50%;
   background: var(--button-bg);
   color: #ffffff;
@@ -1723,8 +1730,8 @@ button:disabled {
 .physical-action-body {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: minmax(0, 1fr) clamp(3.45rem, 6.1vh, 4.75rem);
-  gap: 0.35rem;
+  grid-template-rows: minmax(4.6rem, 1fr) clamp(2.45rem, 4.5vh, 3.35rem);
+  gap: 0.3rem;
   min-height: 0;
   min-width: 0;
   overflow: hidden;
@@ -1747,8 +1754,8 @@ button:disabled {
   min-height: 0;
   min-width: 0;
   overflow: hidden;
-  padding: 0.24rem 0.32rem;
-  font-size: clamp(0.8rem, 0.9vw, 1rem);
+  padding: 0.18rem 0.28rem;
+  font-size: var(--small-button-font-size);
   line-height: 1.02;
   word-break: normal;
   overflow-wrap: anywhere;
@@ -1756,8 +1763,8 @@ button:disabled {
 
 .physical-action-body .controller-send-button img,
 .physical-action-body .controller-clear-video-button img {
-  width: clamp(0.95rem, 1.15vw, 1.3rem);
-  height: clamp(0.95rem, 1.15vw, 1.3rem);
+  width: clamp(0.85rem, 1vw, 1.12rem);
+  height: clamp(0.85rem, 1vw, 1.12rem);
 }
 
 .physical-action-body .controller-send-button.selected-region,
@@ -1783,18 +1790,28 @@ button:disabled {
   }
 
   .physical-action-body {
-    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 0.62fr) minmax(5rem, 0.38fr);
+    grid-template-rows: minmax(4.2rem, 1fr);
+    align-items: stretch;
   }
 
   .physical-action-body .controller-action-row {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(2, minmax(2.2rem, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    height: 100%;
   }
 
   .physical-action-body .controller-send-button,
   .physical-action-body .controller-clear-video-button {
-    min-height: 2.2rem;
-    font-size: clamp(0.76rem, 4.2cqw, 0.95rem);
+    min-height: 0;
+    font-size: clamp(0.58rem, 3.05cqw, 0.78rem);
+    padding: 0.14rem 0.2rem;
+  }
+
+  .physical-action-body .controller-send-button img,
+  .physical-action-body .controller-clear-video-button img {
+    width: clamp(0.78rem, 3.9cqw, 1rem);
+    height: clamp(0.78rem, 3.9cqw, 1rem);
   }
 }
 
