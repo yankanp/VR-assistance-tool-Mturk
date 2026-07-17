@@ -281,6 +281,40 @@ function rectSnapshot(rect) {
   };
 }
 
+function collectLayoutSnapshot(screenElement = null, dashboardElement = null) {
+  const regions = {};
+  const addRegion = (element, fallbackId = '') => {
+    if (!(element instanceof Element)) return;
+    const regionId = element.getAttribute('data-region-id') || fallbackId;
+    if (!regionId || regionId === 'objects-region') return;
+    const rect = rectSnapshot(element.getBoundingClientRect?.());
+    if (!rect) return;
+    let key = regionId;
+    let suffix = 2;
+    while (regions[key]) {
+      key = `${regionId}#${suffix}`;
+      suffix += 1;
+    }
+    regions[key] = {
+      region_id: regionId,
+      label: element.getAttribute('aria-label') || element.textContent?.trim()?.replace(/\s+/g, ' ').slice(0, 120) || '',
+      rect,
+    };
+  };
+
+  const root = screenElement instanceof Element ? screenElement : document.body;
+  root?.querySelectorAll?.('[data-region-id]')?.forEach((element) => addRegion(element));
+
+  return {
+    viewport: {
+      width: typeof window !== 'undefined' ? window.innerWidth : '',
+      height: typeof window !== 'undefined' ? window.innerHeight : '',
+    },
+    dashboard_rect: rectSnapshot(dashboardElement?.getBoundingClientRect?.()),
+    regions,
+  };
+}
+
 function createClickLayoutSnapshot(event, dashboardElement = null) {
   const nativeEvent = event?.nativeEvent ?? event;
   const clientX = event?.clientX ?? nativeEvent?.clientX;
@@ -304,13 +338,21 @@ function createClickLayoutSnapshot(event, dashboardElement = null) {
 }
 
 function createScreenClickRecord(elementName, event, extra = {}) {
+  const nativeEvent = event?.nativeEvent ?? event;
+  const clientX = event?.clientX ?? nativeEvent?.clientX;
+  const clientY = event?.clientY ?? nativeEvent?.clientY;
+  const dashboardRect = extra.dashboardElement?.getBoundingClientRect?.();
+  const dashboardX = dashboardRect && typeof clientX === 'number' ? Math.round(clientX - dashboardRect.left) : '';
+  const dashboardY = dashboardRect && typeof clientY === 'number' ? Math.round(clientY - dashboardRect.top) : '';
   return {
     element_clicked: elementName,
     timestamp: getIsoTimestamp(),
-    x: Math.round(event?.nativeEvent?.offsetX ?? 0),
-    y: Math.round(event?.nativeEvent?.offsetY ?? 0),
-    ...createClickLayoutSnapshot(event),
-    ...extra,
+    client_x: typeof clientX === 'number' ? Math.round(clientX) : '',
+    client_y: typeof clientY === 'number' ? Math.round(clientY) : '',
+    dashboard_x: dashboardX,
+    dashboard_y: dashboardY,
+    layout_snapshot: collectLayoutSnapshot(extra.screenElement, extra.dashboardElement),
+    ...Object.fromEntries(Object.entries(extra).filter(([key]) => key !== 'screenElement' && key !== 'dashboardElement')),
   };
 }
 
@@ -341,6 +383,7 @@ function buildMetricsPayload(session, config) {
     task_order: '',
     question_asked: '',
     final_answer: '',
+    layout_snapshot: '',
     all_clicked_elements: '[]',
     click_count: 0,
     is_correct: '',
@@ -349,16 +392,16 @@ function buildMetricsPayload(session, config) {
   });
   const clicksJson = (clicks = []) => JSON.stringify((clicks ?? []).map((click) => ({
     element_clicked: click.element_clicked || click.region_id || click.target_id || '',
+    region_id: click.region_id || click.target_id || '',
+    base_region_id: click.base_region_id || click.region_id || click.target_id || '',
+    region_label: click.region_label || '',
     timestamp: click.timestamp || '',
-    x: click.x ?? click.offset_x ?? '',
-    y: click.y ?? click.offset_y ?? '',
     client_x: click.client_x ?? '',
     client_y: click.client_y ?? '',
-    viewport_width: click.viewport_width ?? '',
-    viewport_height: click.viewport_height ?? '',
-    target_rect: click.target_rect ?? null,
-    dashboard_rect: click.dashboard_rect ?? null,
+    dashboard_x: click.dashboard_x ?? click.x ?? '',
+    dashboard_y: click.dashboard_y ?? click.y ?? '',
   })));
+  const layoutJson = (layoutSnapshot) => JSON.stringify(layoutSnapshot || {});
   const findEvent = (type) => (session.events ?? []).find((event) => event.type === type);
 
   const consentEvent = findEvent('consent_declined') || findEvent('consent_accepted');
@@ -369,6 +412,7 @@ function buildMetricsPayload(session, config) {
     screen_name: 'Informed Consent',
     question_asked: 'Consent form shown',
     final_answer: consentEvent?.type === 'consent_declined' ? 'declined' : 'consented',
+    layout_snapshot: layoutJson(consentClicks.find((click) => click.layout_snapshot)?.layout_snapshot),
     all_clicked_elements: clicksJson(consentClicks),
     click_count: consentClicks.length,
     time_spent_ms: durationMs(consentStartedAt, consentEndedAt),
@@ -386,6 +430,7 @@ function buildMetricsPayload(session, config) {
       screen_name: 'Study Introduction',
       question_asked: 'Study instructions shown',
       final_answer: introEvent ? 'continued' : '',
+      layout_snapshot: layoutJson(introClicks.find((click) => click.layout_snapshot)?.layout_snapshot),
       all_clicked_elements: clicksJson(introClicks),
       click_count: introClicks.length,
       time_spent_ms: durationMs(timing.introduction_started_at, timing.introduction_ended_at || introEvent?.timestamp),
@@ -401,6 +446,7 @@ function buildMetricsPayload(session, config) {
       screen_name: 'Attention Check',
       question_asked: check.prompt || '',
       final_answer: check.answer_label || check.answer || '',
+      layout_snapshot: layoutJson(check.layout_snapshot || checkClicks.find((click) => click.layout_snapshot)?.layout_snapshot),
       all_clicked_elements: clicksJson(checkClicks),
       click_count: checkClicks.length,
       is_correct: check.is_correct ?? '',
@@ -420,6 +466,7 @@ function buildMetricsPayload(session, config) {
       task_order: response.task_order || '',
       question_asked: response.prompt || '',
       final_answer: response.selected_region_label || response.selected_region_id || '',
+      layout_snapshot: layoutJson(response.layout_snapshot || clicks.find((click) => click.layout_snapshot)?.layout_snapshot),
       all_clicked_elements: clicksJson(clicks),
       click_count: clicks.length,
       is_correct: response.is_correct ?? '',
@@ -444,6 +491,7 @@ function buildMetricsPayload(session, config) {
     screen_name: 'Completion / Qualtrics Code',
     question_asked: 'Participant reached completion screen and received/submitted completion code',
     final_answer: session.completion_entered_code || session.completion_code || '',
+    layout_snapshot: layoutJson(completionClicks.find((click) => click.layout_snapshot)?.layout_snapshot),
     all_clicked_elements: clicksJson(completionClicks),
     click_count: completionClicks.length,
     time_spent_ms: timing.completion_duration_ms || durationMs(completionStartedAt, completionSubmittedAt),
@@ -716,12 +764,10 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   const actionProps = (regionId, extraClass = '', disabled = false) => ({
     'data-region-id': regionId,
     className: `sim-button clickable-region ${extraClass} ${disabled ? 'disabled-control' : ''} ${selectedRegionId === regionId ? 'selected-region' : ''}`,
-    disabled,
     'aria-disabled': disabled ? 'true' : undefined,
     onClick: (event) => {
       event.stopPropagation();
-      if (disabled) return;
-      emitRegionClick(regionId, event);
+      emitRegionClick(regionId, event, disabled ? { trackOnly: true } : {});
     },
   });
 
@@ -933,17 +979,25 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   const vrViewRegionProps = regionProps('VR-user-current-view-region');
 
   function emitRegionClick(regionId, event, details = {}) {
-    let x = '';
-    let y = '';
-    const layoutSnapshot = createClickLayoutSnapshot(event, dashboardContainerRef.current);
+    let dashboardX = '';
+    let dashboardY = '';
     const clientX = event?.clientX ?? event?.nativeEvent?.clientX;
     const clientY = event?.clientY ?? event?.nativeEvent?.clientY;
     if (dashboardContainerRef.current && typeof clientX === 'number' && typeof clientY === 'number') {
       const rect = dashboardContainerRef.current.getBoundingClientRect();
-      x = Math.round(clientX - rect.left);
-      y = Math.round(clientY - rect.top);
+      dashboardX = Math.round(clientX - rect.left);
+      dashboardY = Math.round(clientY - rect.top);
     }
-    onRegionClick(regionId, event, { ...details, ...layoutSnapshot, x, y });
+    onRegionClick(regionId, event, {
+      ...details,
+      client_x: typeof clientX === 'number' ? Math.round(clientX) : '',
+      client_y: typeof clientY === 'number' ? Math.round(clientY) : '',
+      dashboard_x: dashboardX,
+      dashboard_y: dashboardY,
+      viewport_width: typeof window !== 'undefined' ? window.innerWidth : '',
+      viewport_height: typeof window !== 'undefined' ? window.innerHeight : '',
+      layoutSnapshot: collectLayoutSnapshot(dashboardContainerRef.current, dashboardContainerRef.current),
+    });
   }
 
   function SectionTitle({ children, tooltipId, as: Tag = 'h2' }) {
@@ -956,17 +1010,23 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             <button
               type="button"
               className="section-info-button"
+              data-region-id={`tooltip-button-${tooltipId}`}
               aria-label={`More information about ${children}`}
               aria-expanded={openTooltipId === tooltipId}
               onClick={(event) => {
                 event.stopPropagation();
+                emitRegionClick(`tooltip-button-${tooltipId}`, event, {
+                  baseRegionId: 'tooltip-button',
+                  regionLabel: `tooltip button: ${tooltipId}`,
+                  trackOnly: true,
+                });
                 setOpenTooltipId((value) => value === tooltipId ? '' : tooltipId);
               }}
             >
               <img className="section-info-icon" src={assetUrl('img/button_icons/info.png')} alt="" aria-hidden="true" />
             </button>
             {openTooltipId === tooltipId && (
-              <span className="section-tooltip" role="tooltip">
+              <span className="section-tooltip" role="tooltip" data-region-id={`tooltip-${tooltipId}`}>
                 {tooltip}
               </span>
             )}
@@ -988,7 +1048,14 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
       ref={dashboardContainerRef}
       className={`sim-dashboard selected-task-${selectedTaskStatus} ${selectedRegionId ? 'has-selected-region' : ''}`}
       aria-label="Simulated VR helper dashboard"
-      onClick={() => setOpenTooltipId('')}
+      onClick={(event) => {
+        setOpenTooltipId('');
+        emitRegionClick('dashboard-empty-area', event, {
+          baseRegionId: 'dashboard-empty-area',
+          regionLabel: 'dashboard empty area',
+          trackOnly: true,
+        });
+      }}
     >
       <section className="sim-region task-dropdown-panel" aria-label="Task dropdown">
         <div className="task-select">
@@ -1094,7 +1161,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
         </div>
       </section>
 
-      <section {...regionProps('objects-region')} aria-label="Current activity objects">
+      <section className="sim-region objects-panel" aria-label="Current activity objects">
         <SectionTitle tooltipId="objects">{dashboardText.objectsTitle ?? 'Current activity objects'}&nbsp;</SectionTitle>
         <div className="object-button-list">
           {(currentTask?.objects ?? []).map((object, index) => {
@@ -1195,17 +1262,23 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               <button
                 type="button"
                 className="section-info-button"
+                data-region-id="tooltip-button-physicalAction"
                 aria-label={`More information about ${dashboardText.physicalActionTitle ?? 'Physical action video'}`}
                 aria-expanded={openTooltipId === 'physicalAction'}
                 onClick={(event) => {
                   event.stopPropagation();
+                  emitRegionClick('tooltip-button-physicalAction', event, {
+                    baseRegionId: 'tooltip-button',
+                    regionLabel: 'tooltip button: physicalAction',
+                    trackOnly: true,
+                  });
                   setOpenTooltipId((value) => value === 'physicalAction' ? '' : 'physicalAction');
                 }}
               >
                 <img className="section-info-icon" src={assetUrl('img/button_icons/info.png')} alt="" aria-hidden="true" />
               </button>
               {openTooltipId === 'physicalAction' && (
-                <span className="section-tooltip" role="tooltip">
+                <span className="section-tooltip" role="tooltip" data-region-id="tooltip-physicalAction">
                   {sectionTooltips.physicalAction}
                 </span>
               )}
@@ -1314,17 +1387,23 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               <button
                 type="button"
                 className="section-info-button"
+                data-region-id="tooltip-button-controller"
                 aria-label={`More information about ${dashboardText.requiredControlsFor ?? 'Required controls for:'}`}
                 aria-expanded={openTooltipId === 'controller'}
                 onClick={(event) => {
                   event.stopPropagation();
+                  emitRegionClick('tooltip-button-controller', event, {
+                    baseRegionId: 'tooltip-button',
+                    regionLabel: 'tooltip button: controller',
+                    trackOnly: true,
+                  });
                   setOpenTooltipId((value) => value === 'controller' ? '' : 'controller');
                 }}
               >
                 <img className="section-info-icon" src={assetUrl('img/button_icons/info.png')} alt="" aria-hidden="true" />
               </button>
               {openTooltipId === 'controller' && (
-                <span className="section-tooltip" role="tooltip">
+                <span className="section-tooltip" role="tooltip" data-region-id="tooltip-controller">
                   {sectionTooltips.controller}
                 </span>
               )}
@@ -1754,6 +1833,7 @@ export default function App() {
   const [firstClick, setFirstClick] = useState(null);
   const [currentQuestionClicks, setCurrentQuestionClicks] = useState([]);
   const currentQuestionClicksRef = useRef([]);
+  const currentQuestionLayoutRef = useRef(null);
   const savedSessionIdRef = useRef('');
   const phaseStartedAtRef = useRef('');
   const [metricsSaveStatus, setMetricsSaveStatus] = useState('idle');
@@ -1824,6 +1904,7 @@ export default function App() {
     setFirstClick(null);
     setCurrentQuestionClicks([]);
     currentQuestionClicksRef.current = [];
+    currentQuestionLayoutRef.current = null;
   }, [phase, flowIndex]);
 
   useEffect(() => {
@@ -1921,34 +2002,42 @@ export default function App() {
     const timestamp = getIsoTimestamp();
     const baseRegionId = details.baseRegionId || regionId;
     const regionLabel = details.regionLabel || getRegionFeedbackLabel(regionId, uiText);
+    const shouldSelect = !details.trackOnly;
+    if (details.layoutSnapshot && !currentQuestionLayoutRef.current) {
+      currentQuestionLayoutRef.current = details.layoutSnapshot;
+    }
     if (!firstClick) {
       setFirstClick({
         region_id: regionId,
         base_region_id: baseRegionId,
         region_label: regionLabel,
         timestamp,
-        offset_x: Math.round(event?.nativeEvent?.offsetX ?? 0),
-        offset_y: Math.round(event?.nativeEvent?.offsetY ?? 0),
+        client_x: details.client_x ?? '',
+        client_y: details.client_y ?? '',
+        dashboard_x: details.dashboard_x ?? '',
+        dashboard_y: details.dashboard_y ?? '',
       });
     }
     const clickRecord = {
+      element_clicked: regionId,
       region_id: regionId,
       base_region_id: baseRegionId,
       region_label: regionLabel,
       timestamp,
-      x: details.x ?? '',
-      y: details.y ?? '',
       client_x: details.client_x ?? '',
       client_y: details.client_y ?? '',
+      dashboard_x: details.dashboard_x ?? details.x ?? '',
+      dashboard_y: details.dashboard_y ?? details.y ?? '',
       viewport_width: details.viewport_width ?? '',
       viewport_height: details.viewport_height ?? '',
-      target_rect: details.target_rect ?? null,
-      dashboard_rect: details.dashboard_rect ?? null,
+      track_only: Boolean(details.trackOnly),
     };
     currentQuestionClicksRef.current = [...currentQuestionClicksRef.current, clickRecord];
     setCurrentQuestionClicks(currentQuestionClicksRef.current);
-    setSelectedRegionId(regionId);
-    setSelectedRegionMeta({ base_region_id: baseRegionId, region_label: regionLabel });
+    if (shouldSelect) {
+      setSelectedRegionId(regionId);
+      setSelectedRegionMeta({ base_region_id: baseRegionId, region_label: regionLabel });
+    }
     recordEvent({
       type: 'dashboard_region_clicked',
       question_id: currentFlowItem?.item?.question_id || currentFlowItem?.item?.check_id,
@@ -1957,6 +2046,7 @@ export default function App() {
       region_id: regionId,
       base_region_id: baseRegionId,
       region_label: regionLabel,
+      track_only: Boolean(details.trackOnly),
     });
   }
 
@@ -1982,15 +2072,18 @@ export default function App() {
   function handleMainNext(event) {
     const question = currentFlowItem.item;
     const answeredAt = getIsoTimestamp();
-    const layoutSnapshot = createClickLayoutSnapshot(event);
+    const nextClickSnapshot = createScreenClickRecord('question_next_button', event);
     const nextClick = {
+      element_clicked: 'question_next_button',
       region_id: 'question_next_button',
       base_region_id: 'question_next_button',
       region_label: 'Question Next button',
       timestamp: answeredAt,
-      x: Math.round(event?.nativeEvent?.offsetX ?? 0),
-      y: Math.round(event?.nativeEvent?.offsetY ?? 0),
-      ...layoutSnapshot,
+      client_x: nextClickSnapshot.client_x,
+      client_y: nextClickSnapshot.client_y,
+      dashboard_x: nextClickSnapshot.dashboard_x,
+      dashboard_y: nextClickSnapshot.dashboard_y,
+      track_only: true,
     };
     const finalQuestionClicks = [...currentQuestionClicksRef.current, nextClick];
     currentQuestionClicksRef.current = finalQuestionClicks;
@@ -2020,6 +2113,7 @@ export default function App() {
         question_started_at: currentQuestionStartedAt,
         response_time_ms: Date.parse(answeredAt) - Date.parse(currentQuestionStartedAt),
         clicks: finalQuestionClicks,
+        layout_snapshot: currentQuestionLayoutRef.current || nextClickSnapshot.layout_snapshot,
         is_correct: isCorrect,
         screen_variant: question.screen_variant,
         question_type: question.question_type,
@@ -2054,6 +2148,7 @@ export default function App() {
         started_at: currentQuestionStartedAt,
         ended_at: answeredAt,
         clicks: finalQuestionClicks,
+        layout_snapshot: currentQuestionLayoutRef.current || nextClickSnapshot.layout_snapshot,
       };
       const { nextAttentionChecks, failureCount, attentionPassed } = applyAttentionResult(previous, attentionResult);
       return {
