@@ -131,11 +131,36 @@ function makeDashboardAttentionQuestion(check) {
 }
 
 function buildQuestionFlow(questions, attentionChecks, sessionId) {
-  const mainItems = shuffleWithSeed(
-    [...questions].sort((a, b) => a.order - b.order),
-    `${sessionId || 'no-session'}:main-questions`,
-  )
-    .map((question) => ({ type: 'dashboard', id: question.question_id, item: { ...question, is_attention_check: false } }));
+  const scenarioBasedQuestions = questions.some((question) => Array.isArray(question.questions));
+  const mainItems = scenarioBasedQuestions
+    ? shuffleWithSeed(
+      [...questions].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+      `${sessionId || 'no-session'}:scenarios`,
+    ).flatMap((scenario, scenarioIndex) => (
+      [...(scenario.questions ?? [])]
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .map((question, questionIndex) => ({
+          type: 'dashboard',
+          id: question.question_id,
+          item: {
+            ...question,
+            is_attention_check: false,
+            scenario_id: scenario.scenario_id,
+            scenario_text: scenario.scenario_text,
+            scenario_order_index: scenarioIndex + 1,
+            scenario_question_index: questionIndex + 1,
+            task_id: question.task_id ?? scenario.task_id,
+            task_order: question.task_order ?? scenario.task_order,
+            vr_view_image: question.vr_view_image ?? scenario.vr_view_image,
+            object_view_images: question.object_view_images ?? scenario.object_view_images ?? [],
+          },
+        }))
+    ))
+    : shuffleWithSeed(
+      [...questions].sort((a, b) => a.order - b.order),
+      `${sessionId || 'no-session'}:main-questions`,
+    )
+      .map((question) => ({ type: 'dashboard', id: question.question_id, item: { ...question, is_attention_check: false } }));
   const checkItems = [...attentionChecks]
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .map((check) => (
@@ -299,6 +324,10 @@ function buildMetricsPayload(session, config) {
   const makeRow = (values) => ({
     ...base,
     screen_name: '',
+    scenario_id: '',
+    scenario_text: '',
+    task_id: '',
+    task_order: '',
     question_asked: '',
     final_answer: '',
     all_clicked_elements: '[]',
@@ -386,6 +415,10 @@ function buildMetricsPayload(session, config) {
     const clicks = response.clicks ?? [];
     rows.push(makeRow({
       screen_name: response.is_attention_check ? 'Dashboard Attention Check' : 'Dashboard Question',
+      scenario_id: response.scenario_id || '',
+      scenario_text: response.scenario_text || '',
+      task_id: response.task_id || '',
+      task_order: response.task_order || '',
       question_asked: response.prompt || '',
       final_answer: response.selected_region_label || response.selected_region_id || '',
       all_clicked_elements: clicksJson(clicks),
@@ -549,9 +582,11 @@ function IntroPage({ onNext, onInteraction, uiText }) {
   );
 }
 
-function getObjectViewImage(index) {
+function getObjectViewImage(index, objectViewImages = []) {
+  if (objectViewImages[index]) return objectViewImages[index];
+  if (objectViewImages[0]) return objectViewImages[0];
   const objectNumber = index + 1;
-  if (objectNumber === 7) return 'img/VR_user_current_view_screenshots/task-18-obj-7).png';
+  if (objectNumber === 7) return 'img/VR_user_current_view_screenshots/task-18-obj-7.png';
   return `img/VR_user_current_view_screenshots/task-18-obj-${objectNumber}.png`;
 }
 
@@ -594,10 +629,25 @@ function isCorrectRegionSelection(selectedRegionId, correctRegionIds, selectedBa
   return false;
 }
 
-function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, metadata, resetKey, uiText }) {
+function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, metadata, resetKey, uiText, scenarioConfig = {} }) {
   const tasks = metadata?.tasks ?? [];
   const dashboardText = uiText?.dashboard ?? {};
-  const initialTask = tasks.find((task) => getTaskNumber(task) === CURRENT_TASK_ORDER) ?? tasks[0];
+  const initialTask = (
+    scenarioConfig.task_id
+      ? tasks.find((task) => task.id === scenarioConfig.task_id)
+      : null
+  )
+    ?? (
+      Number.isFinite(Number(scenarioConfig.task_order))
+        ? tasks.find((task) => getTaskNumber(task) === Number(scenarioConfig.task_order))
+        : null
+    )
+    ?? tasks.find((task) => getTaskNumber(task) === CURRENT_TASK_ORDER)
+    ?? tasks[0];
+  const baseVrViewImage = scenarioConfig.vr_view_image || FIXED_VR_VIEW_IMAGE;
+  const objectViewImages = Array.isArray(scenarioConfig.object_view_images)
+    ? scenarioConfig.object_view_images
+    : [];
   const [selectedTaskId, setSelectedTaskId] = useState(initialTask?.id ?? '');
   const [selectedObjectKey, setSelectedObjectKey] = useState('');
   const [controllerSide, setControllerSide] = useState('left');
@@ -609,7 +659,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   const [isFreehandActive, setIsFreehandActive] = useState(false);
   const [hasActiveAnnotation, setHasActiveAnnotation] = useState(false);
   const [hasObjectAnnotation, setHasObjectAnnotation] = useState(false);
-  const [vrViewImage, setVrViewImage] = useState(FIXED_VR_VIEW_IMAGE);
+  const [vrViewImage, setVrViewImage] = useState(baseVrViewImage);
   const [isTaskDropdownOpen, setIsTaskDropdownOpen] = useState(false);
   const [screencastVolume, setScreencastVolume] = useState(70);
   const [isVolumeOpen, setIsVolumeOpen] = useState(false);
@@ -689,12 +739,12 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     setIsFreehandActive(false);
     setHasActiveAnnotation(false);
     setHasObjectAnnotation(false);
-    setIsTaskDropdownOpen(false);
-    setVrViewImage(FIXED_VR_VIEW_IMAGE);
+    setIsTaskDropdownOpen(screenVariant === 'dropdown-open');
+    setVrViewImage(baseVrViewImage);
     isDrawingRef.current = false;
     lastDrawPointRef.current = null;
     clearFreehandCanvas();
-  }, [resetKey, initialTask?.id]);
+  }, [resetKey, initialTask?.id, baseVrViewImage, screenVariant]);
 
   useEffect(() => {
     setSelectedObjectKey(getObjectKey(currentTask?.objects?.[0], 0));
@@ -707,9 +757,9 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     setIsFreehandActive(false);
     setHasActiveAnnotation(false);
     setHasObjectAnnotation(false);
-    setVrViewImage(FIXED_VR_VIEW_IMAGE);
+    setVrViewImage(baseVrViewImage);
     clearFreehandCanvas();
-  }, [currentTask?.id]);
+  }, [currentTask?.id, baseVrViewImage]);
 
   useEffect(() => {
     setIsControllerVideoPlaying(false);
@@ -773,7 +823,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   function handleObjectButtonClick(event, object, index) {
     setSelectedObjectKey(getObjectKey(object, index));
     setIsControllerVideoPlaying(false);
-    setVrViewImage(getObjectViewImage(index));
+    setVrViewImage(getObjectViewImage(index, objectViewImages));
     setHasObjectAnnotation(true);
     setHasActiveAnnotation(true);
     emitRegionClick(readableRegionId('object-button', object?.label, object?.id || index), event, {
@@ -1069,7 +1119,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             {...actionProps('objects-region-clear-button', 'object-clear-button')}
             onClick={(event) => {
               event.stopPropagation();
-              setVrViewImage(FIXED_VR_VIEW_IMAGE);
+              setVrViewImage(baseVrViewImage);
               setHasObjectAnnotation(false);
               if (!sentControllerVideo && !isFreehandActive) {
                 setHasActiveAnnotation(false);
@@ -1123,7 +1173,16 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           </div>
         )}
       </section>
-      <section className="sim-region physical-action-section" aria-label="Physical action video">
+      <section
+        className={`sim-region physical-action-section dimmable-region ${
+          selectedRegionId === 'physical-world-video-region'
+          || selectedRegionId === 'controller-send-button'
+          || selectedRegionId === 'controller-clear-button'
+            ? 'contains-selected-region'
+            : ''
+        }`}
+        aria-label="Physical action video"
+      >
         <div className="physical-action-header">
           <span className="physical-action-title-text">{dashboardText.physicalActionTitle ?? 'Physical action video'}</span>
         
@@ -1378,7 +1437,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               setIsFreehandActive(false);
               setSentControllerVideo(false);
               clearFreehandCanvas();
-              setVrViewImage(FIXED_VR_VIEW_IMAGE);
+              setVrViewImage(baseVrViewImage);
               setHasObjectAnnotation(false);
               setHasActiveAnnotation(false);
               emitRegionClick('drawing-clear-button', event);
@@ -1482,6 +1541,9 @@ function MainQuestionPage({ question, questionIndex, totalQuestions, selectedReg
       <header className="question-bar">
         <div>
           <p className="eyebrow">{formatTextTemplate(uiText?.question?.progressTemplate ?? 'Question {current} of {total}', { current: questionIndex + 1, total: totalQuestions })}</p>
+          {question.scenario_text ? (
+            <p className="scenario-context">{question.scenario_text}</p>
+          ) : null}
           <h1>{question.prompt}</h1>
           <p className={`selection-feedback ${selectedRegionId ? 'has-selection' : ''}`}>
             {selectedRegionId ? (
@@ -1505,6 +1567,7 @@ function MainQuestionPage({ question, questionIndex, totalQuestions, selectedReg
           metadata={metadata}
           resetKey={question.question_id}
           uiText={uiText}
+          scenarioConfig={question}
         />
       </div>
     </main>
@@ -1673,7 +1736,7 @@ export default function App() {
   useEffect(() => {
     Promise.all([
       fetch(assetUrl('study-config.json')).then((response) => response.json()),
-      fetch(assetUrl('questions.json')).then((response) => response.json()),
+      fetch(assetUrl('scenario-questions.json')).then((response) => response.json()),
       fetch(assetUrl('attention-checks.json')).then((response) => response.json()),
       fetch(assetUrl('task_metadata.json')).then((response) => response.json()),
       fetch(assetUrl('ui-text.json')).then((response) => response.json()),
@@ -1853,6 +1916,7 @@ export default function App() {
       type: 'dashboard_region_clicked',
       question_id: currentFlowItem?.item?.question_id || currentFlowItem?.item?.check_id,
       question_type: currentFlowItem?.type,
+      scenario_id: currentFlowItem?.item?.scenario_id || '',
       region_id: regionId,
       base_region_id: baseRegionId,
       region_label: regionLabel,
@@ -1900,6 +1964,12 @@ export default function App() {
     setSession((previous) => {
       const response = {
         question_id: question.question_id,
+        scenario_id: question.scenario_id || '',
+        scenario_text: question.scenario_text || '',
+        scenario_order_index: question.scenario_order_index || '',
+        scenario_question_index: question.scenario_question_index || '',
+        task_id: question.task_id || '',
+        task_order: question.task_order || '',
         prompt: question.prompt,
         correct_answers: correctAnswers,
         selected_region_id: selectedRegionId,
@@ -1922,6 +1992,7 @@ export default function App() {
         type: question.is_attention_check ? 'attention_dashboard_question_answered' : 'main_question_answered',
         timestamp: answeredAt,
         question_id: question.question_id,
+        scenario_id: question.scenario_id || '',
         selected_region_id: selectedRegionId,
         is_correct: isCorrect,
       };

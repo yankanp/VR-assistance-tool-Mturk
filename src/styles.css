@@ -171,10 +171,16 @@ button:disabled {
   background: var(--panel-bg);
 }
 
+.question-bar > div {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
 .question-bar h1 {
   margin: 0;
-  font-size: clamp(1.45rem, 2.2vw, 2.35rem);
-  line-height: 1.12;
+  font-size: clamp(1.05rem, 1.35vw, 1.45rem);
+  line-height: 1.25;
 }
 
 .question-bar .eyebrow {
@@ -216,10 +222,10 @@ button:disabled {
 }
 
 .selected-region {
-  outline: 0.32rem solid var(--selection);
-  outline-offset: -0.32rem;
+  outline: 0;
   box-shadow:
-    0 0 0 0.15rem var(--selection-dark),
+    inset 0 0 0 0.32rem var(--selection),
+    inset 0 0 0 0.48rem var(--selection-dark),
     0 0 1.25rem rgba(255, 241, 118, 0.8);
 }
 
@@ -606,10 +612,10 @@ button:disabled {
 
 .video-thumb.selected-region,
 .sim-dashboard [aria-label="Current activity demonstration video"].selected-region {
-  outline-width: 0.28rem;
-  outline-offset: 0.12rem;
+  outline: 0;
   box-shadow:
-    0 0 0 0.22rem rgba(255, 236, 87, 0.72),
+    inset 0 0 0 0.3rem rgba(255, 236, 87, 0.95),
+    inset 0 0 0 0.46rem rgba(42, 34, 0, 0.95),
     0 0 1rem rgba(255, 236, 87, 0.45);
 }
 
@@ -976,8 +982,8 @@ button:disabled {
   width: calc(var(--left-panel-width) - 0.12rem);
   border: 0.14rem solid var(--selected-task-color);
   border-radius: 0.7rem;
-  border-color:rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.9);
+  border-color:rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.9);
   pointer-events: none;
   z-index: 3;
 }
@@ -1920,6 +1926,18 @@ button:disabled {
   color: #475569;
   font-size: clamp(1rem, 1.15vw, 1.2rem);
   line-height: 1.25;
+}
+
+.scenario-context {
+  margin: 0.55rem 0 0.35rem;
+  padding: 0.7rem 0.8rem;
+  border-left: 0.32rem solid #f59e0b;
+  border-radius: 0.55rem;
+  background: #fff7dd;
+  color: #3a2a08;
+  font-size: clamp(1.05rem, 1.35vw, 1.45rem);
+  line-height: 1.25;
+  font-weight: 700;
 }
 
 .selection-feedback.has-selection {

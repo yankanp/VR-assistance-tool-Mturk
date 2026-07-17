@@ -248,7 +248,7 @@
         {
           "id": "BarrelRollingSetup002",
           "label": "Cargo barrel 2",
-          "icon": "img/object_icons/task_4_object_2.png",
+          "icon": "img/object_icons//task_4_object_1.png",
           "controllerHints": {
             "needsToPressCondition": "one_button_either_controller",
             "left": {
@@ -274,7 +274,7 @@
         {
           "id": "BarrelRollingSetup003",
           "label": "Cargo barrel 3",
-          "icon": "img/object_icons/task_4_object_3.png",
+          "icon": "img/object_icons//task_4_object_1.png",
           "controllerHints": {
             "needsToPressCondition": "one_button_either_controller",
             "left": {
@@ -570,9 +570,9 @@
           "sceneName": "Beat2",
           "objectPath": "Boat/DynamicBoat/SailControls (1)/RopeSystem/VerletRope",
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-9-object-1.png",
-            "leftVideoUrl": "video/controller/task-9-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-9-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/task-9.png",
+            "leftVideoUrl": "video/controller/task-9-left.mp4",
+            "rightVideoUrl": "video/controller/task-9-right.mp4"
           }
         }
       ],
@@ -1036,7 +1036,7 @@
         {
           "id": "lever",
           "label": "Harpoon lever",
-          "icon": "img/object_icons/teleportation.png",
+          "icon": "img/object_icons/task_18_object_1.png",
           "sceneName": "Beat3and4",
           "objectPath": "Boat/DynamicBoat/Harpoon/Top/Interactable Slide Bar/Handle/GrabPoint/Model/Model/Top_Lever",
           "controllerHints": {
@@ -1056,13 +1056,13 @@
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/task-18-object-1.png",
             "leftVideoUrl": "video/controller/task-18-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-18-object-1-right.mp4"
+            "rightVideoUrl": "video/controller/task-18-object-1-left.mp4"
           }
         },
         {
           "id": "button",
           "label": "Fire button",
-          "icon": "img/object_icons/teleportation.png",
+          "icon": "img/object_icons/task_18_object_2.png",
           "sceneName": "Beat3and4",
           "objectPath": "Boat/DynamicBoat/Harpoon/Top/Fire Button/Button",
           "controllerHints": {
@@ -1078,13 +1078,13 @@
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/task-18-object-2.png",
             "leftVideoUrl": "video/controller/task-18-object-2-left.mp4",
-            "rightVideoUrl": "video/controller/task-18-object-2-right.mp4"
+            "rightVideoUrl": "video/controller/task-18-object-2-left.mp4"
           }
         },
         {
           "id": "crank",
           "label": "Crank handle",
-          "icon": "img/object_icons/teleportation.png",
+          "icon": "img/object_icons/task_18_object_3.png",
           "sceneName": "Beat3and4",
           "objectPath": "Boat/DynamicBoat/Harpoon/Top/Double Crank/Handle",
           "controllerHints": {
@@ -1104,13 +1104,13 @@
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/task-18-object-3.png",
             "leftVideoUrl": "video/controller/task-18-object-3-left.mp4",
-            "rightVideoUrl": "video/controller/task-18-object-3-right.mp4"
+            "rightVideoUrl": "video/controller/task-18-object-3-left.mp4"
           }
         },
         {
           "id": "aiming_handle",
           "label": "Aiming handle",
-          "icon": "img/object_icons/teleportation.png",
+          "icon": "img/object_icons/task_18_object_4.png",
           "sceneName": "Beat3and4",
           "objectPath": "Boat/DynamicBoat/Harpoon/Top/HarpoonBody/Handle",
           "controllerHints": {
@@ -1130,13 +1130,13 @@
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/task-18-object-4.png",
             "leftVideoUrl": "video/controller/task-18-object-4-left.mp4",
-            "rightVideoUrl": "video/controller/task-18-object-4-right.mp4"
+            "rightVideoUrl": "video/controller/task-18-object-4-left.mp4"
           }
         },
         {
           "id": "box_1",
           "label": "Cargo box 1",
-          "icon": "img/object_icons/teleportation.png",
+          "icon": "img/object_icons/task_18_object_5.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 3/Sequence 8/HarpoonTargets/HarpoonTargetBox",
           "controllerHints": {
@@ -1155,7 +1155,7 @@
         {
           "id": "box_2",
           "label": "Cargo box 2",
-          "icon": "img/object_icons/teleportation.png",
+          "icon": "img/object_icons/task_18_object_5.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 3/Sequence 8/HarpoonTargets/HarpoonTargetBox (1)",
           "controllerHints": {
@@ -1174,7 +1174,7 @@
         {
           "id": "box_3",
           "label": "Cargo box 3",
-          "icon": "img/object_icons/teleportation.png",
+          "icon": "img/object_icons/task_18_object_5.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 3/Sequence 8/HarpoonTargets/HarpoonTargetBox (2)",
           "controllerHints": {

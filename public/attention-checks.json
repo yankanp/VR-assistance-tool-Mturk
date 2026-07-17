@@ -10,7 +10,7 @@
                         },
                         {
                             "value":  "headset_user",
-                            "label":  "The headset user"
+                            "label":  "The user"
                         },
                         {
                             "value":  "both",
@@ -28,7 +28,7 @@
         "check_id":  "ac_repeat_vr_view",
         "type":  "dashboard_click",
         "question_type":  "attention_repetition",
-        "prompt":  "Click the area where you would see what the headset user is currently seeing.",
+        "prompt":  "Click the area where you would see what the user is currently seeing.",
         "screen_variant":  "default",
         "order":  2,
         "correct_answers":  [
@@ -39,7 +39,7 @@
         "check_id":  "ac_clear_imc",
         "type":  "dashboard_click",
         "question_type":  "attention_instructional_manipulation",
-        "prompt":  "We want to understand whether first-time users can understand the helper tool. Imagine you are helping the headset user. For this question only, click the Clear drawing button.",
+        "prompt":  "We want to understand whether first-time users can understand the helper tool. Imagine you are helping the user. For this question only, click the Erase drawing button.",
         "screen_variant":  "default",
         "order":  3,
         "correct_answers":  [

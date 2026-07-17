@@ -1,0 +1,116 @@
+[
+  {
+    "scenario_id": "cargo_barrels",
+    "scenario_text": "The user is trying to roll the cargo barrels. They say, \"I can't find the barrel.\"",
+    "task_order": 4,
+    "vr_view_image": "img/VR_user_current_view_screenshots/task-4-no-annotation.png",
+    "object_view_images": [
+      "img/VR_user_current_view_screenshots/task-4-obj-1.png"
+    ],
+    "order": 1,
+    "questions": [
+      {
+        "question_id": "cargo_q1_vr_view",
+        "prompt": "Before helping the user, you want to see exactly what the user is looking at right now. Click the part of the screen that shows what the user is currently viewing.",
+        "question_type": "main",
+        "screen_variant": "default",
+        "order": 1,
+        "correct_answers": ["VR-user-current-view-region"]
+      },
+      {
+        "question_id": "cargo_q2_point_barrel",
+        "prompt": "Click the part of the screen that you would use to mark in their virtual world, so a directional arrow appears above the barrel, showing exactly where to look.",
+        "question_type": "main",
+        "screen_variant": "default",
+        "order": 2,
+        "correct_answers": ["object-button", "objects-region"]
+      },
+      {
+        "question_id": "cargo_q3_next_activity",
+        "prompt": "After moving the barrels, the user asks, \"what is the next activity?\" Click the part of the screen that lets you see the next activity.",
+        "question_type": "main",
+        "screen_variant": "default",
+        "order": 3,
+        "correct_answers": ["dropdown", "dropdown-value"]
+      }
+    ]
+  },
+  {
+    "scenario_id": "raise_sail",
+    "scenario_text": "The user is trying to raise the sail. They say, \"I don't know how to do this.\"",
+    "task_order": 9,
+    "vr_view_image": "img/VR_user_current_view_screenshots/task-9-no-annotation.png",
+    "object_view_images": [
+      "img/VR_user_current_view_screenshots/task-9-obj-1.png"
+    ],
+    "order": 2,
+    "questions": [
+      {
+        "question_id": "sail_q1_controller_buttons",
+        "prompt": "Before helping the user, you want to know which controller button to press to raise the sail. Click the part of the screen that shows which controller button(s) to press to raise the sail.",
+        "question_type": "main",
+        "screen_variant": "default",
+        "order": 1,
+        "correct_answers": ["controller-region"]
+      },
+      {
+        "question_id": "sail_q2_hand_movement_video",
+        "prompt": "You want to see how to move the hands to raise the sail. Click the part of the screen that lets you watch the hand movement and controller buttons needed to raise the sail.",
+        "question_type": "main",
+        "screen_variant": "default",
+        "order": 2,
+        "correct_answers": ["physical-world-video-region"]
+      },
+      {
+        "question_id": "sail_q3_send_hand_video",
+        "prompt": "The user says they don't understand how to raise the sail. You decide to show them a video demonstrating the required hand movements and the controller buttons needed to raise the sail. Click the part of the screen that lets you send the video showing how to move the hands and controller button(s) to press to raise the sail.",
+        "question_type": "main",
+        "screen_variant": "default",
+        "order": 3,
+        "correct_answers": ["controller-send-button"]
+      }
+    ]
+  },
+  {
+    "scenario_id": "harpoon",
+    "scenario_text": "The user is trying to use the harpoon. They say, \"I'm not sure what I'm supposed to do with the harpoon.\"",
+    "task_order": 18,
+    "vr_view_image": "img/VR_user_current_view_screenshots/task-18-no-annotation.png",
+    "object_view_images": [
+      "img/VR_user_current_view_screenshots/task-18-obj-1.png",
+      "img/VR_user_current_view_screenshots/task-18-obj-2.png",
+      "img/VR_user_current_view_screenshots/task-18-obj-3.png",
+      "img/VR_user_current_view_screenshots/task-18-obj-4.png",
+      "img/VR_user_current_view_screenshots/task-18-obj-5.png",
+      "img/VR_user_current_view_screenshots/task-18-obj-6.png",
+      "img/VR_user_current_view_screenshots/task-18-obj-7.png"
+    ],
+    "order": 3,
+    "questions": [
+      {
+        "question_id": "harpoon_q1_in_world_demo",
+        "prompt": "Before helping the user, you want to see how the harpoon is used inside the virtual world. Click the part of the screen that lets you watch a video showing how to use the harpoon in the virtual world.",
+        "question_type": "main",
+        "screen_variant": "default",
+        "order": 1,
+        "correct_answers": ["in-world-video-region"]
+      },
+      {
+        "question_id": "harpoon_q2_draw",
+        "prompt": "The user is not looking at the harpoon. Click the part of the screen that lets you draw on the user's virtual world.",
+        "question_type": "main",
+        "screen_variant": "default",
+        "order": 2,
+        "correct_answers": ["drawing-button"]
+      },
+      {
+        "question_id": "harpoon_q3_clear_drawing",
+        "prompt": "The user sees the drawing on their virtual world and no longer needs it. Click the part of the screen that lets you remove all drawings from the user's virtual world.",
+        "question_type": "main",
+        "screen_variant": "default",
+        "order": 3,
+        "correct_answers": ["drawing-clear-button"]
+      }
+    ]
+  }
+]
