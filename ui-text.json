@@ -255,7 +255,8 @@
     "codePlaceholder": "Paste the code shown at the end of Qualtrics",
     "submitHit": "Submit HIT",
     "missingSubmitUrl": "MTurk submit URL is missing. Please open this study from the MTurk HIT page.",
-    "codeMismatch": "The code does not match. Please copy the code exactly from Qualtrics."
+    "codeMismatch": "The code does not match. Please copy the code exactly from Qualtrics.",
+    "submitFailed": "Responses were saved, but the MTurk submission failed. Please retry submitting the HIT."
   },
   "thankYou": {
     "title": "Thank you for your time.",
