@@ -28,7 +28,7 @@
         "check_id":  "ac_repeat_vr_view",
         "type":  "dashboard_click",
         "question_type":  "attention_repetition",
-        "prompt":  "Click the area where you would see what the user is currently seeing.",
+        "prompt":  "Before helping the user, you want to see exactly what the user is looking at right now. Click the part of the screen that shows what the user is currently viewing",
         "screen_variant":  "default",
         "order":  2,
         "correct_answers":  [
@@ -39,7 +39,7 @@
         "check_id":  "ac_clear_imc",
         "type":  "dashboard_click",
         "question_type":  "attention_instructional_manipulation",
-        "prompt":  "We want to understand whether first-time users can understand the helper tool. Imagine you are helping the user. For this question only, click the Erase drawing button.",
+        "prompt":  "We want to understand whether someone can understand the helper tool. Imagine you are helping the user. For this question only, click the “Erase drawing” button in the Drawing tools section.",
         "screen_variant":  "default",
         "order":  3,
         "correct_answers":  [
