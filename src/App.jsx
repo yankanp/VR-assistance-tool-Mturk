@@ -1676,6 +1676,7 @@ function CompletionPage({
 
   async function handleSubmitHit(event) {
     event.preventDefault();
+    const form = event.currentTarget;
     const submitClick = createScreenClickRecord('completion_code_submit_button', event);
     onInteraction?.({
       type: 'completion_click',
@@ -1688,9 +1689,15 @@ function CompletionPage({
     setCodeError('');
     try {
       await onSubmitCompletionCode?.(enteredCode, submitClick);
-      HTMLFormElement.prototype.submit.call(event.currentTarget);
     } catch (error) {
       setCodeError(uiText?.completion?.saveFailed ?? 'Responses could not be saved. Please retry before continuing.');
+      return;
+    }
+
+    try {
+      HTMLFormElement.prototype.submit.call(form);
+    } catch (error) {
+      setCodeError(uiText?.completion?.submitFailed ?? 'Responses were saved, but the MTurk submission failed. Please retry submitting the HIT.');
     }
   }
 

@@ -1,0 +1,21 @@
+python3 create_study.py --environment sandbox --assignments 10
+python3 create_study.py --environment production --assignments 40
+
+python3 view_submissions.py --environment sandbox --hit-id YOUR_HIT_ID
+python3 review_submission.py --environment sandbox --assignment-id ASSIGNMENT_ID --action approve
+python3 review_submission.py --environment sandbox --assignment-id ASSIGNMENT_ID --action reject --feedback "Completion code could not be validated."
+
+
+cd C:\Projects\VR-Projects\Mturk_study
+
+# List sandbox HITs
+python3 manage_hits.py list --environment sandbox
+
+# List production HITs
+python3 manage_hits.py list --environment production
+
+# Delete an already deletable HIT
+python3 manage_hits.py delete --environment sandbox --hit-id HIT_ID --yes
+
+# Expire first, then delete
+python3 manage_hits.pydelete --environment sandbox --hit-id HIT_ID --force-expire --yes
