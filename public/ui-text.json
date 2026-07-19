@@ -243,13 +243,13 @@
     "mturkPreviewBody": "You are currently previewing this HIT. After you accept it on MTurk, this study will open with your assignment information and you can begin."
   },
   "completion": {
-    "title": "Please continue to the exit survey.",
+    "title": "Please continue to the survey.",
     "saveBeforeSubmit": "Your study responses must be saved before you can submit this HIT.",
-    "keepOpen": "Keep this MTurk page open. The exit survey opens in a new tab.",
+    "keepOpen": "Keep this page open. The survey opens in a new tab.",
     "saving": "Saving responses...",
     "saveFailed": "Responses could not be saved. Please retry before continuing.",
     "retrySaving": "Retry saving responses",
-    "openSurvey": "Open exit survey",
+    "openSurvey": "Open survey",
     "qualtricsMissing": "Qualtrics URL not configured",
     "codeLabel": "Completion code from Qualtrics",
     "codePlaceholder": "Paste the code shown at the end of Qualtrics",
