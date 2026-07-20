@@ -119,7 +119,7 @@ def main() -> None:
         "AssignmentDurationInSeconds": STUDY.assignment_duration_seconds,
         "AutoApprovalDelayInSeconds": STUDY.auto_approval_delay_seconds,
         "Question": question_xml,
-        # "QualificationRequirements": qualification_requirements,
+        "QualificationRequirements": qualification_requirements,
     }
 
     if args.dry_run:

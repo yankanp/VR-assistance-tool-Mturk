@@ -5,17 +5,18 @@ python3 view_submissions.py --environment sandbox --hit-id YOUR_HIT_ID
 python3 review_submission.py --environment sandbox --assignment-id ASSIGNMENT_ID --action approve
 python3 review_submission.py --environment sandbox --assignment-id ASSIGNMENT_ID --action reject --feedback "Completion code could not be validated."
 
-
-cd C:\Projects\VR-Projects\Mturk_study
-
 # List sandbox HITs
 python3 manage_hits.py list --environment sandbox
 
-# List production HITs
-python3 manage_hits.py list --environment production
-
-# Delete an already deletable HIT
-python3 manage_hits.py delete --environment sandbox --hit-id HIT_ID --yes
-
 # Expire first, then delete
 python3 manage_hits.py delete --environment sandbox --force-expire --yes --hit-id HIT_ID
+
+
+
+python3 create_study.py --environment sandbox --assignments 14
+python3 view_submissions.py --environment sandbox --hit-id 3QMELQS6ZFJWIHC41KKEWTJJI2O6R0
+python3 review_submission.py --environment sandbox --assignment-id 3NGI5ARFT4DJL2SM8O9ALMN2NBN1PP --action approve
+
+
+
+python3 review_submission.py --environment sandbox --assignment-id 3TAYZSBPLWGNNFQAJ9DILA2I2182SN --action reject --feedback "Completion code could not be validated."
