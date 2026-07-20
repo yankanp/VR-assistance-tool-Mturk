@@ -79,7 +79,7 @@
       { "region_id": "completion-card", "description": "Completion content card." },
       { "region_id": "completion-title", "description": "Completion screen title." },
       { "region_id": "completion-debug-banner", "description": "Debug-mode notice shown when debug mode is enabled." },
-      { "region_id": "completion-save-instruction", "description": "Instruction explaining that responses must be saved before HIT submission." },
+      { "region_id": "completion-save-instruction", "description": "Instruction explaining that responses must be saved before submission." },
       { "region_id": "completion-keep-open-instruction", "description": "Instruction telling workers to keep the page open." },
       { "region_id": "completion-actions", "description": "Completion action area." },
       { "region_id": "completion_saving_button", "description": "Disabled saving status button." },
@@ -89,7 +89,7 @@
       { "region_id": "completion-code-form", "description": "MTurk completion code form." },
       { "region_id": "completion-code-input-wrap", "description": "Completion code input label/wrapper." },
       { "region_id": "completion_code_input", "description": "Input where the worker enters the Qualtrics completion code." },
-      { "region_id": "completion_code_submit_button", "description": "Button that submits the MTurk HIT after code validation." },
+      { "region_id": "completion_code_submit_button", "description": "Button that submits the MTurk after code validation." },
       { "region_id": "completion-error-message", "description": "Displayed completion-code or submit URL error." },
       { "region_id": "completion-save-error-detail", "description": "Detailed backend save error message." }
     ],
@@ -102,7 +102,7 @@
       { "region_id": "mturk-required-card", "description": "MTurk-required message card." },
       { "region_id": "mturk-required-title", "description": "MTurk-required title." },
       { "region_id": "mturk-required-body", "description": "MTurk-required body text." },
-      { "region_id": "mturk-preview-screen", "description": "Full screen shown when worker is previewing the HIT before accepting." },
+      { "region_id": "mturk-preview-screen", "description": "Full screen shown when worker is previewing the study before accepting." },
       { "region_id": "mturk-preview-card", "description": "MTurk-preview message card." },
       { "region_id": "mturk-preview-title", "description": "MTurk-preview title." },
       { "region_id": "mturk-preview-body", "description": "MTurk-preview body text." }

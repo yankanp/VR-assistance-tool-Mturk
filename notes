@@ -18,4 +18,4 @@ python3 manage_hits.py list --environment production
 python3 manage_hits.py delete --environment sandbox --hit-id HIT_ID --yes
 
 # Expire first, then delete
-python3 manage_hits.pydelete --environment sandbox --hit-id HIT_ID --force-expire --yes
+python3 manage_hits.py delete --environment sandbox --force-expire --yes --hit-id HIT_ID

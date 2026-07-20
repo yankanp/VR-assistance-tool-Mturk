@@ -237,10 +237,10 @@
   "access": {
     "loading": "Loading study...",
     "loadErrorTitle": "Study could not load",
-    "mturkRequiredTitle": "Please open this study from the MTurk HIT page.",
+    "mturkRequiredTitle": "Please open this study from the MTurk page.",
     "mturkRequiredBody": "This study requires a valid MTurk account",
-    "mturkPreviewTitle": "Please accept the HIT before starting the study.",
-    "mturkPreviewBody": "You are currently previewing this HIT. After you accept it on MTurk, this study will open with your assignment information and you can begin."
+    "mturkPreviewTitle": "Please accept the study before starting the study.",
+    "mturkPreviewBody": "You are currently previewing this study. After you accept it on MTurk, this study will open with your assignment information and you can begin."
   },
   "completion": {
     "title": "Please continue to the survey.",
@@ -253,8 +253,8 @@
     "qualtricsMissing": "Qualtrics URL not configured",
     "codeLabel": "Completion code from Qualtrics",
     "codePlaceholder": "Paste the code shown at the end of Qualtrics",
-    "submitHit": "Submit HIT",
-    "missingSubmitUrl": "MTurk submit URL is missing. Please open this study from the MTurk HIT page.",
+    "submitHit": "Submit Code",
+    "missingSubmitUrl": "MTurk submit URL is missing. Please open this study from the MTurk page.",
     "codeMismatch": "The code does not match. Please copy the code exactly from Qualtrics.",
     "submitFailed": "Responses were saved, but the MTurk submission failed. Please retry submitting the HIT."
   },

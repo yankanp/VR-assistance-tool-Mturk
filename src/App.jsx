@@ -1781,7 +1781,7 @@ function CompletionPage({
               {uiText?.completion?.submitHit ?? 'Submit HIT'}
             </button>
             {!externalSubmitUrl && (
-              <p className="save-error" data-region-id="completion-error-message">{uiText?.completion?.missingSubmitUrl ?? 'MTurk submit URL is missing. Please open this study from the MTurk HIT page.'}</p>
+              <p className="save-error" data-region-id="completion-error-message">{uiText?.completion?.missingSubmitUrl ?? 'MTurk submit URL is missing. Please open this study from the MTurk page.'}</p>
             )}
             {codeError && <p className="save-error" data-region-id="completion-error-message">{codeError}</p>}
           </form>
@@ -1807,7 +1807,7 @@ function MturkRequiredPage({ uiText }) {
   return (
     <main className="page-shell" data-region-id="mturk-required-screen">
       <section className="study-card completion-card" data-region-id="mturk-required-card">
-        <h1 data-region-id="mturk-required-title">{uiText?.access?.mturkRequiredTitle ?? 'Please open this study from the MTurk HIT page.'}</h1>
+        <h1 data-region-id="mturk-required-title">{uiText?.access?.mturkRequiredTitle ?? 'Please open this study from the MTurk page.'}</h1>
         <p data-region-id="mturk-required-body">{uiText?.access?.mturkRequiredBody ?? 'This study requires a valid MTurk worker ID, assignment ID, and HIT ID. Please return to MTurk and use the survey link shown inside the HIT.'}</p>
       </section>
     </main>
@@ -1818,7 +1818,7 @@ function MturkPreviewPage({ uiText }) {
   return (
     <main className="page-shell" data-region-id="mturk-preview-screen">
       <section className="study-card completion-card" data-region-id="mturk-preview-card">
-        <h1 data-region-id="mturk-preview-title">{uiText?.access?.mturkPreviewTitle ?? 'Please accept the HIT before starting the study.'}</h1>
+        <h1 data-region-id="mturk-preview-title">{uiText?.access?.mturkPreviewTitle ?? 'Please accept the study before starting the study.'}</h1>
         <p data-region-id="mturk-preview-body">{uiText?.access?.mturkPreviewBody ?? 'You are currently previewing this HIT. After you accept it on MTurk, this study will open with your assignment information and you can begin.'}</p>
       </section>
     </main>
