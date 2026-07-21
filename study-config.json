@@ -6,5 +6,5 @@
   "submissionToken": "b061b884-b3f3-4437-9e88-96bd64576527",
   "requireMturkParams": true,
   "autoRedirectToQualtrics": false,
-  "debugMode": false
+  "debugMode": true
 }

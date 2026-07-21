@@ -244,7 +244,7 @@
   },
   "completion": {
     "title": "Please continue to the survey.",
-    "saveBeforeSubmit": "Your study responses must be saved before you can submit this HIT.",
+    "saveBeforeSubmit": "Your study responses must be saved before you can submit.",
     "keepOpen": "Keep this page open. The survey opens in a new tab.",
     "saving": "Saving responses...",
     "saveFailed": "Responses could not be saved. Please retry before continuing.",
