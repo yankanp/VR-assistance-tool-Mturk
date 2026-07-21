@@ -28,7 +28,7 @@
         "check_id":  "ac_repeat_vr_view",
         "type":  "dashboard_click",
         "question_type":  "attention_repetition",
-        "prompt":  "Before helping the user, you want to see exactly what the user is looking at right now. Click the part of the screen that shows what the user is currently viewing",
+        "prompt":  "Before helping the user, you want to see exactly what the user is looking at right now. Click the part of the screen that shows what the user is currently viewing.",
         "screen_variant":  "default",
         "order":  2,
         "correct_answers":  [
