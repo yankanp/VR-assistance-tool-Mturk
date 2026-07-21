@@ -1707,7 +1707,7 @@ function CompletionPage({
       <section className="study-card completion-card" data-region-id="completion-card">
         <h1 data-region-id="completion-title">{uiText?.completion?.title ?? 'Please continue to the survey.'}</h1>
         {debugMode && <p className="debug-mode-banner" data-region-id="completion-debug-banner">Debug mode is enabled. MTurk code validation is bypassed.</p>}
-        <p data-region-id="completion-save-instruction">{uiText?.completion?.saveBeforeSubmit ?? 'Your study responses must be saved before you can submit this HIT.'}</p>
+        <p data-region-id="completion-save-instruction">{uiText?.completion?.saveBeforeSubmit ?? 'Your study responses must be saved before you can submit.'}</p>
         {!debugMode && <p data-region-id="completion-keep-open-instruction">{uiText?.completion?.keepOpen ?? 'Keep this page open. The survey opens in a new tab.'}</p>}
         <div className="completion-actions" data-region-id="completion-actions">
           {(metricsSaveStatus === 'idle' || metricsSaveStatus === 'saving') && (
