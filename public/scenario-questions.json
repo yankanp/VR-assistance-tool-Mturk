@@ -11,7 +11,7 @@
     "questions": [
       {
         "question_id": "cargo_q1_vr_view",
-        "prompt": "Before helping the user, you want to see exactly what the user is looking at right now. Click the part of the screen that shows what the user is currently viewing.",
+        "prompt": "Before helping the user, you want to see exactly what the user is looking at right now. Click the part of the screen that shows what the user is currently viewing. ",
         "question_type": "main",
         "screen_variant": "default",
         "order": 1,
@@ -19,7 +19,7 @@
       },
       {
         "question_id": "cargo_q2_point_barrel",
-        "prompt": "Click the part of the screen that you would use to mark in their virtual world, so a directional arrow appears above the barrel, showing exactly where to look.",
+        "prompt": "Click the part of the screen that you would use to mark an object in their virtual world so that an arrow appears above the barrel, showing exactly where the user should look.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 2,
@@ -27,7 +27,7 @@
       },
       {
         "question_id": "cargo_q3_next_activity",
-        "prompt": "After moving the barrels, the user asks, \"what is the next activity?\" Click the part of the screen that lets you see the next activity.",
+        "prompt": "After moving the barrels, the user asks, \"What is the next activity?\" Click the part of the screen that lets you see the next activity.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 3,
@@ -47,7 +47,7 @@
     "questions": [
       {
         "question_id": "sail_q1_controller_buttons",
-        "prompt": "Before helping the user, you want to know which controller button to press to raise the sail. Click the part of the screen that shows which controller button(s) to press to raise the sail.",
+        "prompt": "Before helping the user, you want to know which controller button(s) to press to raise the sail. Click the part of the screen that shows which controller button(s) to press to raise the sail.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 1,
@@ -55,7 +55,7 @@
       },
       {
         "question_id": "sail_q2_hand_movement_video",
-        "prompt": "You want to see how to move the hands to raise the sail. Click the part of the screen that lets you watch the hand movement and controller buttons needed to raise the sail.",
+        "prompt": "You want to see how the user should move their hands to raise the sail. Click the part of the screen that lets you watch the hand movement and controller button(s) needed to raise the sail.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 2,
@@ -63,7 +63,7 @@
       },
       {
         "question_id": "sail_q3_send_hand_video",
-        "prompt": "The user says they don't understand how to raise the sail. You decide to show them a video demonstrating the required hand movements and the controller buttons needed to raise the sail. Click the part of the screen that lets you send the video showing how to move the hands and controller button(s) to press to raise the sail.",
+        "prompt": "The user says that they don’t understand how to raise the sail. You decide to show them a video demonstrating the required hand movements and the controller button(s) needed to raise the sail. Click the part of the screen that lets you send the video showing how the user should move their hands and which controller button(s) to press to raise the sail.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 3,
@@ -105,7 +105,7 @@
       },
       {
         "question_id": "harpoon_q3_clear_drawing",
-        "prompt": "The user sees the drawing on their virtual world and no longer needs it. Click the part of the screen that lets you remove all drawings from the user's virtual world.",
+        "prompt": "The user sees the drawing in their virtual world and no longer needs it. Click the part of the screen that lets you remove all drawings from the user's virtual world. ",
         "question_type": "main",
         "screen_variant": "default",
         "order": 3,

@@ -68,15 +68,15 @@ def build_qualification_requirements(completed_qualification_id: str) -> list[di
         },
     ]
 
-    if STUDY.require_adult:
-        requirements.append(
-            {
-                "QualificationTypeId": WORKER_ADULT_QUALIFICATION_ID,
-                "Comparator": "EqualTo",
-                "IntegerValues": [1],
-                "ActionsGuarded": "DiscoverPreviewAndAccept",
-            }
-        )
+    # if STUDY.require_adult:
+    #     requirements.append(
+    #         {
+    #             "QualificationTypeId": WORKER_ADULT_QUALIFICATION_ID,
+    #             "Comparator": "EqualTo",
+    #             "IntegerValues": [1],
+    #             "ActionsGuarded": "DiscoverPreviewAndAccept",
+    #         }
+    #     )
 
     return requirements
 
