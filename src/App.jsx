@@ -518,6 +518,7 @@ function buildMetricsPayload(session, config) {
     attention_passed: session.attention_passed,
     completion_code: session.completion_code || '',
     completion_code_prefix: config?.completionCodePrefix ?? 'VRHELP',
+    submission_token: config?.submissionToken ?? '',
     qualtrics_redirect_url: session.qualtrics_redirect_url || '',
     study_name: config?.studyName ?? '',
     generated_at: getIsoTimestamp(),

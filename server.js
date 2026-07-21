@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import http from 'node:http';
 import { randomBytes } from 'node:crypto';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
@@ -10,6 +11,8 @@ const port = Number(process.env.PORT || 5174);
 const distDir = path.join(__dirname, 'dist');
 const dataDir = path.join(__dirname, 'data', 'sessions');
 const allowedOrigin = process.env.CORS_ORIGIN || '*';
+const adminToken = process.env.ADMIN_TOKEN || '';
+const studySubmissionToken = process.env.STUDY_SUBMISSION_TOKEN || '';
 
 const contentTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -31,7 +34,7 @@ function sendJson(response, statusCode, body) {
     'Content-Type': 'application/json; charset=utf-8',
     'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   });
   response.end(JSON.stringify(body));
 }
@@ -40,10 +43,43 @@ function sendCorsPreflight(response) {
   response.writeHead(204, {
     'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Max-Age': '86400',
   });
   response.end();
+}
+
+function getBearerToken(request) {
+  const header = request.headers.authorization || '';
+  const match = header.match(/^Bearer\s+(.+)$/i);
+  return match ? match[1].trim() : '';
+}
+
+function getAdminTokenFromRequest(request, url) {
+  return getBearerToken(request) || url.searchParams.get('adminToken') || '';
+}
+
+function requireAdmin(request, response, url) {
+  if (!adminToken) {
+    sendJson(response, 503, {
+      ok: false,
+      error: 'Admin access is disabled because ADMIN_TOKEN is not configured on the backend.',
+    });
+    return false;
+  }
+
+  if (getAdminTokenFromRequest(request, url) !== adminToken) {
+    sendJson(response, 401, { ok: false, error: 'Unauthorized' });
+    return false;
+  }
+
+  return true;
+}
+
+function isSubmissionTokenValid(payload, request) {
+  if (!studySubmissionToken) return true;
+  return payload.submission_token === studySubmissionToken
+    || request.headers['x-study-submission-token'] === studySubmissionToken;
 }
 
 function sanitizeFilePart(value) {
@@ -134,7 +170,13 @@ async function saveSession(request, response) {
   try {
     const body = await readRequestBody(request);
     const payload = JSON.parse(body);
+    const { submission_token: _submissionToken, ...payloadForStorage } = payload;
     const completionPrefix = payload.completion_code_prefix || 'VRHELP';
+
+    if (!isSubmissionTokenValid(payload, request)) {
+      sendJson(response, 401, { ok: false, error: 'Invalid study submission token.' });
+      return;
+    }
 
     if (payload.completion_status === 'completed' && !isCompletedPayloadValid(payload)) {
       sendJson(response, 400, {
@@ -148,7 +190,7 @@ async function saveSession(request, response) {
       ? payload.completion_code || await findExistingCompletionCode(payload.session_id) || createCompletionCode(completionPrefix)
       : '';
     const payloadToSave = {
-      ...payload,
+      ...payloadForStorage,
       completion_code: generatedCompletionCode,
       rows: Array.isArray(payload.rows)
         ? payload.rows
@@ -755,27 +797,32 @@ const server = http.createServer(async (request, response) => {
   }
 
   if (request.method === 'GET' && url.pathname === '/api/export') {
+    if (!requireAdmin(request, response, url)) return;
     await exportMetrics(response);
     return;
   }
 
   if (request.method === 'GET' && url.pathname === '/api/session-json') {
+    if (!requireAdmin(request, response, url)) return;
     await listSessionJsonFiles(response);
     return;
   }
 
   if (request.method === 'GET' && url.pathname === '/api/session-json-all') {
+    if (!requireAdmin(request, response, url)) return;
     await downloadAllSessionJson(response);
     return;
   }
 
   if (request.method === 'GET' && url.pathname.startsWith('/api/session-json/')) {
+    if (!requireAdmin(request, response, url)) return;
     const filename = decodeURIComponent(url.pathname.slice('/api/session-json/'.length));
     await downloadSessionJson(response, filename);
     return;
   }
 
   if (request.method === 'GET' && url.pathname === '/api/sessions') {
+    if (!requireAdmin(request, response, url)) return;
     await listSessions(response);
     return;
   }

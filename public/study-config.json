@@ -3,7 +3,8 @@
   "qualtricsRedirectUrl": "https://uri.co1.qualtrics.com/jfe/form/SV_6kY4lKaetR6QLzg",
   "metricsApiBaseUrl": "https://18-209-23-25.sslip.io",
   "completionCodePrefix": "VRHELP",
+  "submissionToken": "b061b884-b3f3-4437-9e88-96bd64576527",
   "requireMturkParams": true,
   "autoRedirectToQualtrics": false,
-  "debugMode": true
+  "debugMode": false
 }
