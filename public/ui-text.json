@@ -52,7 +52,7 @@
         "type": "list",
         "items": [
           "The purpose of this study is to understand whether people using a helper tool for the first time can understand how to use it to provide real-time assistance to a person using a single-user virtual reality application.",
-          "If you choose to participate, you will interact with a web application designed to help a person using virtual reality application. You will then be asked a few questions about your experience. This will take about 20 minutes.",
+          "If you choose to participate, you will interact with a web application designed to help a person using a virtual reality application. You will then be asked a few questions about your experience. This will take about 20 minutes.",
           "Risks or discomfort from this research are expected to be minimal.",
           "The study will have no direct benefits to you.",
           "You will be paid $4 for your participation.",
@@ -73,7 +73,7 @@
       },
       {
         "type": "text",
-        "text": "You are being asked to be in this study in order to evaluate understandability of a helper tool. In order to participate you must at least 18 years old."
+        "text": "You are being asked to be in this study in order to evaluate the understandability of a helper tool. In order to participate you must at least be 18 years old."
       },
       {
         "type": "heading",
@@ -89,11 +89,11 @@
       },
       {
         "type": "text",
-        "text": "If you agree to participate, you will first read a brief introduction explaining the purpose of the study and your role. You will then complete a series of scenario-based questions about the helper. For each question, you will see the helper tool and your task is to click the part of the helper tool that best answers the question. The helper tool includes several regions, after you click a region, the selected region will be highlighted. You may change your selection before moving to the next question. Only your final selected region for each question will be recorded as your answer. You will not be told whether each answer is correct during the study."
+        "text": "If you agree to participate, you will first read a brief introduction explaining the purpose of the study and your role. You will then complete a series of scenario-based questions about the helper tool. For each question, you will see the helper tool and your task is to click the part of the helper tool that best answers the question. The helper tool includes several regions, after you click a region, the selected region will be highlighted. You may change your selection before moving to the next question. Only your final selected region for each question will be recorded as your answer. You will not be told whether each answer is correct during the study."
       },
       {
         "type": "text",
-        "text": "Afterward, you will be asked to complete a short survey with questions your experience using the helper tool as well as a few demographics questions such as age, gender, and prior VR experience. Your answers to the survey will not affect your compensation in any way. At the end of the survey, you will receive a completion code. You will copy and paste this code into Amazon Mechanical Turk to receive payment for completing the study."
+        "text": "Afterward, you will be asked to complete a short survey with questions about your experience using the helper tool as well as a few demographic questions such as age, gender, and prior VR experience. Your answers to the survey will not affect your compensation in any way. At the end of the survey, you will receive a completion code. You will copy and paste this code into Amazon Mechanical Turk to receive payment for completing the study."
       },
       {
         "type": "heading",
@@ -153,11 +153,11 @@
       },
       {
         "type": "text",
-        "text": "The data will be stored electronically through a secure server and will only be seen by the research team during the study and for 5 years or longer after the study is complete."
+        "text": "The data will be stored electronically on a secure server and will only be seen by the research team during the study and for 5 years or longer after the study is complete."
       },
       {
         "type": "text",
-        "text": "The only persons who will have access to your research records are the study personnel, the Institutional Review Board (IRB), and any other person, agency, or sponsor as required by law. The information from this study may be published in scientific journals or presented at scientific meetings but the data will be reported as group or summarized data and your identity will be kept strictly confidential."
+        "text": "The only persons who will have access to your research records are the study personnel, the Institutional Review Board (IRB), and any other person, agency, or sponsor as required by law. The information from this study may be published in scientific journals or presented at scientific meetings but the data will be reported as grouped or summarized data and your identity will be kept strictly confidential."
       },
       {
         "type": "heading",

@@ -29,9 +29,9 @@
           "sceneName": "Beat1",
           "objectPath": "Start Menu/FlatUnityCanvas/Canvas/Debug Menu Opener",
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-0-object-1.png",
-            "leftVideoUrl": "video/controller/task-0-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-0-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/trigger.png",
+            "leftVideoUrl": "video/controller/trigger-left.mp4",
+            "rightVideoUrl": "video/controller/trigger-right.mp4"
           }
         }
       ],
@@ -68,9 +68,9 @@
           "sceneName": "Beat1",
           "objectPath": "FloatingDebrisPlatform/Bell/Bell Parent/SM_Bell",
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-1-object-1.png",
-            "leftVideoUrl": "video/controller/task-1-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-1-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
@@ -109,8 +109,8 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -135,8 +135,8 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -161,8 +161,8 @@
           "order": 3,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
@@ -201,8 +201,8 @@
           "objectPath": "Beat2_IslandAndJetty_VisibilitySet/Beat 2_Docks/DocksTeleports/Teleport Hotspot B2_S4/FX_Teleport_Pin",
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
@@ -335,8 +335,8 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -361,8 +361,8 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
@@ -399,9 +399,9 @@
           "sceneName": "Beat2",
           "objectPath": "Beat2_IslandAndJetty_VisibilitySet/Beat 2_Docks/UnhitchShip_Interaction/RopeSystem",
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-6-object-1.png",
-            "leftVideoUrl": "video/controller/task-6-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-6-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
@@ -440,8 +440,8 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -466,8 +466,8 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -492,8 +492,8 @@
           "order": 3,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
@@ -532,8 +532,8 @@
           },
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
@@ -570,9 +570,9 @@
           "sceneName": "Beat2",
           "objectPath": "Boat/DynamicBoat/SailControls (1)/RopeSystem/VerletRope",
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-9.png",
-            "leftVideoUrl": "video/controller/task-9-left.mp4",
-            "rightVideoUrl": "video/controller/task-9-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
@@ -609,9 +609,9 @@
           "sceneName": "Beat2",
           "objectPath": "Boat/DynamicBoat/SailControls (1)/SM_SailControlMechanisms/PROXY_CleatMesh/Knot",
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-10-object-1.png",
-            "leftVideoUrl": "video/controller/task-10-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-10-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
@@ -650,8 +650,8 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -671,15 +671,15 @@
           "objectPath": "Boat/DynamicBoat/SteeringWheel/Handle",
           "order": 2,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-11-object-2.png",
-            "leftVideoUrl": "video/controller/task-11-object-2-left.mp4",
-            "rightVideoUrl": "video/controller/task-11-object-2-right.mp4"
+            "thumbnail": "video/controller/thumbnails/steer.png",
+            "leftVideoUrl": "video/controller/steer-left.mp4",
+            "rightVideoUrl": "video/controller/steer-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-11.mov",
-        "thumbnail": "video/in-world-videos/thumbnails/task-11.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B2_S11",
@@ -713,8 +713,8 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -739,8 +739,8 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -765,14 +765,14 @@
           "order": 3,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-12.mov",
-        "thumbnail": "video/in-world-videos/thumbnails/task-12.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B3_S1"
@@ -804,14 +804,14 @@
           },
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-13.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-13.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B3_S2"
@@ -842,15 +842,15 @@
             }
           },
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-14-object-1.png",
-            "leftVideoUrl": "video/controller/task-14-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-14-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-14.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-14.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B3_S3"
@@ -883,8 +883,8 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -909,14 +909,14 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-15.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-15.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B3_S4"
@@ -949,8 +949,8 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -975,14 +975,14 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-16.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-16.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B3_S5",
@@ -1015,14 +1015,14 @@
           },
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-17.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-17.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B3_S7"
@@ -1054,9 +1054,9 @@
           },
           "order": 1,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-18-object-1.png",
-            "leftVideoUrl": "video/controller/task-18-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-18-object-1-left.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         },
         {
@@ -1076,9 +1076,9 @@
           },
           "order": 2,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-18-object-2.png",
-            "leftVideoUrl": "video/controller/task-18-object-2-left.mp4",
-            "rightVideoUrl": "video/controller/task-18-object-2-left.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         },
         {
@@ -1102,9 +1102,9 @@
           },
           "order": 3,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-18-object-3.png",
-            "leftVideoUrl": "video/controller/task-18-object-3-left.mp4",
-            "rightVideoUrl": "video/controller/task-18-object-3-left.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         },
         {
@@ -1128,9 +1128,9 @@
           },
           "order": 1,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-18-object-4.png",
-            "leftVideoUrl": "video/controller/task-18-object-4-left.mp4",
-            "rightVideoUrl": "video/controller/task-18-object-4-left.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         },
         {
@@ -1211,7 +1211,7 @@
         {
           "id": "Teleport Hotspot B4_S2",
           "label": "Teleport Hotspot B4_S2",
-          "icon": "img/object_icons/task_19_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot B4_S2/FX_Teleport_Pin",
           "controllerHints": {
@@ -1229,14 +1229,14 @@
           },
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-19.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-19.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B4_S1"
@@ -1267,15 +1267,15 @@
             }
           },
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-20-object-1.png",
-            "leftVideoUrl": "video/controller/task-20-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-20-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-20.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-20.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B4_S2"
@@ -1289,7 +1289,7 @@
         {
           "id": "Teleport Hotspot B4_S3",
           "label": "Teleport marker 1",
-          "icon": "img/object_icons/task_21_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot B4_S3/FX_Teleport_Pin",
           "controllerHints": {
@@ -1307,14 +1307,14 @@
           },
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-21.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-21.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B4_S2_2"
@@ -1328,7 +1328,7 @@
         {
           "id": "Teleport Hotspot Towards B4_S4 1",
           "label": "Teleport marker 1",
-          "icon": "img/object_icons/task_21_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S4 1/FX_Teleport_Pin",
           "controllerHints": {
@@ -1347,14 +1347,14 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
           "id": "Teleport Hotspot Towards B4_S4 2",
           "label": "Teleport marker 2",
-          "icon": "img/object_icons/task_21_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S4 2/FX_Teleport_Pin",
           "controllerHints": {
@@ -1373,14 +1373,14 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
           "id": "Teleport Hotspot B4_S4",
           "label": "Teleport marker 3",
-          "icon": "img/object_icons/task_21_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot B4_S4/FX_Teleport_Pin",
           "controllerHints": {
@@ -1399,14 +1399,14 @@
           "order": 3,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-22.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-22.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B4_S3"
@@ -1420,7 +1420,7 @@
         {
           "id": "Barrel-PROXY_CleatMesh",
           "label": "Secure rope",
-          "icon": "img/object_icons/task_23_object_1.png",
+          "icon": "img/object_icons/task_9_object_1.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/BarrelsForRopeSection/RopeSystem/VerletRope",
           "controllerHints": {
@@ -1437,15 +1437,15 @@
             }
           },
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-23-object-1.png",
-            "leftVideoUrl": "video/controller/task-23-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-23-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-23.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-23.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B4_S4"
@@ -1459,7 +1459,7 @@
         {
           "id": "Teleport Hotspot S4_S5_2",
           "label": "Teleport marker 1",
-          "icon": "img/object_icons/task_24_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot S4_S5_2/FX_Teleport_Pin",
           "controllerHints": {
@@ -1477,14 +1477,14 @@
           },
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-24.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-24.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B4_S5"
@@ -1498,7 +1498,7 @@
         {
           "id": "Teleport Hotspot Towards B4_S7 2",
           "label": "Teleport marker 1",
-          "icon": "img/object_icons/task_25_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S7 2/FX_Teleport_Pin",
           "controllerHints": {
@@ -1517,14 +1517,14 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
           "id": "Teleport Hotspot Towards B4_S7 3",
           "label": "Teleport marker 2",
-          "icon": "img/object_icons/task_25_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Teleport Hotspot Towards B4_S7 3/FX_Teleport_Pin",
           "controllerHints": {
@@ -1543,14 +1543,14 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
           "id": "Proxy Teleport Hotspot Towards B4_S7 4",
           "label": "Teleport marker 3",
-          "icon": "img/object_icons/task_25_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat3and4",
           "objectPath": "Narrative/Beat 4/Beat4Teleports/Proxy Teleport Hotspot Towards B4_S7 4/FX_Teleport_Pin",
           "controllerHints": {
@@ -1569,14 +1569,14 @@
           "order": 3,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-25.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-25.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B4_S5_2",
@@ -1594,7 +1594,7 @@
         {
           "id": "Teleport Hotspot B5_Towards_S2",
           "label": "Teleport marker 1",
-          "icon": "img/object_icons/task_26_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_Towards_S2/FX_Teleport_Pin",
           "controllerHints": {
@@ -1613,14 +1613,14 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
           "id": "Teleport Hotspot B5_Towards_S2_02",
           "label": "Teleport marker 2",
-          "icon": "img/object_icons/task_26_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_Towards_S2_02/FX_Teleport_Pin",
           "controllerHints": {
@@ -1639,14 +1639,14 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
           "id": "Teleport Hotspot B5_S2",
           "label": "Teleport marker 3",
-          "icon": "img/object_icons/task_26_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_S2/FX_Teleport_Pin",
           "controllerHints": {
@@ -1665,14 +1665,14 @@
           "order": 3,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-26.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-26.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B5_S1"
@@ -1686,7 +1686,7 @@
         {
           "id": "Teleport Hotspot B5_S3",
           "label": "Teleport marker 1",
-          "icon": "img/object_icons/task_27_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_S3/FX_Teleport_Pin",
           "controllerHints": {
@@ -1705,8 +1705,8 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -1730,15 +1730,15 @@
           },
           "order": 2,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-27-object-2.png",
-            "leftVideoUrl": "video/controller/task-27-object-2-left.mp4",
-            "rightVideoUrl": "video/controller/task-27-object-2-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-27.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-27.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B5_S2"
@@ -1752,7 +1752,7 @@
         {
           "id": "Teleport Hotspot B5_Towards_S4_01",
           "label": "Teleport marker 1",
-          "icon": "img/object_icons/task_28_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_Towards_S4_01/FX_Teleport_Pin",
           "controllerHints": {
@@ -1771,14 +1771,14 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
           "id": "Proxy Teleport Hotspot B5_S4",
           "label": "Teleport marker 2",
-          "icon": "img/object_icons/task_28_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Proxy Teleport Hotspot B5_S4/FX_Teleport_Pin",
           "controllerHints": {
@@ -1797,14 +1797,14 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-28.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-28.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B5_S3"
@@ -1818,7 +1818,7 @@
         {
           "id": "Teleport Hotspot B5_S5",
           "label": "Teleport marker 1",
-          "icon": "img/object_icons/task_29_object_1.png",
+          "icon": "img/object_icons/teleportation.png",
           "sceneName": "Beat5",
           "objectPath": "Narrative/Beat 5/Beat5Teleports/Teleport Hotspot B5_S5/FX_Teleport_Pin",
           "controllerHints": {
@@ -1836,14 +1836,14 @@
           },
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-29.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-29.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B5_S4"
@@ -1875,9 +1875,9 @@
           },
           "order": 1,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-30-object-1.png",
-            "leftVideoUrl": "video/controller/task-30-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-30-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         },
         {
@@ -1897,9 +1897,9 @@
           },
           "order": 2,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-30-object-2.png",
-            "leftVideoUrl": "video/controller/task-30-object-2-left.mp4",
-            "rightVideoUrl": "video/controller/task-30-object-2-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         },
         {
@@ -1923,9 +1923,9 @@
           },
           "order": 1,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-30-object-3.png",
-            "leftVideoUrl": "video/controller/task-30-object-3-left.mp4",
-            "rightVideoUrl": "video/controller/task-30-object-3-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         },
         {
@@ -1945,9 +1945,9 @@
           },
           "order": 1,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-30-object-4.png",
-            "leftVideoUrl": "video/controller/task-30-object-4-left.mp4",
-            "rightVideoUrl": "video/controller/task-30-object-4-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         },
         {
@@ -1967,9 +1967,9 @@
           },
           "order": 1,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-30-object-5.png",
-            "leftVideoUrl": "video/controller/task-30-object-5-left.mp4",
-            "rightVideoUrl": "video/controller/task-30-object-5-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         },
         {
@@ -1989,9 +1989,9 @@
           },
           "order": 1,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-30-object-6.png",
-            "leftVideoUrl": "video/controller/task-30-object-6-left.mp4",
-            "rightVideoUrl": "video/controller/task-30-object-6-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         },
         {
@@ -2011,15 +2011,15 @@
           },
           "order": 1,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-30-object-7.png",
-            "leftVideoUrl": "video/controller/task-30-object-7-left.mp4",
-            "rightVideoUrl": "video/controller/task-30-object-7-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-30.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-30.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B5_S5",
@@ -2053,14 +2053,14 @@
           },
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-31.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-31.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B5_S5_4"
@@ -2093,8 +2093,8 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -2119,8 +2119,8 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -2145,8 +2145,8 @@
           "order": 3,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -2171,14 +2171,14 @@
           "order": 4,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-32.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-32.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B6_S1"
@@ -2211,8 +2211,8 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -2236,9 +2236,9 @@
           },
           "order": 2,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-33-object-2.png",
-            "leftVideoUrl": "video/controller/task-33-object-2-left.mp4",
-            "rightVideoUrl": "video/controller/task-33-object-2-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         },
         {
@@ -2263,14 +2263,14 @@
           "order": 3,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-33.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-33.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B6_S2",
@@ -2305,15 +2305,15 @@
             }
           },
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-34-object-1.png",
-            "leftVideoUrl": "video/controller/task-34-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-34-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-34.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-34.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B6_S4"
@@ -2346,15 +2346,15 @@
             }
           },
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-35-object-1.png",
-            "leftVideoUrl": "video/controller/task-35-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-35-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-35.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-35.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B6_S4_2"
@@ -2385,15 +2385,15 @@
             }
           },
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-36-object-1.png",
-            "leftVideoUrl": "video/controller/task-36-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-36-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-36.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-36.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B6_S4_3_InitialDrop",
@@ -2421,15 +2421,15 @@
             }
           },
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-37-object-1.png",
-            "leftVideoUrl": "video/controller/task-37-object-1-left.mp4",
-            "rightVideoUrl": "video/controller/task-37-object-1-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-37.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-37.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B6_S4_3_OceanDescent"
@@ -2462,8 +2462,8 @@
           "order": 1,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -2488,8 +2488,8 @@
           "order": 2,
           "demoVideoPhysicalworld": {
             "thumbnail": "video/controller/thumbnails/teleport.png",
-            "leftVideoUrl": "video/controller/teleport-left.mov",
-            "rightVideoUrl": "video/controller/teleport-right.mov"
+            "leftVideoUrl": "video/controller/teleport-left.mp4",
+            "rightVideoUrl": "video/controller/teleport-right.mp4"
           }
         },
         {
@@ -2509,15 +2509,15 @@
           },
           "order": 3,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/task-38-object-3.png",
-            "leftVideoUrl": "video/controller/task-38-object-3-left.mp4",
-            "rightVideoUrl": "video/controller/task-38-object-3-right.mp4"
+            "thumbnail": "video/controller/thumbnails/grip.png",
+            "leftVideoUrl": "video/controller/grip-left.mp4",
+            "rightVideoUrl": "video/controller/grip-right.mp4"
           }
         }
       ],
       "demoVideoInworld": {
-        "file": "video/in-world-videos/task-38.mp4",
-        "thumbnail": "video/in-world-videos/thumbnails/task-38.png"
+        "file": "video/in-world-videos/temp.mov",
+        "thumbnail": "video/in-world-videos/thumbnails/temp.png"
       },
       "unityTaskIds": [
         "B6_S4_4",
