@@ -1619,7 +1619,7 @@ function MainQuestionPage({ question, questionIndex, totalQuestions, selectedReg
       <header className="question-bar" data-region-id="question-panel">
         <div data-region-id="question-text-area">
           <p className="eyebrow" data-region-id="question-progress">{formatTextTemplate(uiText?.question?.progressTemplate ?? 'Question {current} of {total}', { current: questionIndex + 1, total: totalQuestions })}</p>
-          {question.scenario_text ? (
+          {question.scenario_text && !question.hide_scenario_text ? (
             <p className="scenario-context" data-region-id="question-scenario-text">{question.scenario_text}</p>
           ) : null}
           <h1 data-region-id="question-prompt">{question.prompt}</h1>

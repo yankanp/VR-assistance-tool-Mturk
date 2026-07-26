@@ -30,6 +30,7 @@
         "prompt": "After moving the barrels, the user asks, \"What is the next activity?\" Click the part of the screen that lets you see the next activity.",
         "question_type": "main",
         "screen_variant": "default",
+        "hide_scenario_text": true,
         "order": 3,
         "correct_answers": ["dropdown", "dropdown-value"]
       }
