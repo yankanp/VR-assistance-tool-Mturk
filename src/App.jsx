@@ -118,15 +118,31 @@ function shuffleWithSeed(items, seedValue) {
   return shuffled;
 }
 
-function makeDashboardAttentionQuestion(check) {
+function makeDashboardAttentionQuestion(check, scenarioContext = {}) {
   return {
+    ...scenarioContext,
     question_id: check.check_id,
     prompt: check.prompt,
     correct_answers: check.correct_answers || [],
     question_type: check.question_type || check.type,
-    screen_variant: check.screen_variant || 'default',
+    screen_variant: scenarioContext.screen_variant || check.screen_variant || 'default',
     is_attention_check: true,
     check_id: check.check_id,
+  };
+}
+
+function getScenarioContextForDashboardAttention(item) {
+  const question = item?.item ?? {};
+  return {
+    scenario_id: question.scenario_id || '',
+    scenario_text: question.scenario_text || '',
+    scenario_order_index: question.scenario_order_index || '',
+    scenario_question_index: question.scenario_question_index || '',
+    task_id: question.task_id,
+    task_order: question.task_order,
+    vr_view_image: question.vr_view_image,
+    object_view_images: question.object_view_images ?? [],
+    screen_variant: question.screen_variant || 'default',
   };
 }
 
@@ -165,7 +181,7 @@ function buildQuestionFlow(questions, attentionChecks, sessionId) {
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .map((check) => (
       check.type === 'dashboard_click'
-        ? { type: 'dashboard', id: check.check_id, item: makeDashboardAttentionQuestion(check), check }
+        ? { type: 'dashboard', id: check.check_id, item: null, check }
         : { type: 'attention_check', id: check.check_id, item: check }
     ));
 
@@ -174,15 +190,31 @@ function buildQuestionFlow(questions, attentionChecks, sessionId) {
   const slots = getAttentionInsertionSlots(mainItems.length, checkItems.length, sessionId);
   const flow = [];
   let checkIndex = 0;
+  let lastScenarioContext = {};
   mainItems.forEach((item, index) => {
     flow.push(item);
+    if (item.type === 'dashboard' && !item.item?.is_attention_check) {
+      lastScenarioContext = getScenarioContextForDashboardAttention(item);
+    }
     while (slots[checkIndex] === index + 1) {
-      flow.push(checkItems[checkIndex]);
+      const checkItem = checkItems[checkIndex];
+      flow.push(checkItem.type === 'dashboard'
+        ? {
+          ...checkItem,
+          item: makeDashboardAttentionQuestion(checkItem.check, lastScenarioContext),
+        }
+        : checkItem);
       checkIndex += 1;
     }
   });
   while (checkIndex < checkItems.length) {
-    flow.push(checkItems[checkIndex]);
+    const checkItem = checkItems[checkIndex];
+    flow.push(checkItem.type === 'dashboard'
+      ? {
+        ...checkItem,
+        item: makeDashboardAttentionQuestion(checkItem.check, lastScenarioContext),
+      }
+      : checkItem);
     checkIndex += 1;
   }
   return flow;
@@ -679,6 +711,44 @@ function isCorrectRegionSelection(selectedRegionId, correctRegionIds, selectedBa
   return false;
 }
 
+function HarpoonInfoText({ text, textKey, openInfoKey, setOpenInfoKey, description }) {
+  const value = String(text ?? '');
+  const match = value.match(/harpoon/i);
+  if (!match) return value;
+
+  const before = value.slice(0, match.index);
+  const term = value.slice(match.index, match.index + match[0].length);
+  const after = value.slice(match.index + match[0].length);
+  const isOpen = openInfoKey === textKey;
+
+  return (
+    <>
+      {before}
+      <span className="harpoon-term-wrap">
+        <span>{term}</span>
+        <button
+          type="button"
+          className="harpoon-info-button"
+          aria-label="What is a harpoon?"
+          aria-expanded={isOpen}
+          onClick={(event) => {
+            event.stopPropagation();
+            setOpenInfoKey((valueKey) => valueKey === textKey ? '' : textKey);
+          }}
+        >
+          <img src={assetUrl('img/button_icons/info.png')} alt="" aria-hidden="true" />
+        </button>
+        {isOpen && (
+          <span className="harpoon-info-tooltip" role="tooltip">
+            {description}
+          </span>
+        )}
+      </span>
+      {after}
+    </>
+  );
+}
+
 function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, metadata, resetKey, uiText, scenarioConfig = {} }) {
   const tasks = metadata?.tasks ?? [];
   const dashboardText = uiText?.dashboard ?? {};
@@ -1076,7 +1146,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
               alt=""
               aria-hidden="true"
             />
-            <span className="task-select-chevron" aria-hidden="true">v</span>
+            <span className="task-select-chevron" aria-hidden="true" />
           </button>
         </div>
         {isTaskDropdownOpen && (
@@ -1613,6 +1683,19 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
 }
 function MainQuestionPage({ question, questionIndex, totalQuestions, selectedRegionId, onRegionClick, onNext, metadata, uiText }) {
   const selectedLabel = selectedRegionId ? getRegionFeedbackLabel(selectedRegionId, uiText) : '';
+  const [openHarpoonInfoKey, setOpenHarpoonInfoKey] = useState('');
+  const harpoonDescription = uiText?.question?.harpoonDescription
+    ?? 'A harpoon is a spear-like tool used to catch or pull objects from a distance.';
+
+  useEffect(() => {
+    if (!openHarpoonInfoKey) return undefined;
+    function closeHarpoonInfo(event) {
+      if (event.target?.closest?.('.harpoon-term-wrap')) return;
+      setOpenHarpoonInfoKey('');
+    }
+    document.addEventListener('click', closeHarpoonInfo);
+    return () => document.removeEventListener('click', closeHarpoonInfo);
+  }, [openHarpoonInfoKey]);
 
   return (
     <main className="study-interaction-page" data-region-id="question-screen">
@@ -1620,9 +1703,25 @@ function MainQuestionPage({ question, questionIndex, totalQuestions, selectedReg
         <div data-region-id="question-text-area">
           <p className="eyebrow" data-region-id="question-progress">{formatTextTemplate(uiText?.question?.progressTemplate ?? 'Question {current} of {total}', { current: questionIndex + 1, total: totalQuestions })}</p>
           {question.scenario_text && !question.hide_scenario_text ? (
-            <p className="scenario-context" data-region-id="question-scenario-text">{question.scenario_text}</p>
+            <p className="scenario-context" data-region-id="question-scenario-text">
+              <HarpoonInfoText
+                text={question.scenario_text}
+                textKey={`${question.question_id}-scenario`}
+                openInfoKey={openHarpoonInfoKey}
+                setOpenInfoKey={setOpenHarpoonInfoKey}
+                description={harpoonDescription}
+              />
+            </p>
           ) : null}
-          <h1 data-region-id="question-prompt">{question.prompt}</h1>
+          <h1 data-region-id="question-prompt">
+            <HarpoonInfoText
+              text={question.prompt}
+              textKey={`${question.question_id}-prompt`}
+              openInfoKey={openHarpoonInfoKey}
+              setOpenInfoKey={setOpenHarpoonInfoKey}
+              description={harpoonDescription}
+            />
+          </h1>
           <p className={`selection-feedback ${selectedRegionId ? 'has-selection' : ''}`} data-region-id="question-selection-feedback">
             {selectedRegionId ? (
               <>

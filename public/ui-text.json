@@ -227,6 +227,7 @@
     "progressTemplate": "Question {current} of {total}",
     "selectedTemplate": "You have selected {label}, highlighted in yellow.",
     "noSelection": "Select anywhere on the tool.",
+    "harpoonDescription": "A harpoon is a spear-like tool used to catch or pull objects from a distance.",
     "nextButton": "Next"
   },
   "inlineAttention": {
@@ -279,7 +280,7 @@
     "clearObjects": "Remove highlight",
     "send": "Show user this video",
     "removeVideo": "Remove video for user",
-    "physicalActionTitle":"Button(s) and how to move hands",
+    "physicalActionTitle":"How to move hands",
     "vrViewLabel": "VR user's current view",
     "tooltips": {
       "objects": "Use these buttons to point the user toward a virtual object and highlight it in the virtual world.",

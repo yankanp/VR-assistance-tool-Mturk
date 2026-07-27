@@ -19,7 +19,7 @@
       },
       {
         "question_id": "cargo_q2_point_barrel",
-        "prompt": "Click the part of the screen that you would use to mark an object in their virtual world so that an arrow appears above the barrel, showing exactly where the user should look.",
+        "prompt": "Click the part of the screen that you would use to highlight the barrel in their virtual world so that an arrow appears above the barrel, showing exactly where the user should look.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 2,
@@ -56,7 +56,7 @@
       },
       {
         "question_id": "sail_q2_hand_movement_video",
-        "prompt": "You want to see how the user should move their hands to raise the sail. Click the part of the screen that lets you watch the hand movement and controller button(s) needed to raise the sail.",
+        "prompt": "You want to see how the user should move their hands to raise the sail. Click the part of the screen that lets you watch a video showing the hand movement and controller button(s) needed to raise the sail.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 2,
