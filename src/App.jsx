@@ -1308,7 +1308,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
                 playsInline
               />
             )}
-            <span className="vr-sent-play">â–¶</span>
+            <span className="vr-sent-play" aria-hidden="true"><span className="play-icon-shape" /></span>
           </div>
         )}
       </section>
@@ -1387,7 +1387,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             )}
             {hasControllerVideo && (
               <div className="study-video-controls" aria-hidden="true">
-                <span className="play-symbol">{isControllerVideoPlaying ? 'â…¡' : 'â–¶'}</span>
+                <span className="play-symbol"><span className={isControllerVideoPlaying ? 'pause-icon-shape' : 'play-icon-shape'} /></span>
                 <span className="video-progress-track">
                   <span className="video-progress-fill" style={{ width: `${controllerVideoProgress}%` }} />
                 </span>
@@ -1552,7 +1552,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           )}
           {demoVideoUrl && (
             <div className="study-video-controls" aria-hidden="true">
-              <span className="play-symbol">{isDemoVideoPlaying ? 'â…¡' : 'â–¶'}</span>
+              <span className="play-symbol"><span className={isDemoVideoPlaying ? 'pause-icon-shape' : 'play-icon-shape'} /></span>
               <span className="video-progress-track">
                 <span className="video-progress-fill" style={{ width: `${demoVideoProgress}%` }} />
               </span>

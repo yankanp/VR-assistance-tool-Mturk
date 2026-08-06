@@ -2257,3 +2257,38 @@ button:disabled {
 .tablet-frame .sim-dashboard [aria-label="Current activity controller guidance"] {
   margin-left: 0.4rem;
 }
+
+.play-icon-shape {
+  width: 0;
+  height: 0;
+  border-top: 0.48em solid transparent;
+  border-bottom: 0.48em solid transparent;
+  border-left: 0.72em solid currentColor;
+  margin-left: 0.12em;
+}
+
+.pause-icon-shape {
+  position: relative;
+  display: inline-block;
+  width: 0.72em;
+  height: 0.9em;
+}
+
+.pause-icon-shape::before,
+.pause-icon-shape::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 0.24em;
+  height: 100%;
+  border-radius: 0.08em;
+  background: currentColor;
+}
+
+.pause-icon-shape::before {
+  left: 0;
+}
+
+.pause-icon-shape::after {
+  right: 0;
+}
