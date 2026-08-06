@@ -3,7 +3,7 @@ import Controller3DViewer from './controllers/Controller3DViewer';
 import './controllers/Controller3DViewer.css';
 
 const STORAGE_KEY = 'vr-helper-mturk-study-session';
-const CONSENT_VERSION = '2026-07-06';
+const CONSENT_VERSION = '2026-08-05';
 const FIXED_VR_VIEW_IMAGE = 'img/VR_user_current_view_screenshots/task-18-no-annotation.png';
 const CURRENT_TASK_ORDER = 18;
 
@@ -1308,7 +1308,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
                 playsInline
               />
             )}
-            <span className="vr-sent-play">▶</span>
+            <span className="vr-sent-play">â–¶</span>
           </div>
         )}
       </section>
@@ -1387,7 +1387,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
             )}
             {hasControllerVideo && (
               <div className="study-video-controls" aria-hidden="true">
-                <span className="play-symbol">{isControllerVideoPlaying ? 'Ⅱ' : '▶'}</span>
+                <span className="play-symbol">{isControllerVideoPlaying ? 'â…¡' : 'â–¶'}</span>
                 <span className="video-progress-track">
                   <span className="video-progress-fill" style={{ width: `${controllerVideoProgress}%` }} />
                 </span>
@@ -1552,7 +1552,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           )}
           {demoVideoUrl && (
             <div className="study-video-controls" aria-hidden="true">
-              <span className="play-symbol">{isDemoVideoPlaying ? 'Ⅱ' : '▶'}</span>
+              <span className="play-symbol">{isDemoVideoPlaying ? 'â…¡' : 'â–¶'}</span>
               <span className="video-progress-track">
                 <span className="video-progress-fill" style={{ width: `${demoVideoProgress}%` }} />
               </span>
@@ -2510,3 +2510,4 @@ export default function App() {
 
   return null;
 }
+
