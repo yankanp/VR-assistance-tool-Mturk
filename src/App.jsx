@@ -247,8 +247,10 @@ function makeQualtricsUrl(config, participantParams, completionCode, sessionId) 
 }
 
 function makeExternalSubmitUrl(turkSubmitTo) {
-  const base = String(turkSubmitTo || '').replace(/\/+$/, '');
-  return base ? `${base}/mturk/externalSubmit` : '';
+  const raw = String(turkSubmitTo || '').trim();
+  if (!raw) return '';
+  const base = raw.replace(/\/+$/, '');
+  return base.endsWith('/mturk/externalSubmit') ? base : `${base}/mturk/externalSubmit`;
 }
 
 async function saveSessionMetrics(payload, metricsApiBaseUrl = '') {
@@ -1854,7 +1856,6 @@ function CompletionPage({
         {metricsSaveStatus === 'saved' && !debugMode && (
           <form className="mturk-submit-form" method="post" action={externalSubmitUrl} onSubmit={handleSubmitHit} data-region-id="completion-code-form">
             <input type="hidden" name="assignmentId" value={participantParams?.assignmentId || ''} />
-            <input type="hidden" name="completion_code" value={completionCode || ''} />
             <input type="hidden" name="session_id" value={sessionId || ''} />
             <input type="hidden" name="study_worker_id" value={participantParams?.workerId || ''} />
             <input type="hidden" name="study_hit_id" value={participantParams?.hitId || ''} />
@@ -1862,6 +1863,7 @@ function CompletionPage({
               <span>{uiText?.completion?.codeLabel ?? 'Completion code from Qualtrics'}</span>
               <input
                 data-region-id="completion_code_input"
+                name="completion_code"
                 value={enteredCode}
                 onChange={(event) => {
                   if (!enteredCode) {
@@ -2510,4 +2512,3 @@ export default function App() {
 
   return null;
 }
-
