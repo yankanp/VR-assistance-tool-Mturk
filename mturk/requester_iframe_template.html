@@ -2,9 +2,9 @@
 <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
 
 <crowd-form answer-format="flatten-objects" id="vrHelperMturkForm">
-  <input type="hidden" name="assignmentId" id="assignmentIdField" value="${assignmentId}" />
-  <input type="hidden" name="workerId" id="workerIdField" value="${workerId}" />
-  <input type="hidden" name="hitId" id="hitIdField" value="${hitId}" />
+  <input type="hidden" name="assignmentId" id="assignmentIdField" />
+  <input type="hidden" name="workerId" id="workerIdField" />
+  <input type="hidden" name="hitId" id="hitIdField" />
   <input type="hidden" name="completion_code" id="completionCodeField" required />
   <input type="hidden" name="session_id" id="sessionIdField" />
   <input type="hidden" name="study_status" id="studyStatusField" value="incomplete" />
@@ -13,7 +13,7 @@
     <iframe
       id="vrHelperStudyFrame"
       title="VR helper dashboard study"
-      src="https://yankanp.github.io/VR-assistance-tool-Mturk/?assignmentId=${assignmentId}&workerId=${workerId}&hitId=${hitId}&submitMode=parent"
+      src="about:blank"
       style="width:100%; height:900px; border:0; display:block;"
       allow="fullscreen"
     ></iframe>
@@ -31,11 +31,35 @@
 <script>
   (function () {
     var expectedOrigin = 'https://yankanp.github.io';
+    var studyUrl = 'https://yankanp.github.io/VR-assistance-tool-Mturk/';
     var submitted = false;
+
+    function getParam(name) {
+      var params = new URLSearchParams(window.location.search);
+      return params.get(name) || '';
+    }
 
     function setValue(id, value) {
       var element = document.getElementById(id);
       if (element) element.value = value || '';
+    }
+
+    var workerId = getParam('workerId');
+    var assignmentId = getParam('assignmentId');
+    var hitId = getParam('hitId');
+
+    setValue('assignmentIdField', assignmentId);
+    setValue('workerIdField', workerId);
+    setValue('hitIdField', hitId);
+
+    var frame = document.getElementById('vrHelperStudyFrame');
+    if (frame) {
+      var appUrl = new URL(studyUrl);
+      appUrl.searchParams.set('assignmentId', assignmentId);
+      appUrl.searchParams.set('workerId', workerId);
+      appUrl.searchParams.set('hitId', hitId);
+      appUrl.searchParams.set('submitMode', 'parent');
+      frame.src = appUrl.toString();
     }
 
     window.addEventListener('message', function (event) {
