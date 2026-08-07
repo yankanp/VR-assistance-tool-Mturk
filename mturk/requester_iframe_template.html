@@ -1,0 +1,63 @@
+<!-- Paste this into the MTurk Requester HTML editor. -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form answer-format="flatten-objects" id="vrHelperMturkForm">
+  <input type="hidden" name="assignmentId" id="assignmentIdField" value="${assignmentId}" />
+  <input type="hidden" name="workerId" id="workerIdField" value="${workerId}" />
+  <input type="hidden" name="hitId" id="hitIdField" value="${hitId}" />
+  <input type="hidden" name="completion_code" id="completionCodeField" required />
+  <input type="hidden" name="session_id" id="sessionIdField" />
+  <input type="hidden" name="study_status" id="studyStatusField" value="incomplete" />
+
+  <div id="studyShell" style="width:100%; min-height:900px; margin:0; padding:0;">
+    <iframe
+      id="vrHelperStudyFrame"
+      title="VR helper dashboard study"
+      src="https://yankanp.github.io/VR-assistance-tool-Mturk/?assignmentId=${assignmentId}&workerId=${workerId}&hitId=${hitId}&submitMode=parent"
+      style="width:100%; height:900px; border:0; display:block;"
+      allow="fullscreen"
+    ></iframe>
+  </div>
+
+  <p id="submitStatus" style="display:none; font:16px Arial, sans-serif; margin:12px 0; color:#1f2937;">
+    Submitting your HIT...
+  </p>
+
+  <button id="hiddenSubmitButton" type="submit" style="display:none;">
+    Submit HIT
+  </button>
+</crowd-form>
+
+<script>
+  (function () {
+    var expectedOrigin = 'https://yankanp.github.io';
+    var submitted = false;
+
+    function setValue(id, value) {
+      var element = document.getElementById(id);
+      if (element) element.value = value || '';
+    }
+
+    window.addEventListener('message', function (event) {
+      if (event.origin !== expectedOrigin || submitted) return;
+
+      var data = event.data || {};
+      if (data.type !== 'vr-helper-mturk-complete') return;
+      if (!data.completion_code || !data.assignmentId) return;
+
+      submitted = true;
+      setValue('completionCodeField', data.completion_code);
+      setValue('sessionIdField', data.session_id);
+      setValue('assignmentIdField', data.assignmentId);
+      setValue('workerIdField', data.workerId);
+      setValue('hitIdField', data.hitId);
+      setValue('studyStatusField', 'completed');
+
+      var status = document.getElementById('submitStatus');
+      if (status) status.style.display = 'block';
+
+      var button = document.getElementById('hiddenSubmitButton');
+      if (button) button.click();
+    });
+  })();
+</script>

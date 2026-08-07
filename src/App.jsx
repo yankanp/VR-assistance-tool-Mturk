@@ -40,6 +40,7 @@ function getUrlParams() {
     assignmentId: params.get('assignmentId') ?? '',
     hitId: params.get('hitId') ?? '',
     turkSubmitTo: params.get('turkSubmitTo') ?? '',
+    submitMode: params.get('submitMode') ?? '',
     participant_id: params.get('participant_id') ?? '',
   };
 }
@@ -238,6 +239,7 @@ function makeQualtricsUrl(config, participantParams, completionCode, sessionId) 
     if (participantParams.assignmentId) url.searchParams.set('assignmentId', participantParams.assignmentId);
     if (participantParams.hitId) url.searchParams.set('hitId', participantParams.hitId);
     if (participantParams.turkSubmitTo) url.searchParams.set('turkSubmitTo', participantParams.turkSubmitTo);
+    if (participantParams.submitMode) url.searchParams.set('submitMode', participantParams.submitMode);
     url.searchParams.set('session_id', sessionId);
     url.searchParams.set('completion_code', completionCode);
     return url.toString();
@@ -251,6 +253,10 @@ function makeExternalSubmitUrl(turkSubmitTo) {
   if (!raw) return '';
   const base = raw.replace(/\/+$/, '');
   return base.endsWith('/mturk/externalSubmit') ? base : `${base}/mturk/externalSubmit`;
+}
+
+function shouldSubmitThroughParent(participantParams) {
+  return String(participantParams?.submitMode || '').trim().toLowerCase() === 'parent';
 }
 
 async function saveSessionMetrics(payload, metricsApiBaseUrl = '') {
@@ -1769,12 +1775,16 @@ function CompletionPage({
 }) {
   const [enteredCode, setEnteredCode] = useState('');
   const [codeError, setCodeError] = useState('');
+  const [parentSubmitSent, setParentSubmitSent] = useState(false);
   const normalizedEnteredCode = enteredCode.trim().toUpperCase();
   const normalizedCompletionCode = String(completionCode || '').trim().toUpperCase();
+  const submitThroughParent = shouldSubmitThroughParent(participantParams);
+  const canReachMturkSubmit = submitThroughParent || Boolean(externalSubmitUrl);
   const canSubmitHit = metricsSaveStatus === 'saved'
-    && Boolean(externalSubmitUrl)
+    && canReachMturkSubmit
     && Boolean(normalizedCompletionCode)
-    && Boolean(normalizedEnteredCode);
+    && Boolean(normalizedEnteredCode)
+    && !parentSubmitSent;
 
   async function handleSubmitHit(event) {
     event.preventDefault();
@@ -1793,6 +1803,19 @@ function CompletionPage({
       await onSubmitCompletionCode?.(enteredCode, submitClick);
     } catch (error) {
       setCodeError(uiText?.completion?.saveFailed ?? 'Responses could not be saved. Please retry before continuing.');
+      return;
+    }
+
+    if (submitThroughParent) {
+      setParentSubmitSent(true);
+      window.parent?.postMessage({
+        type: 'vr-helper-mturk-complete',
+        completion_code: normalizedEnteredCode,
+        session_id: sessionId || '',
+        workerId: participantParams?.workerId || '',
+        assignmentId: participantParams?.assignmentId || '',
+        hitId: participantParams?.hitId || '',
+      }, '*');
       return;
     }
 
@@ -1880,9 +1903,11 @@ function CompletionPage({
               />
             </label>
             <button className="primary-action" type="submit" data-region-id="completion_code_submit_button" disabled={!canSubmitHit}>
-              {uiText?.completion?.submitHit ?? 'Submit HIT'}
+              {parentSubmitSent
+                ? (uiText?.completion?.submittingToMturk ?? 'Submitting to MTurk...')
+                : (uiText?.completion?.submitHit ?? 'Submit HIT')}
             </button>
-            {!externalSubmitUrl && (
+            {!canReachMturkSubmit && (
               <p className="save-error" data-region-id="completion-error-message">{uiText?.completion?.missingSubmitUrl ?? 'MTurk submit URL is missing. Please open this study from the MTurk page.'}</p>
             )}
             {codeError && <p className="save-error" data-region-id="completion-error-message">{codeError}</p>}
