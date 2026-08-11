@@ -1,7 +1,7 @@
 [
   {
     "scenario_id": "cargo_barrels",
-    "scenario_text": "The user is trying to roll the cargo barrels. They say, \"I can't find the barrel.\"",
+    "scenario_text": "The user wants to roll the cargo barrels and tells you that they can’t find them.",
     "task_order": 4,
     "vr_view_image": "img/VR_user_current_view_screenshots/task-4-no-annotation.png",
     "object_view_images": [
@@ -11,7 +11,7 @@
     "questions": [
       {
         "question_id": "cargo_q1_vr_view",
-        "prompt": "Before helping the user, you want to see exactly what the user is looking at right now. Click the part of the screen that shows what the user is currently viewing. ",
+        "prompt": "Click where the VR helper tool shows you what the user is currently viewing.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 1,
@@ -19,7 +19,7 @@
       },
       {
         "question_id": "cargo_q2_point_barrel",
-        "prompt": "Click the part of the screen that you would use to highlight the barrel in their virtual world and show directional guidance toward it, showing exactly where the user should look.",
+        "prompt": "Click where in the VR helper tool you can highlight a barrel for the user to help them find it.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 2,
@@ -27,7 +27,7 @@
       },
       {
         "question_id": "cargo_q3_next_activity",
-        "prompt": "After moving the barrels, the user asks, \"What is the next activity?\" Click the part of the screen that lets you see the next activity.",
+        "prompt": "Click where the VR helper tool lets you see the next activity.",
         "question_type": "main",
         "screen_variant": "default",
         "hide_scenario_text": true,
@@ -38,7 +38,7 @@
   },
   {
     "scenario_id": "raise_sail",
-    "scenario_text": "The user is trying to raise the sail. They say, \"I don't know how to do this.\"",
+    "scenario_text": "The user tries unsuccessfully to raise the ship’s sail and tells you that they don’t know how to do it.",
     "task_order": 9,
     "vr_view_image": "img/VR_user_current_view_screenshots/task-9-no-annotation.png",
     "object_view_images": [
@@ -48,7 +48,7 @@
     "questions": [
       {
         "question_id": "sail_q1_controller_buttons",
-        "prompt": "Before helping the user, you want to know which controller button(s) to press to raise the sail. Click the part of the screen that shows which controller button(s) to press to raise the sail.",
+        "prompt": "Click where the VR helper tool shows which controller button(s) the user needs to press to raise the sail.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 1,
@@ -56,7 +56,7 @@
       },
       {
         "question_id": "sail_q2_hand_movement_video",
-        "prompt": "You want to see how the user should move their hands to raise the sail. Click the part of the screen that lets you watch a video showing the hand movement and controller button(s) needed to raise the sail.",
+        "prompt": "Click where the VR helper tool lets you view which controller button(s) and arm movement(s) are needed to raise the sail.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 2,
@@ -64,7 +64,7 @@
       },
       {
         "question_id": "sail_q3_send_hand_video",
-        "prompt": "The user says that they don’t understand how to raise the sail. You decide to show them a video demonstrating the required hand movements and the controller button(s) needed to raise the sail. Click the part of the screen that lets you send the video showing how the user should move their hands and which controller button(s) to press to raise the sail.",
+        "prompt": "Click where the VR helper tool lets you send a video showing the necessary controller button(s) and arm movement(s) needed to raise the sail.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 3,
@@ -74,7 +74,7 @@
   },
   {
     "scenario_id": "harpoon",
-    "scenario_text": "The user is trying to use the harpoon. They say, \"I'm not sure what I'm supposed to do with the harpoon.\"",
+    "scenario_text": "The user wants to use the harpoon and tells you that they don’t know what they’re supposed to do with it.",
     "task_order": 18,
     "vr_view_image": "img/VR_user_current_view_screenshots/task-18-no-annotation.png",
     "object_view_images": [
@@ -90,7 +90,7 @@
     "questions": [
       {
         "question_id": "harpoon_q1_in_world_demo",
-        "prompt": "Before helping the user, you want to see how the harpoon is used inside the virtual world. Click the part of the screen that lets you watch a video showing how to use the harpoon in the virtual world.",
+        "prompt": "Click where the VR helper tool lets you view how the user is supposed to use the harpoon in the virtual environment.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 1,
@@ -98,7 +98,7 @@
       },
       {
         "question_id": "harpoon_q2_draw",
-        "prompt": "The user is not looking at the harpoon. Click the part of the screen that lets you draw on the user's virtual world.",
+        "prompt": "Click where the VR helper tool lets you draw in the user's virtual environment.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 2,
@@ -106,7 +106,7 @@
       },
       {
         "question_id": "harpoon_q3_clear_drawing",
-        "prompt": "The user sees the drawing in their virtual world and no longer needs it. Click the part of the screen that lets you remove all drawings from the user's virtual world. ",
+        "prompt": "Click where the VR helper tool lets you remove all of your drawings from the user's virtual environment.",
         "question_type": "main",
         "screen_variant": "default",
         "order": 3,
