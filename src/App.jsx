@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+﻿import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Controller3DViewer from './controllers/Controller3DViewer';
 import './controllers/Controller3DViewer.css';
 
@@ -123,7 +123,8 @@ function makeDashboardAttentionQuestion(check, scenarioContext = {}) {
   return {
     ...scenarioContext,
     question_id: check.check_id,
-    prompt: check.prompt,
+    prompt: (check.prompt_from_scenario && scenarioContext[check.prompt_from_scenario]) || check.prompt,
+    vr_view_image: check.vr_view_image || scenarioContext.vr_view_image,
     correct_answers: check.correct_answers || [],
     question_type: check.question_type || check.type,
     screen_variant: scenarioContext.screen_variant || check.screen_variant || 'default',
@@ -139,6 +140,7 @@ function getScenarioContextForDashboardAttention(item) {
     scenario_text: question.scenario_text || '',
     scenario_order_index: question.scenario_order_index || '',
     scenario_question_index: question.scenario_question_index || '',
+    attention_vr_view_prompt: question.attention_vr_view_prompt || '',
     task_id: question.task_id,
     task_order: question.task_order,
     vr_view_image: question.vr_view_image,
@@ -150,33 +152,31 @@ function getScenarioContextForDashboardAttention(item) {
 function buildQuestionFlow(questions, attentionChecks, sessionId) {
   const scenarioBasedQuestions = questions.some((question) => Array.isArray(question.questions));
   const mainItems = scenarioBasedQuestions
-    ? shuffleWithSeed(
-      [...questions].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
-      `${sessionId || 'no-session'}:scenarios`,
-    ).flatMap((scenario, scenarioIndex) => (
-      [...(scenario.questions ?? [])]
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-        .map((question, questionIndex) => ({
-          type: 'dashboard',
-          id: question.question_id,
-          item: {
-            ...question,
-            is_attention_check: false,
-            scenario_id: scenario.scenario_id,
-            scenario_text: scenario.scenario_text,
-            scenario_order_index: scenarioIndex + 1,
-            scenario_question_index: questionIndex + 1,
-            task_id: question.task_id ?? scenario.task_id,
-            task_order: question.task_order ?? scenario.task_order,
-            vr_view_image: question.vr_view_image ?? scenario.vr_view_image,
-            object_view_images: question.object_view_images ?? scenario.object_view_images ?? [],
-          },
-        }))
-    ))
-    : shuffleWithSeed(
-      [...questions].sort((a, b) => a.order - b.order),
-      `${sessionId || 'no-session'}:main-questions`,
-    )
+    ? [...questions]
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+      .flatMap((scenario, scenarioIndex) => (
+        [...(scenario.questions ?? [])]
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+          .map((question, questionIndex) => ({
+            type: 'dashboard',
+            id: question.question_id,
+            item: {
+              ...question,
+              is_attention_check: false,
+              scenario_id: scenario.scenario_id,
+              scenario_text: scenario.scenario_text,
+              scenario_order_index: scenarioIndex + 1,
+              scenario_question_index: questionIndex + 1,
+              task_id: question.task_id ?? scenario.task_id,
+              task_order: question.task_order ?? scenario.task_order,
+              vr_view_image: question.vr_view_image ?? scenario.vr_view_image,
+              object_view_images: question.object_view_images ?? scenario.object_view_images ?? [],
+            },
+          }))
+      ))
+      .sort((a, b) => (a.item.study_order ?? a.item.order ?? 0) - (b.item.study_order ?? b.item.order ?? 0))
+    : [...questions]
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
       .map((question) => ({ type: 'dashboard', id: question.question_id, item: { ...question, is_attention_check: false } }));
   const checkItems = [...attentionChecks]
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
@@ -709,14 +709,34 @@ function getRegionFeedbackLabel(regionId, uiText) {
 }
 
 function isCorrectRegionSelection(selectedRegionId, correctRegionIds, selectedBaseRegionId = '') {
+  if (!correctRegionIds?.length) return null;
   if (correctRegionIds.includes(selectedRegionId) || correctRegionIds.includes(selectedBaseRegionId)) return true;
   if (selectedRegionId?.startsWith('object-button-')) {
-    return correctRegionIds.includes('object-button');
+    return correctRegionIds.includes('object-button') || correctRegionIds.includes('objects-region');
   }
   if (selectedRegionId?.startsWith('dropdown-value-')) {
-    return correctRegionIds.includes('dropdown-value');
+    return correctRegionIds.includes('dropdown-value') || correctRegionIds.includes('dropdown');
   }
   return false;
+}
+
+function isCorrectMultiRegionSelection(selectedRegions, correctRegionIds) {
+  if (!correctRegionIds?.length) return null;
+  return selectedRegions.some((selection) => isCorrectRegionSelection(
+    selection.region_id,
+    correctRegionIds,
+    selection.base_region_id,
+  ));
+}
+
+function renderRichText(text) {
+  const parts = String(text || '').split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={`${part}-${index}`}>{part.slice(2, -2)}</strong>;
+    }
+    return <span key={`${part}-${index}`}>{part}</span>;
+  });
 }
 
 function HarpoonInfoText({ text, textKey, openInfoKey, setOpenInfoKey, description }) {
@@ -757,7 +777,7 @@ function HarpoonInfoText({ text, textKey, openInfoKey, setOpenInfoKey, descripti
   );
 }
 
-function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, metadata, resetKey, uiText, scenarioConfig = {} }) {
+function SimulatedDashboard({ selectedRegionIds = [], onRegionClick, screenVariant, metadata, resetKey, uiText, scenarioConfig = {} }) {
   const tasks = metadata?.tasks ?? [];
   const dashboardText = uiText?.dashboard ?? {};
   const initialTask = (
@@ -830,7 +850,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
   const hasControllerVideo = Boolean(controllerVideoUrl);
   const regionProps = (regionId) => ({
     'data-region-id': regionId,
-    className: `sim-region clickable-region ${selectedRegionId === regionId ? 'selected-region' : ''}`,
+    className: `sim-region clickable-region ${selectedRegionIds.includes(regionId) ? 'selected-region' : ''}`,
     onClick: (event) => {
       event.stopPropagation();
       emitRegionClick(regionId, event);
@@ -839,7 +859,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
 
   const actionProps = (regionId, extraClass = '', disabled = false) => ({
     'data-region-id': regionId,
-    className: `sim-button clickable-region ${extraClass} ${disabled ? 'disabled-control' : ''} ${selectedRegionId === regionId ? 'selected-region' : ''}`,
+    className: `sim-button clickable-region ${extraClass} ${disabled ? 'disabled-control' : ''} ${selectedRegionIds.includes(regionId) ? 'selected-region' : ''}`,
     'aria-disabled': disabled ? 'true' : undefined,
     onClick: (event) => {
       event.stopPropagation();
@@ -1122,7 +1142,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
     <div className="tablet-frame">
     <div
       ref={dashboardContainerRef}
-      className={`sim-dashboard selected-task-${selectedTaskStatus} ${selectedRegionId ? 'has-selected-region' : ''}`}
+      className={`sim-dashboard selected-task-${selectedTaskStatus} ${selectedRegionIds.length ? 'has-selected-region' : ''}`}
       aria-label="Simulated VR helper dashboard"
       onClick={(event) => {
         setOpenTooltipId('');
@@ -1137,7 +1157,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
         <div className="task-select">
           <button
             type="button"
-            className={`task-select-trigger clickable-region ${selectedRegionId === 'dropdown' ? 'selected-region' : ''}`}
+            className={`task-select-trigger clickable-region ${selectedRegionIds.includes('dropdown') ? 'selected-region' : ''}`}
             data-region-id="dropdown"
             onClick={(event) => {
               event.stopPropagation();
@@ -1322,9 +1342,9 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
       </section>
       <section
         className={`sim-region physical-action-section dimmable-region ${
-          selectedRegionId === 'physical-world-video-region'
-          || selectedRegionId === 'controller-send-button'
-          || selectedRegionId === 'controller-clear-button'
+          selectedRegionIds.includes('physical-world-video-region')
+          || selectedRegionIds.includes('controller-send-button')
+          || selectedRegionIds.includes('controller-clear-button')
             ? 'contains-selected-region'
             : ''
         }`}
@@ -1364,7 +1384,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
         <div className="physical-action-body">
           <div
             data-region-id="physical-world-video-region"
-            className={`video-thumb clickable-region ${selectedRegionId === 'physical-world-video-region' ? 'selected-region' : ''}`}
+            className={`video-thumb clickable-region ${selectedRegionIds.includes('physical-world-video-region') ? 'selected-region' : ''}`}
             onClick={(event) => {
               event.stopPropagation();
               if (!hasControllerVideo) {
@@ -1487,7 +1507,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           )}
         </div>
         <div className="controller-body">
-          <div className={`controller-model ${selectedRegionId === 'controller-region' ? 'selected-region' : ''}`}>
+          <div className={`controller-model ${selectedRegionIds.includes('controller-region') ? 'selected-region' : ''}`}>
             <Controller3DViewer
               side={controllerSide}
               modelPath={assetUrl(`models/meta_quest_${controllerSide}_controller.glb`)}
@@ -1499,7 +1519,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
           </div>
           <div
             data-region-id="controller-side-dropdown"
-            className={`controller-side-toggle clickable-region ${selectedRegionId === 'controller-side-dropdown' ? 'selected-region' : ''}`}
+            className={`controller-side-toggle clickable-region ${selectedRegionIds.includes('controller-side-dropdown') ? 'selected-region' : ''}`}
             role="group"
             aria-label="Controller side selector"
             onClick={(event) => {
@@ -1569,7 +1589,7 @@ function SimulatedDashboard({ selectedRegionId, onRegionClick, screenVariant, me
         </div>      </section>
       <section
         className={`sim-region dimmable-region ${
-          selectedRegionId === 'drawing-button' || selectedRegionId === 'drawing-clear-button'
+          selectedRegionIds.includes('drawing-button') || selectedRegionIds.includes('drawing-clear-button')
             ? 'contains-selected-region'
             : ''
         }`}
@@ -1630,7 +1650,7 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
       <header className="question-bar attention-inline-card" data-region-id="attention-check-question-panel">
         <div>
           <p className="eyebrow" data-region-id="attention-check-progress">{formatTextTemplate(uiText?.question?.progressTemplate ?? 'Question {current} of {total}', { current: questionIndex + 1, total: totalQuestions })}</p>
-          <h1 data-region-id="attention-check-prompt">{check.prompt}</h1>
+          <p className="question-prompt" data-region-id="attention-check-prompt">{renderRichText(check.prompt)}</p>
           {check.type === 'open_text' && (
             <p className="selection-feedback" data-region-id="attention-check-open-text-instruction">
 {uiText?.inlineAttention?.openTextHelp ?? 'Answer in one or two sentences. This response helps us check whether the instruction was understood.'}
@@ -1689,8 +1709,10 @@ function InlineAttentionCheckPage({ check, questionIndex, totalQuestions, onSubm
     </main>
   );
 }
-function MainQuestionPage({ question, questionIndex, totalQuestions, selectedRegionId, onRegionClick, onNext, metadata, uiText }) {
-  const selectedLabel = selectedRegionId ? getRegionFeedbackLabel(selectedRegionId, uiText) : '';
+function MainQuestionPage({ question, questionIndex, totalQuestions, selectedRegions = [], onRegionClick, onNext, metadata, uiText }) {
+  const selectedLabel = selectedRegions.length
+    ? selectedRegions.map((selection) => selection.region_label || getRegionFeedbackLabel(selection.region_id, uiText)).join(', ')
+    : '';
   const [openHarpoonInfoKey, setOpenHarpoonInfoKey] = useState('');
   const harpoonDescription = uiText?.question?.harpoonDescription
     ?? 'A harpoon is a spear-like tool used to catch or pull objects from a distance.';
@@ -1721,32 +1743,26 @@ function MainQuestionPage({ question, questionIndex, totalQuestions, selectedReg
               />
             </p>
           ) : null}
-          <h1 data-region-id="question-prompt">
-            <HarpoonInfoText
-              text={question.prompt}
-              textKey={`${question.question_id}-prompt`}
-              openInfoKey={openHarpoonInfoKey}
-              setOpenInfoKey={setOpenHarpoonInfoKey}
-              description={harpoonDescription}
-            />
-          </h1>
-          <p className={`selection-feedback ${selectedRegionId ? 'has-selection' : ''}`} data-region-id="question-selection-feedback">
-            {selectedRegionId ? (
+          <p className="question-prompt" data-region-id="question-prompt">
+            {renderRichText(question.prompt)}
+          </p>
+          <p className={`selection-feedback ${selectedRegions.length ? 'has-selection' : ''}`} data-region-id="question-selection-feedback">
+            {selectedRegions.length ? (
               <>
-{formatTextTemplate(uiText?.question?.selectedTemplate ?? 'You have selected {label}, highlighted in yellow.', { label: selectedLabel })}
+{formatTextTemplate(uiText?.question?.selectedTemplate ?? 'Selected: {label}. Click a selected region again to deselect it.', { label: selectedLabel })}
               </>
             ) : (
               uiText?.question?.noSelection ?? 'Select one region, button, dropdown, or video in the tablet below.'
             )}
           </p>
         </div>
-        <button className="next-button" type="button" data-region-id="question_next_button" disabled={!selectedRegionId} onClick={onNext}>
+        <button className="next-button" type="button" data-region-id="question_next_button" disabled={!selectedRegions.length} onClick={onNext}>
           {uiText?.question?.nextButton ?? 'Next'}
         </button>
       </header>
       <div className="tablet-stage" data-region-id="tablet-stage">
         <SimulatedDashboard
-          selectedRegionId={selectedRegionId}
+          selectedRegionIds={selectedRegions.map((selection) => selection.region_id)}
           onRegionClick={onRegionClick}
           screenVariant={question.screen_variant}
           metadata={metadata}
@@ -1962,8 +1978,7 @@ export default function App() {
   const [phase, setPhase] = useState('loading');
   const [session, setSession] = useState(null);
   const [flowIndex, setFlowIndex] = useState(0);
-  const [selectedRegionId, setSelectedRegionId] = useState('');
-  const [selectedRegionMeta, setSelectedRegionMeta] = useState({ base_region_id: '', region_label: '' });
+  const [selectedRegions, setSelectedRegions] = useState([]);
   const [currentQuestionStartedAt, setCurrentQuestionStartedAt] = useState('');
   const [firstClick, setFirstClick] = useState(null);
   const [currentQuestionClicks, setCurrentQuestionClicks] = useState([]);
@@ -2034,8 +2049,7 @@ export default function App() {
   useEffect(() => {
     if (phase !== 'main') return;
     setCurrentQuestionStartedAt(getIsoTimestamp());
-    setSelectedRegionId('');
-    setSelectedRegionMeta({ base_region_id: '', region_label: '' });
+    setSelectedRegions([]);
     setFirstClick(null);
     setCurrentQuestionClicks([]);
     currentQuestionClicksRef.current = [];
@@ -2170,8 +2184,15 @@ export default function App() {
     currentQuestionClicksRef.current = [...currentQuestionClicksRef.current, clickRecord];
     setCurrentQuestionClicks(currentQuestionClicksRef.current);
     if (shouldSelect) {
-      setSelectedRegionId(regionId);
-      setSelectedRegionMeta({ base_region_id: baseRegionId, region_label: regionLabel });
+      setSelectedRegions((previousSelections) => {
+        if (previousSelections.some((selection) => selection.region_id === regionId)) {
+          return previousSelections.filter((selection) => selection.region_id !== regionId);
+        }
+        return [
+          ...previousSelections,
+          { region_id: regionId, base_region_id: baseRegionId, region_label: regionLabel },
+        ];
+      });
     }
     recordEvent({
       type: 'dashboard_region_clicked',
@@ -2224,7 +2245,9 @@ export default function App() {
     currentQuestionClicksRef.current = finalQuestionClicks;
     setCurrentQuestionClicks(finalQuestionClicks);
     const correctAnswers = question.correct_answers ?? [];
-    const isCorrect = isCorrectRegionSelection(selectedRegionId, correctAnswers, selectedRegionMeta.base_region_id);
+    const finalSelections = selectedRegions;
+    const primarySelection = finalSelections[finalSelections.length - 1] ?? { region_id: '', base_region_id: '', region_label: '' };
+    const isCorrect = isCorrectMultiRegionSelection(finalSelections, correctAnswers);
 
     setSession((previous) => {
       const response = {
@@ -2237,9 +2260,12 @@ export default function App() {
         task_order: question.task_order || '',
         prompt: question.prompt,
         correct_answers: correctAnswers,
-        selected_region_id: selectedRegionId,
-        selected_base_region_id: selectedRegionMeta.base_region_id,
-        selected_region_label: selectedRegionMeta.region_label,
+        selected_region_id: primarySelection.region_id,
+        selected_base_region_id: primarySelection.base_region_id,
+        selected_region_label: primarySelection.region_label,
+        selected_regions: finalSelections,
+        selected_region_ids: finalSelections.map((selection) => selection.region_id),
+        selected_region_labels: finalSelections.map((selection) => selection.region_label),
         first_click_region_id: firstClick?.region_id ?? '',
         first_click_base_region_id: firstClick?.base_region_id ?? '',
         first_click_region_label: firstClick?.region_label ?? '',
@@ -2259,7 +2285,8 @@ export default function App() {
         timestamp: answeredAt,
         question_id: question.question_id,
         scenario_id: question.scenario_id || '',
-        selected_region_id: selectedRegionId,
+        selected_region_id: primarySelection.region_id,
+        selected_region_ids: finalSelections.map((selection) => selection.region_id),
         is_correct: isCorrect,
       };
 
@@ -2275,9 +2302,10 @@ export default function App() {
         check_id: question.check_id || question.question_id,
         prompt: question.prompt,
         type: question.question_type,
-        answer: selectedRegionId,
-        answer_base_region_id: selectedRegionMeta.base_region_id,
-        answer_label: selectedRegionMeta.region_label,
+        answer: primarySelection.region_id,
+        answer_base_region_id: primarySelection.base_region_id,
+        answer_label: primarySelection.region_label,
+        selected_regions: finalSelections,
         correct_answer: correctAnswers.join('|'),
         is_correct: isCorrect,
         started_at: currentQuestionStartedAt,
@@ -2503,7 +2531,7 @@ export default function App() {
         question={currentFlowItem.item}
         questionIndex={displayedQuestionIndex}
         totalQuestions={totalQuestionCount}
-        selectedRegionId={selectedRegionId}
+        selectedRegions={selectedRegions}
         onRegionClick={handleRegionClick}
         onNext={handleMainNext}
         metadata={metadata}
@@ -2537,3 +2565,4 @@ export default function App() {
 
   return null;
 }
+

@@ -2408,3 +2408,16 @@ button:disabled {
 .tablet-frame .controller-info-wrap {
   justify-self: end;
 }
+
+/* Participant-facing question copy: only marked phrases are emphasized. */
+.study-interaction-page .question-bar .question-prompt {
+  margin: 0;
+  color: #111827;
+  font-size: clamp(1.05rem, 1.55vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.18;
+}
+
+.study-interaction-page .question-bar .question-prompt strong {
+  font-weight: 800;
+}
