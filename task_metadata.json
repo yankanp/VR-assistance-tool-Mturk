@@ -570,9 +570,9 @@
           "sceneName": "Beat2",
           "objectPath": "Boat/DynamicBoat/SailControls (1)/RopeSystem/VerletRope",
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/grip.png",
-            "leftVideoUrl": "video/controller/grip-left.mp4",
-            "rightVideoUrl": "video/controller/grip-right.mp4"
+            "thumbnail": "video/controller/thumbnails/task-9.png",
+            "leftVideoUrl": "video/controller/task-9-left.mp4",
+            "rightVideoUrl": "video/controller/task-9-right.mp4"
           }
         }
       ],
@@ -1054,9 +1054,9 @@
           },
           "order": 1,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/grip.png",
-            "leftVideoUrl": "video/controller/grip-left.mp4",
-            "rightVideoUrl": "video/controller/grip-right.mp4"
+            "thumbnail": "video/controller/thumbnails/task-18-object-1.png",
+            "leftVideoUrl": "video/controller/task-18-object-1-left.mp4",
+            "rightVideoUrl": "video/controller/task-18-object-1-right.mp4"
           }
         },
         {
@@ -1076,9 +1076,9 @@
           },
           "order": 2,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/grip.png",
-            "leftVideoUrl": "video/controller/grip-left.mp4",
-            "rightVideoUrl": "video/controller/grip-right.mp4"
+            "thumbnail": "video/controller/thumbnails/task-18-object-2.png",
+            "leftVideoUrl": "video/controller/task-18-object-2-left.mp4",
+            "rightVideoUrl": "video/controller/task-18-object-2-right.mp4"
           }
         },
         {
@@ -1102,9 +1102,9 @@
           },
           "order": 3,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/grip.png",
-            "leftVideoUrl": "video/controller/grip-left.mp4",
-            "rightVideoUrl": "video/controller/grip-right.mp4"
+            "thumbnail": "video/controller/thumbnails/task-18-object-3.png",
+            "leftVideoUrl": "video/controller/task-18-object-3-left.mp4",
+            "rightVideoUrl": "video/controller/task-18-object-3-right.mp4"
           }
         },
         {
@@ -1128,9 +1128,9 @@
           },
           "order": 1,
           "demoVideoPhysicalworld": {
-            "thumbnail": "video/controller/thumbnails/grip.png",
-            "leftVideoUrl": "video/controller/grip-left.mp4",
-            "rightVideoUrl": "video/controller/grip-right.mp4"
+            "thumbnail": "video/controller/thumbnails/task-18-object-4.png",
+            "leftVideoUrl": "video/controller/task-18-object-4-left.mp4",
+            "rightVideoUrl": "video/controller/task-18-object-4-right.mp4"
           }
         },
         {
