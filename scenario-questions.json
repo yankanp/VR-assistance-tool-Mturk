@@ -11,7 +11,7 @@
     "questions": [
       {
         "question_id": "cargo_q1_vr_view",
-        "prompt": "The VR user is trying to roll the cargo barrels. The difficulty is that they **cannot find the barrel**. As their partner, click the part(s) of the intervention tool **you would use to understand what the VR user is currently seeing.**",
+        "prompt": "The user tells you that they **cannot find the barrel**. As their partner, click the part(s) of the intervention tool **you would use to see what the user is currently viewing.**",
         "category": "Information from the tool that a partner can use to understand the VR app",
         "question_type": "main",
         "screen_variant": "default",
@@ -21,8 +21,8 @@
       },
       {
         "question_id": "cargo_q2_point_barrel",
-        "prompt": "The VR user is trying to roll the cargo barrels. The difficulty is that they **cannot find the barrel**. As their partner, click the part(s) of the intervention tool **you would use to point the VR user toward the barrel.**",
-        "category": "Features that partners can use to intervene with VR users",
+        "prompt": "The user tells you that they **cannot find the barrel**. As their partner, click the part(s) of the intervention tool **you would use to point the user toward the barrel.**",
+        "category": "Features that partners can use to intervene with users",
         "question_type": "main",
         "screen_variant": "default",
         "order": 2,
@@ -31,7 +31,7 @@
       },
       {
         "question_id": "cargo_q3_next_activity",
-        "prompt": "The VR user has finished moving the barrels. The difficulty is that they **do not know what to do next**. As their partner, click the part(s) of the intervention tool **you would use to see the next activity.**",
+        "prompt": "The user tells you that they **do not know what to do next**. As their partner, click the part(s) of the intervention tool **you would use to see the next activity.**",
         "category": "Information from the tool that a partner can use to understand the VR app",
         "question_type": "main",
         "screen_variant": "default",
@@ -41,7 +41,7 @@
         "correct_answers": []
       }
     ],
-    "attention_vr_view_prompt": "The VR user is trying to roll the cargo barrels. The difficulty is that they cannot find the barrel. As their partner, click the part(s) of the intervention tool you would use to understand what the VR user is currently seeing."
+    "attention_vr_view_prompt": "The user tells you that they **cannot find the barrel**. As their partner, click the part(s) of the intervention tool **you would use to point the user toward the barrel.**"
   },
   {
     "scenario_id": "raise_sail",
@@ -55,7 +55,7 @@
     "questions": [
       {
         "question_id": "sail_q1_controller_buttons",
-        "prompt": "The VR user is trying to raise the sail. The difficulty is that they **do not know which controller button(s) to press**. As their partner, click the part(s) of the intervention tool **you would use to understand which controller button(s) the VR user should press.**",
+        "prompt": "The user tells you that they **do not know which controller button(s) to press**. As their partner, click the part(s) of the intervention tool **you would use to understand which controller button(s) the user should press.**",
         "category": "Information from the tool that a partner can use to understand the VR app",
         "question_type": "main",
         "screen_variant": "default",
@@ -65,7 +65,7 @@
       },
       {
         "question_id": "sail_q2_hand_movement_video",
-        "prompt": "The VR user is trying to raise the sail. The difficulty is that they **do not know how to move their hands to raise the sail**. As their partner, click the part(s) of the intervention tool **you would use to watch how the VR user should move their hands.**",
+        "prompt": "The user tells you that they **do not know how to move their hands to raise the sail**. As their partner, click the part(s) of the intervention tool **you would use to view how the user should move their hands.**",
         "category": "Information from the tool that a partner can use to understand the VR app",
         "question_type": "main",
         "screen_variant": "default",
@@ -75,8 +75,8 @@
       },
       {
         "question_id": "sail_q3_send_hand_video",
-        "prompt": "The VR user is trying to raise the sail. The difficulty is that they **do not know how to move their hands to raise the sail**. As their partner, click the part(s) of the intervention tool **you would use to send the VR user a video showing  the necessary arm movement(s) needed to raise the sail.**",
-        "category": "Features that partners can use to intervene with VR users",
+        "prompt": "The user tells you that they **do not know how to move their hands to raise the sail**. As their partner, click the part(s) of the intervention tool **you would use to send the user a video showing  the necessary arm movement(s) needed to raise the sail.**",
+        "category": "Features that partners can use to intervene with users",
         "question_type": "main",
         "screen_variant": "default",
         "order": 3,
@@ -84,7 +84,7 @@
         "correct_answers": []
       }
     ],
-    "attention_vr_view_prompt": "The VR user is trying to raise the sail. The difficulty is that they do not know how to do this. As their partner, click the part(s) of the intervention tool you would use to understand what the VR user is currently seeing."
+    "attention_vr_view_prompt": "The user tells you that they **do not know how to move their hands to raise the sail**. As their partner, click the part(s) of the intervention tool **you would use to point the user toward the barrel.**"
   },
   {
     "scenario_id": "harpoon",
@@ -104,7 +104,7 @@
     "questions": [
       {
         "question_id": "harpoon_q1_in_world_demo",
-        "prompt": "The VR user is trying to use the harpoon. The difficulty is that they **do not know how to use the harpoon**. As their partner, click the part(s) of the intervention tool **you would use to understand how the harpoon is used in the virtual world.**",
+        "prompt": "The user tells you that they **do not know how to use the harpoon**. As their partner, click the part(s) of the intervention tool **you would use to understand how the harpoon is used in the virtual world.**",
         "category": "Information from the tool that a partner can use to understand the VR app",
         "question_type": "main",
         "screen_variant": "default",
@@ -114,8 +114,8 @@
       },
       {
         "question_id": "harpoon_q2_draw",
-        "prompt": "The VR user is trying to use the harpoon. The difficulty is that they **are not looking at the relevant place in the virtual world**. As their partner, click the part(s) of the intervention tool **you would use to draw something in the VR user's virtual world.**",
-        "category": "Features that partners can use to intervene with VR users",
+        "prompt": "The user tells you that they **do not know which way to turn the crank**. As their partner, click the part(s) of the intervention tool **you would use to draw something that shows the user which way to turn it.**",
+        "category": "Features that partners can use to intervene with users",
         "question_type": "main",
         "screen_variant": "default",
         "order": 2,
@@ -124,8 +124,8 @@
       },
       {
         "question_id": "harpoon_q3_clear_drawing",
-        "prompt": "The VR user can now see the relevant place in the virtual world and **no longer needs the drawing**. As their partner, click the part(s) of the intervention tool **you would use to remove that drawing from the VR user's virtual world.**",
-        "category": "Features that partners can use to intervene with VR users",
+        "prompt": "The user tells you that they **no longer need the drawing**. As their partner, click the part(s) of the intervention tool **you would use to remove that drawing from the user's virtual world.**",
+        "category": "Features that partners can use to intervene with users",
         "question_type": "main",
         "screen_variant": "default",
         "order": 3,
@@ -133,6 +133,6 @@
         "correct_answers": []
       }
     ],
-    "attention_vr_view_prompt": "The VR user is trying to use the harpoon. The difficulty is that they do not know how to use the harpoon. As their partner, click the part(s) of the intervention tool you would use to understand what the VR user is currently seeing."
+    "attention_vr_view_prompt": "The user tells you that they **do not know how to use the harpoon**. As their partner, click the part(s) of the intervention tool **you would use to point the user toward the barrel.**"
   }
 ]
